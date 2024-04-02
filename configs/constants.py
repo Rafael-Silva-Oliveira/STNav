@@ -1,6 +1,6 @@
 ANALYSIS_CONFIG = (
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\config\analysis.json"
+    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\configs\analysis.json"
 )
 PLOTTING_CONFIG = (
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\config\plots.json"
+    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\configs\plots.json"
 )
