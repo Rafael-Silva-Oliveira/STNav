@@ -38,7 +38,7 @@ date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 import scvi
 import inspect
 import cell2location as c2l
-from src.utils.utils import (
+from src.utils.helpers import (
     unnormalize,
     return_filtered_params,
     log_adataX,
@@ -53,7 +53,7 @@ from src.utils.utils import (
 from scvi.external import RNAStereoscope, SpatialStereoscope
 from scvi.model import CondSCVI, DestVI
 from scipy.sparse import csr_matrix
-from src.utils.utils import fix_write_h5ad, GARD
+from src.utils.helpers import fix_write_h5ad, GARD
 
 # Unnormalize data
 import sys
@@ -973,120 +973,6 @@ class STNavCore(object):
                     adata,
                 )
         return st_model, model_name
-
-    def deconvolution(self, st_model, model_name):
-        logger.info(
-            f"Running deconvolution based on ranked genes with the group {self.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-        )
-
-        st_adata = self.adata_dict[self.data_type]["subset_preprocessed_adata"].copy()
-
-        if model_name == "GraphST":
-
-            adata_sc = self.adata_dict["scRNA"]["subset_preprocessed_adata"].copy()
-            adata_sc_preprocessed = self.adata_dict["scRNA"][
-                "preprocessed_adata"
-            ].copy()
-
-            project_cell_to_spot(st_adata, adata_sc, retain_percent=0.15)
-
-            columns_cell_type_names = list(adata_sc.obs["cell_type"].unique())
-
-            for cell_type in columns_cell_type_names:
-                save_path = self.saving_path + "\\Plots\\" + cell_type + ".png"
-                with plt.rc_context():  # Use this to set figure params like size and dpi
-                    plot_func = sc.pl.spatial(
-                        st_adata,
-                        cmap="magma",
-                        color=cell_type,
-                        img_key="hires",
-                        size=1.5,
-                        alpha_img=0.5,
-                        show=False,
-                    )
-                    plt.savefig(save_path, bbox_inches="tight")
-
-            # Return to the original naming convention for plotting purposes
-            adata_sc.obs.rename(
-                columns={
-                    "cell_type": f"{self.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-                },
-                inplace=True,
-            )
-            adata_sc_preprocessed.obs.rename(
-                columns={
-                    "cell_type": f"{self.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-                },
-                inplace=True,
-            )
-
-            self.adata_dict["scRNA"]["subset_preprocessed_adata"] = adata_sc.copy()
-            self.adata_dict["scRNA"][
-                "preprocessed_adata"
-            ] = adata_sc_preprocessed.copy()
-
-            st_adata.obsm["deconvolution"] = st_adata.obs[columns_cell_type_names]
-
-            self.save_as("deconvoluted_adata", st_adata)
-
-            st_adata.obs.to_excel(
-                f"{self.saving_path}\\{self.data_type}\\Files\\Deconvoluted_{date}.xlsx",
-                index=False,
-            )
-            adata_sc.obs.rename(
-                columns={
-                    "cell_type": {
-                        self.config["scRNA"]["DEG"]["rank_genes_groups"]["params"][
-                            "groupby"
-                        ]
-                    }
-                },
-                inplace=True,
-            )
-        else:
-            # Deconvolution
-            st_adata.obsm["deconvolution"] = st_model.get_proportions()
-            with torch.no_grad():
-                keep_noise = False
-                res = torch.nn.functional.softplus(st_model.module.V).cpu().numpy().T
-                if not keep_noise:
-                    res = res[:, :-1]
-
-            column_names = st_model.cell_type_mapping
-            st_adata.obsm["deconvolution_unconstr"] = pd.DataFrame(
-                data=res,
-                columns=column_names,
-                index=st_model.adata.obs.index,
-            )
-
-            for ct in st_adata.obsm["deconvolution"].columns:
-                st_adata.obs[ct] = st_adata.obsm["deconvolution"][ct]
-
-            st_adata.obs[
-                f"spatial_{self.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-            ] = st_adata.obs[column_names].idxmax(axis=1)
-
-            self.save_as("deconvoluted_adata", st_adata)
-
-            for cell_type in st_adata.obsm["deconvolution"].columns:
-                save_path = self.saving_path + "\\Plots\\" + cell_type + ".png"
-                with plt.rc_context():  # Use this to set figure params like size and dpi
-                    plot_func = sc.pl.spatial(
-                        st_adata,
-                        cmap="magma",
-                        color=cell_type,
-                        img_key="hires",
-                        size=1.6,
-                        alpha_img=0.5,
-                        show=False,
-                    )
-                    plt.savefig(save_path, bbox_inches="tight")
-
-            st_adata.obs.to_excel(
-                f"{self.saving_path}\\{self.data_type}\\Files\\Deconvoluted_{date}.xlsx",
-                index=False,
-            )
-        return st_model
 
     def save_processed_adata(self, fix_write: bool = None):
         logger.info(

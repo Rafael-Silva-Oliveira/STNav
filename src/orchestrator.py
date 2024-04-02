@@ -28,6 +28,7 @@ from src.modules.scRNA.cell_annotation import (
 from src.modules.spatial.LigRec import ReceptorLigandAnalysis
 from src.modules.spatial.SpatialNeighbors import SpatialNeighbors
 from src.modules.spatial.SpatiallyVariableGenes import SpatiallyVariableGenes
+from src.modules.spatial.SpatialDeconvolution import deconvolution
 
 username = os.path.expanduser("~")
 
@@ -120,9 +121,13 @@ class Orchestrator(object):
         )
         self.apply_subset_and_log(STNavCorePipeline)
         STNavCorePipeline.deconvolution(self.st_model, model_name)
+
+        # External modules to the core pipeline
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)
+        deconvolution(STNavCorePipeline, st_model=self.st_model, model_name=model_name)
+
         STNavCorePipeline.save_processed_adata()
 
     def apply_subset_and_log(self, STNavCorePipeline):

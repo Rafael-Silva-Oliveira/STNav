@@ -37,7 +37,7 @@ date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 import scvi
 import inspect
 import cell2location as c2l
-from src.utils.utils import (
+from src.utils.helpers import (
     unnormalize,
     return_filtered_params,
     log_adataX,
@@ -52,7 +52,7 @@ from src.utils.utils import (
 from scvi.external import RNAStereoscope, SpatialStereoscope
 from scvi.model import CondSCVI, DestVI
 from scipy.sparse import csr_matrix
-from src.utils.utils import fix_write_h5ad, GARD
+from src.utils.helpers import fix_write_h5ad, GARD
 
 # Unnormalize data
 import sys

@@ -19,7 +19,7 @@ from typing import Union
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
 # Training a model to predict proportions on Spatial data using scRNA seq as reference
-from src.utils.utils import (
+from src.utils.helpers import (
     return_filtered_params,
 )
 

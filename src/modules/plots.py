@@ -17,7 +17,7 @@ from loguru import logger
 import inspect
 from sklearn.cluster import KMeans
 from sklearn.metrics import adjusted_rand_score
-from src.utils.utils import unnormalize, return_filtered_params
+from src.utils.helpers import unnormalize, return_filtered_params
 import squidpy as sq
 import spatialdm as sdm
 
