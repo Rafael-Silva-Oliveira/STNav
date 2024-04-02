@@ -61,14 +61,11 @@ import sys
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
 sc.settings.verbosity = 3
 import json
-import celltypist
-from celltypist import models
 from GraphST.utils import project_cell_to_spot
 import spatialdm as sdm
 import anndata as ad
 
 
-# Other names: STNavCoreigator, STHub,
 class STNavCore(object):
     adata_dict_suffix = "_adata"
 

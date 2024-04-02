@@ -8,33 +8,17 @@ import scanpy as sc
 import anndata as an
 import pandas as pd
 import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import seaborn as sns
-import scanorama
 import os
-import torch
-import scvi
-import squidpy as sq
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
-# from scvi.data import register_tensor_from_anndata
-from scvi.external import RNAStereoscope, SpatialStereoscope
-from scvi.model import CondSCVI, DestVI
-from scipy.sparse import csr_matrix
 from loguru import logger
 import inspect
-import gseapy as gp
-from gseapy.plot import gseaplot
 
-import sys
 
 sc.set_figure_params(facecolor="white", figsize=(20, 20))
 sc.settings.verbosity = 3
 
-# from sc_adata import scRNA
-# from st_adata import SpatialTranscriptomics
 from src.STNavCore import STNavCore
 from src.modules.plots import run_plots
 from src.modules.scRNA.cell_annotation import (
