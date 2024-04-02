@@ -35,14 +35,21 @@ sc.settings.verbosity = 3
 
 # from sc_adata import scRNA
 # from st_adata import SpatialTranscriptomics
-from src.STNav import STNav
+from src.STNavCore import STNavCore
 from src.modules.plots import run_plots
+from src.modules.scRNA.cell_annotation import (
+    perform_scArches_surgery,
+    perform_celltypist,
+)
+from src.modules.spatial.LigRec import ReceptorLigandAnalysis
+from src.modules.spatial.SpatialNeighbors import SpatialNeighbors
+from src.modules.spatial.SpatiallyVariableGenes import SpatiallyVariableGenes
 
 username = os.path.expanduser("~")
 
 
 class Orchestrator(object):
-    _spatial_pipeline = STNav
+    STNavCore_cls = STNavCore
     SCRNA = "scRNA"
     ST = "ST"
 
@@ -79,7 +86,7 @@ class Orchestrator(object):
     def run_pipeline_for_data_type(
         self, data_type, data_type_dict, adata_dict, saving_dir
     ):
-        AnalysisPipeline = self._spatial_pipeline(
+        STNavCorePipeline = self.STNavCore_cls(
             config=self.analysis_config,
             saving_path=saving_dir,
             data_type=data_type,
@@ -87,76 +94,82 @@ class Orchestrator(object):
         )
         logger.info(f"Running Analysis for {data_type}")
 
-        self.run_analysis_steps(data_type, data_type_dict, AnalysisPipeline)
+        self.run_analysis_steps(data_type, data_type_dict, STNavCorePipeline)
 
-    def run_analysis_steps(self, data_type, data_type_dict, AnalysisPipeline):
+    def run_analysis_steps(self, data_type, data_type_dict, STNavCorePipeline):
         if data_type == self.SCRNA:
             self.sc_model = self.run_scrna_analysis_steps(
-                data_type_dict, AnalysisPipeline
+                data_type_dict, STNavCorePipeline
             )
         if data_type == self.ST:
-            self.run_st_analysis_steps(AnalysisPipeline)
+            self.run_st_analysis_steps(STNavCorePipeline)
 
-    def run_scrna_analysis_steps(self, data_type_dict, AnalysisPipeline):
-        self.perform_surgery_if_needed(data_type_dict, AnalysisPipeline)
-        AnalysisPipeline.QC()
-        AnalysisPipeline.preprocessing()
-        AnalysisPipeline.DEG()
-        self.sc_model = AnalysisPipeline.train_or_load_sc_deconvolution_model()
-        AnalysisPipeline.save_processed_adata(fix_write=True)
+    def run_scrna_analysis_steps(self, data_type_dict, STNavCorePipeline):
+        self.perform_surgery_if_needed(data_type_dict, STNavCorePipeline)
+        STNavCorePipeline.QC()
+        STNavCorePipeline.preprocessing()
+        STNavCorePipeline.DEG()
+        self.sc_model = STNavCorePipeline.train_or_load_sc_deconvolution_model()
+        STNavCorePipeline.save_processed_adata(fix_write=True)
 
-    def perform_surgery_if_needed(self, data_type_dict, AnalysisPipeline):
+    def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
         if data_type_dict["scArches_surgery"]["usage"]:
-            AnalysisPipeline.perform_scArches_surgery()
+            adata_raw = perform_scArches_surgery(STNavCorePipeline)
+            STNavCorePipeline.adata_dict[STNavCorePipeline.data_type].setdefault(
+                "raw_adata", adata_raw
+            )
         elif data_type_dict["celltypist_surgery"]["usage"]:
-            AnalysisPipeline.perform_celltypist()
+            adata_raw = perform_celltypist(STNavCorePipeline)
+            STNavCorePipeline.adata_dict[STNavCorePipeline.data_type].setdefault(
+                "raw_adata", adata_raw
+            )
         else:
-            AnalysisPipeline.read_rna()
+            STNavCorePipeline.read_rna()
 
-    def run_st_analysis_steps(self, AnalysisPipeline):
-        AnalysisPipeline.read_visium()
-        AnalysisPipeline.QC()
-        AnalysisPipeline.preprocessing()
-        AnalysisPipeline.DEG()
+    def run_st_analysis_steps(self, STNavCorePipeline):
+        STNavCorePipeline.read_visium()
+        STNavCorePipeline.QC()
+        STNavCorePipeline.preprocessing()
+        STNavCorePipeline.DEG()
         self.st_model, model_name = (
-            AnalysisPipeline.train_or_load_st_deconvolution_model(self.sc_model)
+            STNavCorePipeline.train_or_load_st_deconvolution_model(self.sc_model)
         )
-        self.apply_subset_and_log(AnalysisPipeline)
-        AnalysisPipeline.deconvolution(self.st_model, model_name)
-        AnalysisPipeline.SpatiallyVariableGenes()
-        AnalysisPipeline.SpatialNeighbors()
-        AnalysisPipeline.ReceptorLigandAnalysis()
-        AnalysisPipeline.save_processed_adata()
+        self.apply_subset_and_log(STNavCorePipeline)
+        STNavCorePipeline.deconvolution(self.st_model, model_name)
+        SpatiallyVariableGenes(STNavCorePipeline)
+        SpatialNeighbors(STNavCorePipeline)
+        ReceptorLigandAnalysis(STNavCorePipeline)
+        STNavCorePipeline.save_processed_adata()
 
-    def apply_subset_and_log(self, AnalysisPipeline):
+    def apply_subset_and_log(self, STNavCorePipeline):
         logger.warning(
             "Subset is now being applied to common genes between Spatial data and single cell data. Plots might not show the exact raw data because of this."
         )
-        intersect = self.get_intersect(AnalysisPipeline)
-        self.apply_subset(AnalysisPipeline, intersect)
-        self.log_subset_info(AnalysisPipeline)
+        intersect = self.get_intersect(STNavCorePipeline)
+        self.apply_subset(STNavCorePipeline, intersect)
+        self.log_subset_info(STNavCorePipeline)
 
-    def get_intersect(self, AnalysisPipeline):
+    def get_intersect(self, STNavCorePipeline):
         return np.intersect1d(
-            AnalysisPipeline.adata_dict[self.SCRNA]["preprocessed_adata"].var_names,
-            AnalysisPipeline.adata_dict[self.ST]["preprocessed_adata"].var_names,
+            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"].var_names,
+            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"].var_names,
         )
 
-    def apply_subset(self, AnalysisPipeline, intersect):
-        AnalysisPipeline.adata_dict[self.ST]["subset_preprocessed_adata"] = (
-            AnalysisPipeline.adata_dict[self.ST]["preprocessed_adata"][
+    def apply_subset(self, STNavCorePipeline, intersect):
+        STNavCorePipeline.adata_dict[self.ST]["subset_preprocessed_adata"] = (
+            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"][
                 :, intersect
             ].copy()
         )
-        AnalysisPipeline.adata_dict[self.SCRNA]["subset_preprocessed_adata"] = (
-            AnalysisPipeline.adata_dict[self.SCRNA]["preprocessed_adata"][
+        STNavCorePipeline.adata_dict[self.SCRNA]["subset_preprocessed_adata"] = (
+            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"][
                 :, intersect
             ].copy()
         )
 
-    def log_subset_info(self, AnalysisPipeline):
+    def log_subset_info(self, STNavCorePipeline):
         logger.info(
-            f"N_obs x N_var for ST and scRNA after intersection: \n{AnalysisPipeline.adata_dict[self.ST]['subset_preprocessed_adata'].n_obs} x {AnalysisPipeline.adata_dict[self.ST]['subset_preprocessed_adata'].n_vars} \n {AnalysisPipeline.adata_dict[self.SCRNA]['subset_preprocessed_adata'].n_obs} x {AnalysisPipeline.adata_dict[self.SCRNA]['subset_preprocessed_adata'].n_vars}"
+            f"N_obs x N_var for ST and scRNA after intersection: \n{STNavCorePipeline.adata_dict[self.ST]['subset_preprocessed_adata'].n_obs} x {STNavCorePipeline.adata_dict[self.ST]['subset_preprocessed_adata'].n_vars} \n {STNavCorePipeline.adata_dict[self.SCRNA]['subset_preprocessed_adata'].n_obs} x {STNavCorePipeline.adata_dict[self.SCRNA]['subset_preprocessed_adata'].n_vars}"
         )
 
     def run_plots(

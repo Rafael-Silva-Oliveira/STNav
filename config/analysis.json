@@ -597,7 +597,7 @@
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "epochs": 1200,
+            "epochs": 10,
             "random_seed": 50,
             "deconvolution": true
           }

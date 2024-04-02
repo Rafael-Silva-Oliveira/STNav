@@ -30,6 +30,7 @@ import squidpy as sq
 from gseapy import GSEA
 from GraphST.utils import clustering
 from GraphST import GraphST
+from typing import Union
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
@@ -67,8 +68,8 @@ import spatialdm as sdm
 import anndata as ad
 
 
-# Other names: STNavigator, STHub,
-class STNav(object):
+# Other names: STNavCoreigator, STHub,
+class STNavCore(object):
     adata_dict_suffix = "_adata"
 
     def __init__(
@@ -78,6 +79,34 @@ class STNav(object):
         self.saving_path = saving_path
         self.data_type = data_type
         self.adata_dict = adata_dict
+
+    def save_as(self, name: str, adata: Union[an.AnnData, dict], copy: bool = True):
+        """
+        Save the given AnnData object in the adata_dict under the provided name.
+
+        If the name already exists in the dictionary, a warning is logged and the existing data is overwritten.
+        If the copy parameter is True, a copy of the AnnData object is saved. Otherwise, the object itself is saved.
+
+        Parameters
+        ----------
+        name : str - The name under which the AnnData object will be saved in the dictionary.
+        adata : Union[an.AnnData, dict] - The AnnData object to be saved (in case copy = True) or a dictionary (in case copy = False)
+        copy : bool, optional - If True, a copy of the AnnData object is saved. Otherwise, the object itself is saved. Default is True.
+
+        Returns
+        -------
+        None
+        """
+        if name in self.adata_dict[self.data_type]:
+            logger.warning(
+                f"Warning: {name} is already in the dictionary. The results will be overwritten."
+            )
+        if copy:
+            logger.info(f"Saving adata to adata_dict as '{name}'.")
+            self.adata_dict[self.data_type][name] = adata.copy()
+        else:
+            logger.info(f"Saving res to adata_dict as '{name}'.")
+            self.adata_dict[self.data_type][name] = adata
 
     def read_rna(self):
         config = self.config[self.data_type]
@@ -102,341 +131,9 @@ class STNav(object):
                 f"Failed to set new index. This might've happened because the index of var is already the genes/feature names, so no changes need to be made."
             )
 
-        self.adata_dict[self.data_type].setdefault("raw_adata", adata)
+        self.save_as("raw_adata", adata)
 
         return adata
-
-    def perform_celltypist(self):
-
-        config = self.config[self.data_type]["celltypist_surgery"]
-        path_backbone = config["path_backbone"]
-        path_reference = os.path.join(path_backbone, config["path_query_data"])
-        # TODO: fix config and add if statements for each type (single, transfer, etc)
-
-        adata = sc.read_h5ad(path_reference)
-        adata.var.drop_duplicates(keep="first", subset=["gene_names"], inplace=True)
-        adata.var["gene_names"] = adata.var["gene_names"].cat.as_ordered()
-        adata.var.set_index("gene_names", inplace=True)
-
-        # Reorder adata.X based on the updated index
-        adata = adata[:, adata.var.index]
-        adata.X.expm1().sum(axis=1)[:10]
-        sc.pp.normalize_total(adata, target_sum=1e4)
-        sc.pp.log1p(adata)
-        models.download_models(force_update=True)
-        models.models_description()
-        model = models.Model.load(model="Human_Lung_Atlas.pkl")
-        model.cell_types
-        predictions = celltypist.annotate(
-            adata,
-            model="Human_Lung_Atlas.pkl",
-            majority_voting=True,
-            mode="prob match",
-            p_thres=0.5,
-        )
-        predictions.predicted_labels
-        adata = predictions.to_adata()
-        adata.obs
-        sc.tl.umap(adata)
-        sc.pl.umap(adata, color=["majority_voting"], legend_loc="on data")
-
-        # pd.crosstab(adata.obs.cell_type, adata.obs.majority_voting).loc[
-        #     ["Microglia", "Macro_pDC"]
-        # ]
-        celltypist.dotplot(
-            predictions,
-            use_as_reference="cell_type",
-            use_as_prediction="predicted_labels",
-        )
-        celltypist.dotplot(
-            predictions,
-            use_as_reference="cell_type",
-            use_as_prediction="majority_voting",
-        )
-
-        predictions = celltypist.annotate(
-            adata,
-            model="Human_Lung_Atlas.pkl",
-            majority_voting=True,
-            mode="prob match",
-            p_thres=0.5,
-        )
-        adata = predictions.to_adata()
-        sc.tl.umap(adata)
-        sc.pl.umap(adata, color=["cell_type", "majority_voting"], legend_loc="on data")
-        adata = predictions.to_adata(insert_prob=True)
-        adata.obs[["cell_type", "Plasma cells"]]
-
-        # if config["train"]:
-        #     logger.info(
-        #         f"Performing surgery (training the model) on the reference model by training with the query dataset with the following params: \n {config['surgery_params']} \n NOTE: During surgery, only those parts of the model are trained that affect how your query is embedded; the reference embedding cannot change. In that way, the embedding of your query data is partly based on pre-learned patterns in the reference, and partly based on the query data itself"
-        #     )
-        # # Train using custom dataset
-        # adata_2000 = sc.read('celltypist_demo_folder/demo_2000_cells.h5ad', backup_url = 'https://celltypist.cog.sanger.ac.uk/Notebook_demo_data/demo_2000_cells.h5ad')
-        # adata_500 = sc.read('celltypist_demo_folder/demo_500_cells.h5ad', backup_url = 'https://celltypist.cog.sanger.ac.uk/Notebook_demo_data/demo_500_cells.h5ad')
-        # new_model = celltypist.train(adata_2000, labels = 'cell_type', n_jobs = 10, feature_selection = True)
-        # new_model.write('./model_from_immune2000.pkl')
-        # new_model = models.Model.load('./model_from_immune2000.pkl')
-        # predictions = celltypist.annotate(adata_500, model = './model_from_immune2000.pkl', majority_voting = True, mode = 'prob match', p_thres = 0.5)
-        # adata = predictions.to_adata(insert_prob = True)
-        # sc.tl.umap(adata)
-        # sc.pl.umap(adata, color = ['cell_type', 'majority_voting'], legend_loc = 'on data')
-
-        # # Examine expression of cell type-driving genes
-        # model = models.Model.load(model = 'celltypist_demo_folder/model_from_immune2000.pkl')
-        # model.cell_types
-        # top_3_genes = model.extract_top_markers("Macrophages", 3)
-        # top_3_genes
-        # sc.pl.violin(adata_2000, top_3_genes, groupby = 'cell_type', rotation = 90)
-        # sc.pl.violin(adata_500, top_3_genes, groupby = 'majority_voting', rotation = 90)
-
-    def perform_scArches_surgery(self):
-        # https://docs.scarches.org/en/latest/hlca_map_classify.html#Visualization-of-the-query-alone,-using-reference-based-embedding-and-including-original-gene-expression-values
-        # https://docs.scvi-tools.org/en/stable/tutorials/notebooks/scrna/scarches_scvi_tools.html using scvi-tools
-        # TODO: add celltypist implementation of this method (use their models and approach as a 2nd option to merge reference data with our query scRNA )
-        config = self.config[self.data_type]["scArches_surgery"]
-
-        # TODO: save dataframe with the ann_levels depth (ann_level_1, etc) so we can open an excel file and see which data we have
-        # Read paths
-        path_backbone = config["path_backbone"]
-        path_reference = os.path.join(path_backbone, config["path_reference"])
-        path_query_data = os.path.join(path_backbone, config["path_query_data"])
-        ref_model_features = os.path.join(path_backbone, config["ref_model_features"])
-        ref_model_dir = os.path.join(path_backbone, config["ref_model_dir"])
-        surgery_model_dir = os.path.join(path_backbone, config["surgery_model_dir"])
-        path_celltypes = os.path.join(path_backbone, "HLCA_celltypes_ordered.csv")
-
-        # Load reference dataset
-        adata_ref = sc.read_h5ad(path_reference)
-        # Load query dataset
-        adata_query_unprep = sc.read_h5ad(path_query_data)
-        logger.info(
-            f"Running scArches surgery with the following info: \n Query dataset: {adata_query_unprep} \n Reference dataset: {adata_ref}."
-        )
-
-        # If your query feature naming (ensembl IDs or gene symbols) does not match the reference model feature naming, apply this function
-        if config["ensembleID_to_GeneSym_mapping"]["usage"]:
-            gene_mapping_path = os.path.join(path_backbone, config["gene_mapping_path"])
-            adata_query_unprep = ensembleID_to_GeneSym_mapping(
-                gene_mapping_path=gene_mapping_path,
-                adata_query_unprep=adata_query_unprep,
-            )
-        # Start prepping query data so that it includes the right genes (depends on the genes used in the reference model, missing genes are padded with zeros).
-        adata_query_unprep.X = sparse.csr_matrix(adata_query_unprep.X)
-
-        # Remove obsm and varm to prevent errors downstream
-        try:
-            del adata_query_unprep.obsm
-            del adata_query_unprep.varm
-        except Exception as e:
-            logger.info(f"Exception occurred - {e}")
-
-        logger.info(
-            f"Checking if raw count data is present in the matrix: \n {adata_query_unprep.X[:10, :30].toarray()}"
-        )
-
-        logger.info(f"Reading reference model features: \n {ref_model_features}")
-        ref_model_features = pd.read_csv(ref_model_features, header=None)
-
-        # Prepare query data for scArches:
-        adata_query = sca.models.SCANVI.prepare_query_anndata(
-            adata=adata_query_unprep, reference_model=ref_model_dir, inplace=False
-        )
-        logger.info(
-            f"Query data after preparing query anndata: \n {adata_query} \n {sca.models.SCANVI.prepare_query_anndata(adata=adata_query_unprep,reference_model=ref_model_dir, inplace=False)}"
-        )
-
-        logger.info(
-            f"Loading reference model on which we will perform surgery (i.e. set relevant query variables)"
-        )
-        # Load reference model and set relevant query variables:
-        surgery_model = sca.models.SCANVI.load_query_data(
-            adata_query,
-            ref_model_dir,
-            freeze_dropout=True,
-        )
-
-        logger.info(
-            f"Surgery model registry: {surgery_model.registry_['setup_args'] = } \n Three key arguments used for building the reference model that should also be used to prep scArches surgery: \n 1. batch_key: Used to specify from which batch our query dataset comes from. \n 2. labels_key: As the reference has a scANVI reference model, it used cell type labels as input for the training. These cell types labels were sotred in a column named scanvi_label. Setting this to unlabeled. \n 3. unlabeled_category: This variable specifies how cells without label were named for this specific model."
-        )
-        adata_query.obs["dataset"] = config["adata_query_batch"]
-        adata_query.obs["scanvi_label"] = "unlabeled"
-
-        logger.info(
-            f"Reloading surgery model, now with the variables for adata_query set."
-        )
-        surgery_model = sca.models.SCANVI.load_query_data(
-            adata_query,
-            ref_model_dir,
-            freeze_dropout=True,
-        )
-
-        # Perform surgery on reference model by training with the query dataset
-        early_stopping_kwargs_surgery = config["surgery_params"].copy()
-        del early_stopping_kwargs_surgery["epochs"]
-
-        if config["train"]:
-            logger.info(
-                f"Performing surgery (training the model) on the reference model by training with the query dataset with the following params: \n {config['surgery_params']} \n NOTE: During surgery, only those parts of the model are trained that affect how your query is embedded; the reference embedding cannot change. In that way, the embedding of your query data is partly based on pre-learned patterns in the reference, and partly based on the query data itself"
-            )
-            surgery_model.train(
-                max_epochs=config["surgery_params"]["epochs"],
-                **early_stopping_kwargs_surgery,
-            )
-            surgery_model.save(surgery_model_dir, overwrite=True)
-        else:
-            logger.info(
-                f"Loading the surgery model: {surgery_model_dir} against the query dataset."
-            )
-            surgery_model = sca.models.SCANVI.load(
-                surgery_model_dir, adata_query
-            )  # if already trained
-
-        # Obtain query latent embedding
-        logger.info(
-            f"Obtaining query latent embedding. Now that we have the updated model, we can calculate low-dimensinal representation or 'embedding' of our query data which is in the same space as our HLCA reference. The latent embedding will be stored in a new anndata under .X"
-        )
-        adata_query_latent = sc.AnnData(
-            surgery_model.get_latent_representation(adata_query)
-        )
-        # Copy over .obs metadata from our query data
-        adata_query_latent.obs = adata_query.obs.loc[adata_query.obs.index, :]
-
-        # Combine reference and query embedding into one joint embedding for further processing
-        logger.info(
-            f"Combining reference and query embedding into one joint embedding. \n NOTE: if you expect non-unique barcodes (.obs index), set index_unique to e.g. '_'. This will add a suffix to our barcodes to ensure we can keep apart reference and query barcodes and batch_key to the obs column that you want to use as a barcode suffix (e.g. ref_or_query)"
-        )
-        adata_query_latent.obs["ref_or_query"] = "query"
-        adata_ref.obs["ref_or_query"] = "ref"
-
-        combined_emb = sc.concat(
-            (adata_ref, adata_query_latent), index_unique=None, join="outer"
-        )  # index_unique="_", batch_key="ref_or_query")
-
-        logger.info(f"Establishing data types.")
-        for cat in combined_emb.obs.columns:
-            if isinstance(combined_emb.obs[cat].values, pd.Categorical):
-                pass
-            elif pd.api.types.is_float_dtype(combined_emb.obs[cat]):
-                pass
-            else:
-                print(
-                    f"	Setting obs column {cat} (not categorical neither float) to strings to prevent writing error."
-                )
-                combined_emb.obs[cat] = combined_emb.obs[cat].astype(str)
-
-        logger.info(f"Performing label transfering. ")
-        cts_ordered = pd.read_csv(path_celltypes, index_col=0).rename(
-            columns={
-                f"Level_{lev}": f"labtransf_ann_level_{lev}" for lev in range(1, 6)
-            }
-        )
-        logger.info(
-            f"Adding annotations for all available labels. They will be stored in adata_ref.obs unde labtransf_ann_level_."
-        )
-        adata_ref.obs = adata_ref.obs.join(cts_ordered, on="ann_finest_level")
-        columns_to_check = [
-            "labtransf_ann_level_1",
-            "labtransf_ann_level_2",
-            "labtransf_ann_level_3",
-            "labtransf_ann_level_4",
-            "labtransf_ann_level_5",
-        ]
-        adata_ref = adata_ref[~adata_ref.obs[columns_to_check].isnull().all(axis=1)]
-        logger.info(f"adata_ref columns: \n {adata_ref.obs.columns} \n {adata_ref}")
-        logger.info(f"Preparing KNN transformer for label transfering")
-        knn_transformer = sca.utils.knn.weighted_knn_trainer(
-            train_adata=adata_ref,
-            train_adata_emb="X",  # location of our joint embedding
-            n_neighbors=50,
-        )
-
-        logger.info(
-            f"Transfering labels for the levels of labels in the reference (e.g. ann_level_1 to ann_level_5)."
-        )
-        labels, uncert = sca.utils.knn.weighted_knn_transfer(
-            query_adata=adata_query_latent,
-            query_adata_emb="X",  # location of our embedding, query_adata.X in this case
-            label_keys="labtransf_ann_level_",  # (start of) obs column name(s) for which to transfer labels
-            knn_model=knn_transformer,
-            ref_adata_obs=adata_ref.obs,
-        )
-        labels.rename(
-            columns={
-                f"labtransf_ann_level_{lev}": f"ann_level_{lev}_transferred_label_unfiltered"
-                for lev in range(1, 6)
-            },
-            inplace=True,
-        )
-        uncert.rename(
-            columns={
-                f"labtransf_ann_level_{lev}": f"ann_level_{lev}_transfer_uncert"
-                for lev in range(1, 6)
-            },
-            inplace=True,
-        )
-        combined_emb.obs = combined_emb.obs.join(labels)
-        combined_emb.obs = combined_emb.obs.join(uncert)
-
-        # copy over labels from reference adata
-        for cat in [f"labtransf_ann_level_{lev}" for lev in range(1, 6)]:
-            combined_emb.obs.loc[adata_ref.obs.index, cat] = adata_ref.obs[cat]
-
-        uncertainty_threshold = config["label_transfer"]["uncertainty_threshold"]
-        logger.info(
-            f"Applying uncertainty threshold of {uncertainty_threshold} and setting labels transferred with uncertainty greater than {uncertainty_threshold} to 'Unknown'."
-        )
-
-        for lev in range(1, 6):
-            combined_emb.obs[f"ann_level_{lev}_transferred_label"] = combined_emb.obs[
-                f"ann_level_{lev}_transferred_label_unfiltered"
-            ].mask(
-                combined_emb.obs[f"ann_level_{lev}_transfer_uncert"]
-                > uncertainty_threshold,
-                "Unknown",
-            )
-        logger.info(
-            f"Percentage of unknown per level, with uncertainty_threshold={uncertainty_threshold}:"
-        )
-        for level in range(1, 6):
-            try:
-                logger.info(
-                    f"Level {level}: {np.round(sum(combined_emb.obs[f'ann_level_{level}_transferred_label'] =='Unknown')/adata_query.n_obs*100,2)}%"
-                )
-            except Exception as e:
-                logger.error(e)
-
-        adata_query_final = (
-            adata_query_unprep.copy()
-        )  # copy the original query adata, including gene counts
-        adata_query_final.obsm["X_scarches_emb"] = adata_query_latent[
-            adata_query_final.obs.index, :
-        ].X  # copy over scArches/reference-based embedding
-
-        # If original query_adata has gene IDs instead of gene symbols as var.index, switch that here for easier gene querying.
-        # if config["ensembleID_to_GeneSym_mapping"]["usage"]:
-        logger.info(
-            f"Setting gene symbols instead of gene IDs as index for easier querying."
-        )
-        adata_query_final.var["gene_ids"] = adata_query_final.var.index
-        adata_query_final.var.index = adata_query_final.var.gene_names
-        adata_query_final.var.index.name = None
-
-        logger.info(f"Copying over label transfer columns")
-        for col in combined_emb.obs.columns:
-            if col.startswith("ann_level") and "transfer" in col:
-                adata_query_final.obs[col] = combined_emb.obs.loc[
-                    adata_query_final.obs.index, col
-                ]
-
-        adata_query_final.var_names = adata_query_final.var_names.str.capitalize()
-        adata_query_final.var.index = adata_query_final.var.index.str.capitalize()
-        adata_query_final.raw = adata_query_final
-
-        logger.info(
-            f"Saving final adata_query_final as 'raw_adata' to adata_dict."
-        )  # TODO: save raw adata as a new file in the data processed, etc so theres no need to run scArches again
-        self.adata_dict[self.data_type].setdefault("raw_adata", adata_query_final)
 
     def read_visium(self):
         config = self.config[self.data_type]
@@ -463,9 +160,8 @@ class STNav(object):
             logger.warning(
                 f"Failed to set new index _index. This might've happened because the index of var is already the genes/feature names, so no changes need to be made."
             )
-        self.adata_dict[self.data_type].setdefault("raw_adata", adata)
 
-        logger.info(f"Saving adata to adata_dict as 'raw_adata'.")
+        self.save_as("raw_adata", adata)
 
         return adata
 
@@ -589,8 +285,8 @@ class STNav(object):
             print(
                 f"{sum(genes_to_remove)} genes removed. Original size was {adata_original.n_obs} cells and {adata_original.n_vars} genes. New size is {adata.n_obs} cells and {adata.n_vars} genes"
             )
-        logger.info(f"Saving adata to adata_dict as 'QCed_adata'.")
-        self.adata_dict[self.data_type].setdefault("QCed_adata", adata.copy())
+
+        self.save_as("QCed_adata", adata)
 
         return adata
 
@@ -738,7 +434,6 @@ class STNav(object):
                 X_value, **filtered_params
             )  # before scalling the minimum of adata.X.min() would be 0, but after scaling we can now have negative numbers.Raw data wont have these negative values.
 
-        # TODO: Put this in a new class method called plotting_preprocessing
         logger.info("Adding extra info for plotting.")
 
         if config["plotting_prep"]["pca"]["usage"]:
@@ -843,9 +538,7 @@ class STNav(object):
 
         logger.info(log_adataX(adata=adata, layer="raw_counts", step="preprocessing"))
 
-        logger.info(f"Saving adata to adata_dict as 'preprocessed_adata'.")
-        # TODO: add a method to give the name through the config ("save as..") so that it gives the names automatically.Add a warning everytime a name is already in the dictionary to warn the user that the results will be overwritten.
-        self.adata_dict[self.data_type].setdefault("preprocessed_adata", adata.copy())
+        self.save_as("preprocessed_adata", adata)
 
         return adata
 
@@ -886,13 +579,8 @@ class STNav(object):
                     config=config["rank_genes_groups"], adata=adata
                 )
             )
-
-            self.adata_dict[self.data_type].setdefault(
-                "DEG_adata", adata_for_DEG.copy()
-            )
-            self.adata_dict[self.data_type].setdefault(
-                "preprocessed_DEG_adata", adata.copy()
-            )
+            self.save_as("DEG_adata", adata_for_DEG)
+            self.save_as("preprocessed_DEG_adata", adata)
 
         # Filter rank genes groups
         if config["filter_rank_genes_groups"]["usage"]:
@@ -1342,8 +1030,8 @@ class STNav(object):
 
             st_adata.obsm["deconvolution"] = st_adata.obs[columns_cell_type_names]
 
-            logger.info(f"Saving adata to adata_dict as 'deconvoluted_adata'.")
-            self.adata_dict[self.data_type].setdefault("deconvoluted_adata", st_adata)
+            self.save_as("deconvoluted_adata", st_adata)
+
             st_adata.obs.to_excel(
                 f"{self.saving_path}\\{self.data_type}\\Files\\Deconvoluted_{date}.xlsx",
                 index=False,
@@ -1381,8 +1069,7 @@ class STNav(object):
                 f"spatial_{self.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
             ] = st_adata.obs[column_names].idxmax(axis=1)
 
-            logger.info(f"Saving adata to adata_dict as 'deconvoluted_adata'.")
-            self.adata_dict[self.data_type].setdefault("deconvoluted_adata", st_adata)
+            self.save_as("deconvoluted_adata", st_adata)
 
             for cell_type in st_adata.obsm["deconvolution"].columns:
                 save_path = self.saving_path + "\\Plots\\" + cell_type + ".png"
@@ -1403,434 +1090,6 @@ class STNav(object):
                 index=False,
             )
         return st_model
-
-    def SpatiallyVariableGenes(self):
-        """
-        g - The name of the gene
-        pval - The P-value for spatial differential expression
-        qval - Significance after correcting for multiple testing
-        l - A parameter indicating the distance scale a gene changes expression over
-        """
-        import SpatialDE
-
-        config = self.config[self.data_type]["SpatiallyVariableGenes"]
-        logger.info("Obtaining spatially variable genes.")
-        for method_name, methods in config.items():
-            for config_name, config_params in methods.items():
-                if config_params["usage"]:
-                    adata = self.adata_dict[self.data_type][
-                        config_params["adata_to_use"]
-                    ].copy()
-                    current_config_params = config_params["params"]
-
-                    logger.info(
-                        f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {current_config_params} \n using the following adata {config_params['adata_to_use']}"
-                    )
-                    data_type = config_params["data_type"]
-
-                    if method_name == "SpatialDE":
-                        # https://scanpy-tutorials.readthedocs.io/en/multiomics/analysis-visualization-spatial.html
-                        if config_name == "config_1":
-                            logger.info(
-                                f"	Running method {method_name} with config {config_name}."
-                            )
-                            counts = pd.DataFrame(
-                                adata.X.todense(),
-                                columns=adata.var_names,
-                                index=adata.obs_names,
-                            )
-                            coord = pd.DataFrame(
-                                adata.obsm["spatial"],
-                                columns=[
-                                    current_config_params["x_coord_name"],
-                                    current_config_params["y_coord_name"],
-                                ],
-                                index=adata.obs_names,
-                            ).to_numpy(dtype="int")
-
-                            results = SpatialDE.run(coord, counts)
-
-                            results.index = results["g"]
-
-                            # Concat making sure they're concatenated in the correct positions with adata.var
-                            adata.var = pd.concat(
-                                [adata.var, results.loc[adata.var.index.values, :]],
-                                axis=1,
-                            )
-
-                        if config_name == "config_2":
-                            raw_counts = adata.to_df(layer="raw_counts")
-                            # Convert the raw_counts to a DataFrame
-                            counts = pd.DataFrame(
-                                data=raw_counts.T,
-                                index=adata.var.index,  # Assuming 'gene_ids' is the gene identifier
-                                columns=adata.obs_names,
-                            ).T  # Assuming 'obs_names' are the sample names
-
-                            sample_info = adata.obs[
-                                [
-                                    current_config_params["x_coord_name"],
-                                    current_config_params["y_coord_name"],
-                                    current_config_params["counts"],
-                                ]
-                            ]
-                            norm_expr = NaiveDE.stabilize(counts.T).T
-                            counts = NaiveDE.regress_out(
-                                sample_info, norm_expr.T, "np.log(total_counts)"
-                            ).T
-
-                            coord = (
-                                sample_info[
-                                    [
-                                        current_config_params["x_coord_name"],
-                                        current_config_params["y_coord_name"],
-                                    ]
-                                ]
-                                .astype("int")
-                                .values
-                            )
-                            results = SpatialDE.run(coord, counts)
-                            results.index = results["g"]
-
-                        logger.info("		Saving spatially variable genes")
-                        results.sort_values("qval", inplace=True)
-
-                        with pd.ExcelWriter(
-                            f"{self.saving_path}\\{data_type}\\Files\\{data_type}_SpatiallyVarGenes_{date}.xlsx"
-                        ) as writer:
-                            results.to_excel(
-                                writer,
-                                sheet_name="Spatially Variable Genes",
-                                index=True,
-                            )
-
-                        results.sort_values("qval", inplace=True)
-                        # Need to filter first for significant genes
-                        sign_results = results.query("qval < 0.05")
-                        logger.info(
-                            f"Sign value results:\n\n{sign_results['l'].value_counts()}"
-                        )
-                        # Automatic expression histology https://github.com/Teichlab/SpatialDE
-                        if config_params["AEH"]["usage"]:
-
-                            # Get the value counts
-                            val_counts = sign_results["l"].value_counts()
-
-                            # Calculate the average length scale - A parameter indicating the distance scale a gene changes expression over
-                            average_length = np.average(
-                                val_counts.index, weights=val_counts.values
-                            )
-
-                            logger.info(
-                                f"Running AEH with the average lenghtscale of {average_length}"
-                            )
-
-                            logger.info("Running automatic expression histology.")
-                            histology_results, patterns = (
-                                SpatialDE.aeh.spatial_patterns(
-                                    coord,
-                                    counts,
-                                    sign_results,
-                                    C=config_params["AEH"]["params"]["C"],
-                                    l=average_length,
-                                    verbosity=1,
-                                )
-                            )
-
-                            # Add the results to the adata and save it as SpatiallyVariableGenes adata
-
-                            self.adata_dict[self.data_type].setdefault(
-                                f"SpatiallyVariableGenes_adata", adata.copy()
-                            )
-
-                            logger.info("		Saving spatially variable genes with AEH.")
-
-                            with pd.ExcelWriter(
-                                f"{self.saving_path}\\{data_type}\\Files\\{data_type}_histology_results_AEH_{date}.xlsx"
-                            ) as writer:
-                                histology_results.to_excel(
-                                    writer,
-                                    sheet_name="histology_results AEH",
-                                    index=True,
-                                )
-
-                            with pd.ExcelWriter(
-                                f"{self.saving_path}\\{data_type}\\Files\\{data_type}_Patterns_AEH_{date}.xlsx"
-                            ) as writer:
-                                patterns.to_excel(
-                                    writer,
-                                    sheet_name="patterns AEH",
-                                    index=True,
-                                )
-
-                            for i in range(3):
-                                plt.subplot(1, 3, i + 1)
-                                plt.scatter(
-                                    coord["array_row"],
-                                    coord["array_col"],
-                                    c=patterns[i],
-                                )
-                                plt.axis("equal")
-                                plt.title(
-                                    "Pattern {} - {} genes".format(
-                                        i,
-                                        histology_results.query("pattern == @i").shape[
-                                            0
-                                        ],
-                                    )
-                                )
-                                plt.colorbar(ticks=[])
-
-                            # for i, g in enumerate(["Dnah7", "Ak9", "Muc4"]):
-                            #     plt.subplot(1, 3, i + 1)
-                            #     plt.scatter(
-                            #         coord["array_row"],
-                            #         coord["array_col"],
-                            #         c=norm_expr[g],
-                            #     )
-                            #     plt.title(g)
-                            #     plt.axis("equal")
-
-                            #     plt.colorbar(ticks=[])
-
-                            # In regular differential expression analysis, we usually investigate the relation between significance and effect size by so called volcano plots. We don't have the concept of fold change in our case, but we can investigate the fraction of variance explained by spatial variation.
-
-                            plt.yscale("log")
-                            plt.scatter(results["FSV"], results["qval"], c="black")
-                            plt.axhline(0.05, c="black", lw=1, ls="--")
-                            plt.gca().invert_yaxis()
-                            plt.xlabel("Fraction spatial variance")
-                            plt.ylabel("Adj. P-value")
-
-                            logger.info(
-                                "		Saving genes associated with the patterns as json file."
-                            )
-                            pattern_dict = {}
-                            for i in histology_results.sort_values(
-                                "pattern"
-                            ).pattern.unique():
-                                pattern_dict.setdefault(
-                                    f"pattern_{i}",
-                                    ", ".join(
-                                        histology_results.query("pattern == @i")
-                                        .sort_values("membership")["g"]
-                                        .tolist()
-                                    ),
-                                )
-
-                            with open(
-                                f"{self.saving_path}\\{data_type}\\Files\\{data_type}_patterns_genes_{date}.json",
-                                "w",
-                            ) as outfile:
-                                json.dump(pattern_dict, outfile)
-
-                    elif method_name == "Squidpy_MoranI":
-                        genes = adata[:, adata.var.highly_variable].var_names.values[
-                            : config_params["n_genes"]
-                        ]
-                        sq.gr.spatial_neighbors(adata)
-
-                        config_params["params"].setdefault("genes", genes)
-                        # Run spatial autocorrelation morans I
-                        sq.gr.spatial_autocorr(
-                            **return_filtered_params(config=config_params, adata=adata)
-                        )
-                        logger.info(f"{adata.uns['moranI'].head(10)}")
-
-                        # Save to excel file
-                        with pd.ExcelWriter(
-                            f"{self.saving_path}\\{data_type}\\Files\\{data_type}_Squidpy_MoranI_{date}.xlsx"
-                        ) as writer:
-                            adata.uns["moranI"].to_excel(
-                                writer,
-                                sheet_name="Squidpy_MoranI",
-                                index=True,
-                            )
-                        logger.info(
-                            f"Saving adata to adata_dict as '{config_name}_adata'."
-                        )
-                        self.adata_dict[self.data_type].setdefault(
-                            f"{method_name}_adata", adata.copy()
-                        )
-
-                        # sq.pl.spatial_scatter(adata, color=["Olfm1", "Plp1", "Itpka", "cluster"])
-
-    def ReceptorLigandAnalysis(self):
-        import squidpy as sq
-        import spatialdm.plottings as pl
-
-        config = self.config[self.data_type]["ReceptorLigandAnalysis"]
-
-        logger.info(f"Running Receptor Ligand Analysis for {self.data_type}.")
-
-        for method_name, methods in config.items():
-            for config_name, config_params in methods.items():
-                if config_params["usage"]:
-                    adata = self.adata_dict[self.data_type][
-                        config_params["adata_to_use"]
-                    ].copy()
-                    logger.info(
-                        f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
-                    )
-
-                    if method_name == "Squidpy":
-                        res = sq.gr.ligrec(
-                            **return_filtered_params(config=config_params, adata=adata)
-                        )
-
-                        with pd.ExcelWriter(
-                            f"{self.saving_path}\\{self.data_type}\\Files\\{self.data_type}_LigRec_{date}.xlsx"
-                        ) as writer:
-                            for sheet_name, file in {
-                                "LigRec Means": res["means"],
-                                "LigRec Pvalues": res["pvalues"],
-                                "LigRec Metadata": res["metadata"],
-                            }.items():
-                                file.to_excel(
-                                    writer,
-                                    sheet_name=sheet_name,
-                                    index=True,
-                                )
-
-                        logger.info(
-                            f"Receptor-Ligand Analysis with {method_name} using {config_name} configuration \nCalculated means: \n{res['means'].head()}\n\nCalculated p-values:\n{res['pvalues'].head()}\n\nInteraction metadata: \n{res['metadata'].head()}"
-                        )
-
-                        # TODO: add plots here for each group and save plot individually similar to how I+m doing on the spatial proportions
-
-                        logger.info(
-                            f"Saving adata to adata_dict as '{config_name}_adata'."
-                        )
-                        self.adata_dict[self.data_type].setdefault(
-                            f"{config_name}_adata", adata.copy()
-                        )
-                        # TODO: check why it isnt saving and not displaying on the plots adata dict
-                        logger.info(
-                            f"Saving res to adata_dict as '{config_name}_dictionary'."
-                        )
-                        self.adata_dict[self.data_type].setdefault(
-                            f"{config_name}_dictionary", res
-                        )
-                    elif method_name == "SpatialDM":
-
-                        adata = SpatialDM_wrapper(
-                            **return_filtered_params(config=config_params, adata=adata)
-                        )
-                        with pd.ExcelWriter(
-                            f"{self.saving_path}\\{self.data_type}\\Files\\{self.data_type}_SpatialDM_LigRec_{date}.xlsx"
-                        ) as writer:
-                            for sheet_name in [
-                                "global_res",
-                                "geneInter",
-                                "selected_spots",
-                            ]:
-                                if not adata.uns[sheet_name].empty:
-                                    adata.uns[sheet_name].to_excel(
-                                        writer,
-                                        sheet_name=sheet_name,
-                                    )
-
-                        logger.info(
-                            f"Saving adata to adata_dict as '{config_name}_adata'."
-                        )
-                        self.adata_dict[self.data_type].setdefault(
-                            f"{config_name}_adata", adata.copy()
-                        )
-                        # TODO: re-do plots. Add dictionary on the plots for this as well
-                        # Filter out sparse interactions with fewer than 3 identified interacting spots. Cluster into 6 patterns.
-
-                        # # visualize global and local pairs
-                        #
-
-                        # pl.global_plot(adata, figsize=(6, 5), cmap="RdGy_r", vmin=-1.5, vmax=2)
-                        # pl.plot_pairs(adata, ["SPP1_CD44"], marker="s")
-
-                        bin_spots = adata.uns["selected_spots"].astype(int)[
-                            adata.uns["local_stat"]["n_spots"] > 2
-                        ]
-                        logger.info(
-                            f"{bin_spots.shape[0]} pairs used for spatial clustering"
-                        )
-
-                        if bin_spots.shape[0] != 0:
-                            results = SpatialDE.run(
-                                adata.obsm["spatial"], bin_spots.transpose()
-                            )
-
-                            histology_results, patterns = (
-                                SpatialDE.aeh.spatial_patterns(
-                                    adata.obsm["spatial"],
-                                    bin_spots.transpose(),
-                                    results,
-                                    C=3,
-                                    l=3,
-                                    verbosity=1,
-                                )
-                            )
-
-                            plt.figure(figsize=(9, 8))
-                            for i in range(3):
-                                plt.subplot(2, 2, i + 2)
-                                plt.scatter(
-                                    adata.obsm["spatial"][:, 0],
-                                    adata.obsm["spatial"][:, 1],
-                                    marker="s",
-                                    c=patterns[i],
-                                    s=35,
-                                )
-                                plt.axis("equal")
-                                pl.plt_util(
-                                    "Pattern {} - {} genes".format(
-                                        i,
-                                        histology_results.query("pattern == @i").shape[
-                                            0
-                                        ],
-                                    )
-                                )
-                            plt.savefig("mel_DE_clusters.pdf")
-
-                        logger.info(
-                            f"Saving adata to adata_dict as '{config_name}_adata'."
-                        )
-                        self.adata_dict[self.data_type].setdefault(
-                            f"{config_name}_adata", adata.copy()
-                        )
-
-    def SpatialNeighbors(self):
-        config = self.config[self.data_type]["SpatialNeighbors"]
-        logger.info("Calcualting Spatial Neighbors scores.")
-        for method_name, methods in config.items():
-            for config_name, config_params in methods.items():
-                if config_params["usage"]:
-                    adata = self.adata_dict[self.data_type][
-                        config_params["adata_to_use"]
-                    ].copy()
-                    logger.info(
-                        f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
-                    )
-
-                    if method_name == "Squidpy":
-                        if config_name == "NHoodEnrichment":
-                            sq.gr.spatial_neighbors(adata)
-                            sq.gr.nhood_enrichment(
-                                **return_filtered_params(
-                                    config=config_params, adata=adata
-                                )
-                            )
-                            self.adata_dict[config_params["data_type"]].setdefault(
-                                f"{config_name}_adata", adata.copy()
-                            )
-                        elif config_name == "Co_Ocurrence":
-                            # TODO: try to save the file with the matrix of co-occurrence probabilities within each spot. Apply this mask over the predictions from deconvolution to adjust based on co-ocurrence (clusters that have high value of co-occurrence will probably have similar cell proportions within each spot)
-                            sq.gr.co_occurrence(
-                                **return_filtered_params(
-                                    config=config_params, adata=adata
-                                )
-                            )
-
-                            self.adata_dict[config_params["data_type"]].setdefault(
-                                f"{config_name}_adata", adata.copy()
-                            )
 
     def save_processed_adata(self, fix_write: bool = None):
         logger.info(
