@@ -5,6 +5,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 import inspect
 import os
+
 # Unnormalize data
 from datetime import datetime
 
@@ -21,6 +22,7 @@ import seaborn as sns
 import spatialdm as sdm
 import squidpy as sq
 from gseapy.plot import gseaplot
+
 # Training a model to predict proportions on spatial data using scRNA seq as reference
 from loguru import logger
 from scipy import sparse
@@ -28,8 +30,6 @@ from scipy.sparse import csr_matrix
 from scvi.external import RNAStereoscope, SpatialStereoscope
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import adjusted_rand_score
-
-from src.utils.helpers import return_filtered_params, unnormalize
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
 sc.settings.verbosity = 3
@@ -145,7 +145,7 @@ def SpatialDM_wrapper(
         adata.obsm["deconvolution"].columns
     ]  # Subset to just have the deconvoluted columns
 
-    adata.raw = ad.AnnData(adata.layers["raw_counts"])  # Add raw as actual raw
+    adata.raw = an.AnnData(adata.layers["raw_counts"])  # Add raw as actual raw
 
     adata.var.index = adata.var.index.str.upper()  # Convert genes to all upper case
 
@@ -235,7 +235,7 @@ def log_adataX(adata, layer: str = None, step: str = None, raw: bool = None):
 
 
 @logger_wraps()
-def sum_by(adata: ad.AnnData, col: str) -> ad.AnnData:
+def sum_by(adata: an.AnnData, col: str) -> an.AnnData:
     adata.strings_to_categoricals()
     assert pd.api.types.is_categorical_dtype(adata.obs[col])
 
@@ -245,7 +245,7 @@ def sum_by(adata: ad.AnnData, col: str) -> ad.AnnData:
         shape=(len(cat.categories), adata.n_obs),
     )
 
-    return ad.AnnData(
+    return an.AnnData(
         indicator @ adata.X, var=adata.var, obs=pd.DataFrame(index=cat.categories)
     )
 
