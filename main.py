@@ -66,8 +66,6 @@ def main(ANALYSIS_CONFIG: str, PLOTTING_CONFIG: str):
     ) = ORCHESTRATOR.run_analysis(saving_dir=directory)
 
     ORCHESTRATOR.run_plots(
-        sc_model=sc_model,
-        st_model=st_model,
         saving_dir=directory,
         adata_dict=adata_dict,
     )
