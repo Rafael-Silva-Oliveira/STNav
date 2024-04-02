@@ -3,16 +3,14 @@ import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 import json
-from datetime import datetime
-import scanpy as sc
-import pandas as pd
-import numpy as np
 import os
-import squidpy as sq
-from config.constants import ANALYSIS_CONFIG, PLOTTING_CONFIG
-from loguru import logger
-from src.orchestrator import Orchestrator
+from datetime import datetime
 
+import scanpy as sc
+from loguru import logger
+
+from config.constants import ANALYSIS_CONFIG, PLOTTING_CONFIG
+from src.orchestrator import Orchestrator
 
 sc.set_figure_params(facecolor="white", figsize=(20, 20))
 sc.settings.verbosity = 3

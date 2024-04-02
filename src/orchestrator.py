@@ -2,33 +2,30 @@
 import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
-import json
-from datetime import datetime
-import scanpy as sc
-import anndata as an
-import pandas as pd
-import numpy as np
 import os
+from datetime import datetime
+
+import anndata as an
+import numpy as np
+import scanpy as sc
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
-from loguru import logger
-import inspect
 
+from loguru import logger
 
 sc.set_figure_params(facecolor="white", figsize=(20, 20))
 sc.settings.verbosity = 3
 
-from src.STNavCore import STNavCore
 from src.modules.plots import run_plots
-from src.modules.scRNA.cell_annotation import (
-    perform_scArches_surgery,
-    perform_celltypist,
+from src.modules.single_cell import perform_celltypist, perform_scArches_surgery
+from src.modules.spatial import (
+    ReceptorLigandAnalysis,
+    SpatiallyVariableGenes,
+    SpatialNeighbors,
+    deconvolution,
 )
-from src.modules.spatial.LigRec import ReceptorLigandAnalysis
-from src.modules.spatial.SpatialNeighbors import SpatialNeighbors
-from src.modules.spatial.SpatiallyVariableGenes import SpatiallyVariableGenes
-from src.modules.spatial.SpatialDeconvolution import deconvolution
+from src.STNavCore import STNavCore
 
 username = os.path.expanduser("~")
 
@@ -120,13 +117,12 @@ class Orchestrator(object):
             STNavCorePipeline.train_or_load_st_deconvolution_model(self.sc_model)
         )
         self.apply_subset_and_log(STNavCorePipeline)
-        STNavCorePipeline.deconvolution(self.st_model, model_name)
 
         # External modules to the core pipeline
+        deconvolution(STNavCorePipeline, st_model=self.st_model, model_name=model_name)
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)
-        deconvolution(STNavCorePipeline, st_model=self.st_model, model_name=model_name)
 
         STNavCorePipeline.save_processed_adata()
 

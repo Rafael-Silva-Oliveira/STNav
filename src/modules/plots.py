@@ -2,34 +2,39 @@
 import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
-import gseapy as gp
-from gseapy.plot import gseaplot
-import scanpy as sc
-import anndata as an
-import pandas as pd
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import seaborn as sns
-import scanorama
-import os
-from loguru import logger
+
 import inspect
-from sklearn.cluster import KMeans
-from sklearn.metrics import adjusted_rand_score
-from src.utils.helpers import unnormalize, return_filtered_params
-import squidpy as sq
-import spatialdm as sdm
-
-# Training a model to predict proportions on spatial data using scRNA seq as reference
-import scvi
-
-# from scvi.data import register_tensor_from_anndata
-from scvi.external import RNAStereoscope, SpatialStereoscope
-from scipy.sparse import csr_matrix
+import os
 
 # Unnormalize data
-import sys
+from datetime import datetime
+
+import anndata as an
+import gseapy as gp
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import scanorama
+import scanpy as sc
+import scarches as sca
+import seaborn as sns
+import spatialdm as sdm
+import squidpy as sq
+from gseapy.plot import gseaplot
+
+# Training a model to predict proportions on spatial data using scRNA seq as reference
+from loguru import logger
+from scipy import sparse
+from scipy.sparse import csr_matrix
+from scvi.external import RNAStereoscope, SpatialStereoscope
+from sklearn.cluster import AgglomerativeClustering, KMeans
+from sklearn.metrics import adjusted_rand_score
+
+from src.utils.helpers import return_filtered_params, unnormalize
+from src.utils.decorators import logger_wraps
+
+date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
 sc.settings.verbosity = 3

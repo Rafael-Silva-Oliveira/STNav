@@ -2,67 +2,46 @@
 import warnings
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
-from sklearn.cluster import KMeans
-from sklearn.metrics import adjusted_rand_score
-import scanpy as sc
-import anndata as an
-import pandas as pd
-import numpy as np
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import seaborn as sns
-import scanorama
-import os
-from loguru import logger
 import re
-import gseapy as gp
-from gseapy.plot import gseaplot
 from datetime import datetime
-from sklearn.cluster import KMeans
-from sklearn.metrics import adjusted_rand_score
-from sklearn.cluster import AgglomerativeClustering
-import torch
-import NaiveDE
-import SpatialDE
-from scipy import sparse
-import scarches as sca
-import squidpy as sq
-from gseapy import GSEA
-from GraphST.utils import clustering
-from GraphST import GraphST
 from typing import Union
+
+import anndata as an
+import gseapy as gp
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import scanpy as sc
+import torch
+from GraphST import GraphST
+from loguru import logger
+from sklearn.cluster import AgglomerativeClustering
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
-# Training a model to predict proportions on Spatial data using scRNA seq as reference
-import scvi
 import inspect
-import cell2location as c2l
-from src.utils.helpers import (
-    unnormalize,
-    return_filtered_params,
-    log_adataX,
-    ensembleID_to_GeneSym_mapping,
-    run_enrichr,
-    run_prerank,
-    run_gsea,
-    SpatialDM_wrapper,
-)
-
-# from scvi.data import register_tensor_from_anndata
-from scvi.external import RNAStereoscope, SpatialStereoscope
-from scvi.model import CondSCVI, DestVI
-from scipy.sparse import csr_matrix
-from src.utils.helpers import fix_write_h5ad, GARD
 
 # Unnormalize data
-import sys
+
+
+# Training a model to predict proportions on Spatial data using scRNA seq as reference
+
+# from scvi.data import register_tensor_from_anndata
+
+from src.utils.helpers import (
+    GARD,
+    fix_write_h5ad,
+    log_adataX,
+    return_filtered_params,
+    run_enrichr,
+    run_gsea,
+    run_prerank,
+    unnormalize,
+)
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
 sc.settings.verbosity = 3
-import json
-from GraphST.utils import project_cell_to_spot
-import spatialdm as sdm
+
 import anndata as ad
 
 

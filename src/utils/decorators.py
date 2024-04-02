@@ -1,5 +1,7 @@
 import functools
 
+from loguru import logger
+
 
 def pass_STNavCore_params(func):
     def wrapper(STNavCorePipeline, *args, **kwargs):
