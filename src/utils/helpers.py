@@ -526,6 +526,7 @@ def run_gsea(
     group_bool,
     saving_path,
 ):
+    # TODO: check this implementation with phenotype https://gseapy.readthedocs.io/en/latest/singlecell_example.html
 
     if group_bool:
         df_list = []
