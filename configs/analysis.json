@@ -3,61 +3,63 @@
   "scRNA": {
     "usage": true,
     "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\Keep\\PipelineRun_2024_02_23-09_22_35_AM\\scRNA\\Files\\scRNA_raw_adata.h5ad",
-    "scArches_surgery": {
-      "usage": false,
-      "path_backbone": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external\\HCLA",
-      "path_query_data": "HLCA_query.h5ad",
-      "adata_query_batch": "Delorey_batch_1",
-      "path_reference": "HLCA_emb_and_metadata.h5ad",
-      "path_cell_types": "HLCA_celltypes_ordered.csv",
-      "ensembleID_to_GeneSym_mapping": {
+    "cell_annotation": {
+      "scArches_surgery": {
         "usage": false,
-        "gene_mapping_path": ""
-      },
-      "train": false,
-      "ref_model_dir": "HLCA_reference_model",
-      "ref_model_features": "HLCA_reference_model/var_names.csv",
-      "surgery_model_dir": "HCLA",
-      "surgery_params": {
-        "epochs": 500,
-        "early_stopping_monitor": "elbo_train",
-        "early_stopping_patience": 10,
-        "early_stopping_min_delta": 0.001,
-        "plan_kwargs": { "weight_decay": 0.0 }
-      },
-      "label_transfer": {
-        "uncertainty_threshold": 0.2
-      }
-    },
-    "celltypist_surgery": {
-      "usage": false,
-      "path_backbone": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\DAIgnostics\\dAIgnostics\\data\\external\\HCLA\\",
-      "surgery_type": {
-        "transfer_from_reference": {
+        "path_backbone": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external\\HCLA",
+        "path_query_data": "HLCA_query.h5ad",
+        "adata_query_batch": "Delorey_batch_1",
+        "path_reference": "HLCA_emb_and_metadata.h5ad",
+        "path_cell_types": "HLCA_celltypes_ordered.csv",
+        "ensembleID_to_GeneSym_mapping": {
           "usage": false,
-          "path_query_data": "HLCA_query.h5ad",
-          "adata_query_batch": "Delorey_batch_1",
-          "path_reference": "HLCA_emb_and_metadata.h5ad",
-          "path_cell_types": "HLCA_celltypes_ordered.csv",
-          "train": false,
-          "params": {
-            "epochs": 500,
-            "early_stopping_monitor": "elbo_train",
-            "early_stopping_patience": 10,
-            "early_stopping_min_delta": 0.001,
-            "plan_kwargs": { "weight_decay": 0.0 }
-          }
+          "gene_mapping_path": ""
         },
-        "single_label": { "usage": false },
-        "multi_label": { "usage": true }
+        "train": false,
+        "ref_model_dir": "HLCA_reference_model",
+        "ref_model_features": "HLCA_reference_model/var_names.csv",
+        "surgery_model_dir": "HCLA",
+        "surgery_params": {
+          "epochs": 500,
+          "early_stopping_monitor": "elbo_train",
+          "early_stopping_patience": 10,
+          "early_stopping_min_delta": 0.001,
+          "plan_kwargs": { "weight_decay": 0.0 }
+        },
+        "label_transfer": {
+          "uncertainty_threshold": 0.2
+        }
       },
-      "ensembleID_to_GeneSym_mapping": {
+      "celltypist_surgery": {
         "usage": false,
-        "gene_mapping_path": ""
-      },
-      "ref_model_dir": "HLCA_reference_model",
-      "ref_model_features": "HLCA_reference_model/var_names.csv",
-      "surgery_model_dir": "HCLA"
+        "path_backbone": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\DAIgnostics\\dAIgnostics\\data\\external\\HCLA\\",
+        "surgery_type": {
+          "transfer_from_reference": {
+            "usage": false,
+            "path_query_data": "HLCA_query.h5ad",
+            "adata_query_batch": "Delorey_batch_1",
+            "path_reference": "HLCA_emb_and_metadata.h5ad",
+            "path_cell_types": "HLCA_celltypes_ordered.csv",
+            "train": false,
+            "params": {
+              "epochs": 500,
+              "early_stopping_monitor": "elbo_train",
+              "early_stopping_patience": 10,
+              "early_stopping_min_delta": 0.001,
+              "plan_kwargs": { "weight_decay": 0.0 }
+            }
+          },
+          "single_label": { "usage": false },
+          "multi_label": { "usage": true }
+        },
+        "ensembleID_to_GeneSym_mapping": {
+          "usage": false,
+          "gene_mapping_path": ""
+        },
+        "ref_model_dir": "HLCA_reference_model",
+        "ref_model_features": "HLCA_reference_model/var_names.csv",
+        "surgery_model_dir": "HCLA"
+      }
     },
     "quality_control": {
       "calculate_qc_metrics": {
@@ -228,7 +230,7 @@
         }
       },
       "GSEA": {
-        "usage": false,
+        "usage": true,
         "stratify_by_group": false,
         "gene_sets": {
           "api_sets": {
@@ -499,7 +501,7 @@
         }
       },
       "GSEA": {
-        "usage": false,
+        "usage": true,
         "stratify_by_group": true,
         "gene_sets": {
           "api_sets": {

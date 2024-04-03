@@ -366,12 +366,21 @@ def run_enrichr(
     set_name,
     group_bool,
 ):
+    """
+    Standard GSEA and GSEA preranked give different results because the genes are ranked differently, and they (by default) use different permutation methods. How did you rank your genes for GSEA Preranked? If you used Log2(FC) then to compare results you can use log2_ratio_of_classes  in standard GSEA and the rankings should be generally similar but we recommend using the default signal to noise ratio if you have more than three samples. Signal to noise ratio includes information about both the magnitude of change and the standard deviation of the sample groups which gives an improved result over log2(FC) in our hands.
 
+    GSEA Preranked, because it doesnt have access to the sample level information has to run in gene_set permutation mode for pValue and FDR calculation. Standard GSEA runs in phenotype permutation mode by default but if you have fewer than 7 samples per group we recommend changing this to gene_set permutation mode as well because it is not possible to generate 1000 distinct permutations from smaller experiments.
+
+    If you can run GSEA in standard mode, you should, if you have enough samples to run phenotype permutation you should. If you cant run phenotype permutation, you should run standard GSEA with gene set permutation. If you dont have enough samples to run signal2noise ratio, then its best to use Preranked with your own ranking metric. Log2(FC) isnt really ideal, sign(log2(fc))*-log10(pValue) seems to work better in users hands, or if youre using DESeq2 you could try the Wald Statistic.
+
+    """
     if group_bool:
         df_list = []
         groups = list(set(ranked_genes_list.group))
         for group in groups:
-            logger.info(f"Running stratified enrichr with {set_name} by {group = }.")
+            logger.info(
+                f"Running stratified enrichr for {data_type} with {set_name} stratified by {group = }."
+            )
             # Filter the glist to have only the current group
             ranked_genes_list_per_group = ranked_genes_list[
                 ranked_genes_list["group"] == group
@@ -401,7 +410,7 @@ def run_enrichr(
                 logger.error(f"No genes matched - {e}")
     else:
         df_list = []
-        logger.info(f"Running enrichr with {set_name} with all genes.")
+        logger.info(f"Running enrichr for {data_type} with {set_name} with all genes.")
         # For each group, create a new set of enrichr parameters
         enrichr_params = {}
 
@@ -447,7 +456,9 @@ def run_prerank(
         df_list = []
         groups = list(set(ranked_genes_list.group))
         for group in groups:
-            logger.info(f"Running stratified prerank with {set_name} by {group = }.")
+            logger.info(
+                f"Running stratified prerank for {data_type} with {set_name} by {group = }."
+            )
             # Filter the glist to have only the current group
             ranked_genes_list_per_group = ranked_genes_list[
                 ranked_genes_list["group"] == group
@@ -478,7 +489,7 @@ def run_prerank(
             except Exception as e:
                 logger.error(f"No genes matched - {e}")
     else:
-        logger.info(f"Running prerank with {set_name} with all genes.")
+        logger.info(f"Running prerank for {data_type} with {set_name} with all genes.")
         df_list = []
         # Create new glist with correct input for gp.prerank
         glist_prerank = ranked_genes_list[["names", "logfoldchanges"]]
@@ -520,7 +531,9 @@ def run_gsea(
         df_list = []
         groups = list(set(ranked_genes_list.group))
         for group in groups:
-            logger.info(f"Running stratified gsea with {set_name} by {group = }.")
+            logger.info(
+                f"Running stratified gsea for {data_type} with {set_name} by {group = }."
+            )
             # Filter the glist to have only the current group
             ranked_genes_list_per_group = ranked_genes_list[
                 ranked_genes_list["group"] == group
@@ -546,7 +559,7 @@ def run_gsea(
             except Exception as e:
                 logger.error(f"No genes matched - {e}")
     else:
-        logger.info(f"Running gsea with {set_name} with all genes.")
+        logger.info(f"Running gsea for {data_type} with {set_name} with all genes.")
         df_list = []
 
         config_gsea["gsea"]["params"]["gene_sets"] = gene_set_list

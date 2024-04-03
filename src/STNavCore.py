@@ -630,7 +630,9 @@ class STNavCore(object):
                 gene_set_dict["manual_sets"] = config_gsea["gene_sets"]["manual_sets"][
                     "sets"
                 ]
-                logger.info("Adding manual gene sets.")
+                logger.info(
+                    f"Adding manual gene sets.\n {gene_set_dict['manual_sets']}"
+                )
 
             # Handle API gene sets
             if config_gsea["gene_sets"]["api_sets"]["usage"]:
@@ -642,7 +644,7 @@ class STNavCore(object):
                     if boolean
                 ]
 
-                logger.info("Adding API gene sets.")
+                logger.info(f"Adding API gene sets.\n {gene_set_dict['api_sets']}")
 
             # Iterate over gene sets
             enrichr_list = []

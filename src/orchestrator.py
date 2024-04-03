@@ -95,12 +95,12 @@ class Orchestrator(object):
         STNavCorePipeline.save_processed_adata(fix_write=True)
 
     def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
-        if data_type_dict["scArches_surgery"]["usage"]:
+        if data_type_dict["cell_annotation"]["scArches_surgery"]["usage"]:
             adata_raw = perform_scArches_surgery(STNavCorePipeline)
             STNavCorePipeline.adata_dict[STNavCorePipeline.data_type].setdefault(
                 "raw_adata", adata_raw
             )
-        elif data_type_dict["celltypist_surgery"]["usage"]:
+        elif data_type_dict["cell_annotation"]["celltypist_surgery"]["usage"]:
             adata_raw = perform_celltypist(STNavCorePipeline)
             STNavCorePipeline.adata_dict[STNavCorePipeline.data_type].setdefault(
                 "raw_adata", adata_raw
