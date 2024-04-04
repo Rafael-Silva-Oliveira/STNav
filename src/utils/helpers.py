@@ -22,6 +22,7 @@ import seaborn as sns
 import spatialdm as sdm
 import squidpy as sq
 from gseapy.plot import gseaplot
+import stlearn as st
 
 # Training a model to predict proportions on spatial data using scRNA seq as reference
 from loguru import logger
@@ -195,6 +196,13 @@ def return_filtered_params(config, adata=None):
     func_str = config["func_str"]
 
     # TODO: try to dynamically import each module so there's no need to load all the necessary model in the utils (avoid redundant imports) with importlib
+    if len_func_str == 4:
+        package_name, class_eval_str, module_str, func_str = func_str.split(".")
+        package_eval = eval(package_name)
+        class_eval = getattr(package_eval, class_eval_str)
+        module = getattr(class_eval, module_str)
+        func = getattr(module, func_str)
+
     if len_func_str == 3:
         class_eval_str, module_str, func_str = func_str.split(".")
         class_eval = eval(class_eval_str)
@@ -409,6 +417,7 @@ def run_enrichr(
             except Exception as e:
                 logger.error(f"No genes matched - {e}")
     else:
+
         df_list = []
         logger.info(f"Running enrichr for {data_type} with {set_name} with all genes.")
         # For each group, create a new set of enrichr parameters
@@ -429,9 +438,26 @@ def run_enrichr(
         df_list.append(enr_df)
 
     try:
-        gp.barplot(enr_res.res2d, title=data_type)
+        with plt.rc_context():  # Use this to set figure params like size and dpi
+            plt.figure(figsize=(20, 20))  # Set the figure size
+            plotting_func = gp.barplot(enr_res.res2d, title=data_type)
+            plt.savefig("./test.png", bbox_inches="tight")
+            plt.close()
+
     except Exception as e:
         logger.warning(f"Couldn't apply gp.barplot - {e}")
+
+    try:
+        with plt.rc_context():  # Use this to set figure params like size and dpi
+            plt.figure(figsize=(20, 20))  # Set the figure size
+            gp.dotplot(
+                enr_res.res2d.head(), figsize=(3, 5), x="UP", size=3, show_ring=True
+            )
+            plt.savefig("./test_dotplot.png", bbox_inches="tight")
+            plt.close()
+
+    except Exception as e:
+        logger.warning(f"Couldn't apply gp.dotplot - {e}")
 
     df = pd.concat(df_list)
     return df
@@ -518,6 +544,7 @@ def run_prerank(
 
 
 def run_gsea(
+    adata,
     gene_set_list,
     ranked_genes_list,
     config_gsea,
@@ -536,15 +563,13 @@ def run_gsea(
                 f"Running stratified gsea for {data_type} with {set_name} by {group = }."
             )
             # Filter the glist to have only the current group
-            ranked_genes_list_per_group = ranked_genes_list[
-                ranked_genes_list["group"] == group
-            ]
+            adata_by_group = adata[adata.obs["group"] == group]
 
             config_gsea["gsea"]["params"]["gene_sets"] = gene_set_list
             try:
                 res = gp.gsea(
                     **return_filtered_params(
-                        config=config_gsea["gsea"], adata=ranked_genes_list_per_group
+                        config=config_gsea["gsea"], adata=adata_by_group.to_df().T
                     )
                 )
                 res_df = res.res2d
@@ -563,11 +588,15 @@ def run_gsea(
         logger.info(f"Running gsea for {data_type} with {set_name} with all genes.")
         df_list = []
 
+        # TODO: add similar above but stratify the adata to the respective group that contains the cls
+        if config_gsea["gsea"]["adata_cls_col_name"] is not None:
+            config_gsea["gsea"]["params"]["cls"] = adata.obs[
+                config_gsea["gsea"]["adata_cls_col_name"]
+            ]
+
         config_gsea["gsea"]["params"]["gene_sets"] = gene_set_list
         res = gp.gsea(
-            **return_filtered_params(
-                config=config_gsea["gsea"], adata=ranked_genes_list
-            )
+            **return_filtered_params(config=config_gsea["gsea"], adata=adata.to_df().T)
         )
         res_df = res.res2d
         res_df["set_name"] = set_name

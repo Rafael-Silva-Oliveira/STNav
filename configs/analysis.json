@@ -203,9 +203,11 @@
         "params": {
           "adata": "adata",
           "groupby": "ann_level_3_transferred_label",
+          "groups": "all",
           "reference": "rest",
           "method": "wilcoxon",
           "key_added": "wilcoxon",
+          "layer": null,
           "n_genes": 5000,
           "use_raw": false
         }
@@ -230,7 +232,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": false,
         "gene_sets": {
           "api_sets": {
@@ -289,11 +291,12 @@
         "gsea": {
           "func_str": "gp.gsea",
           "usage": false,
+          "adata_cls_col_name": null,
           "params": {
             "data": "adata",
             "permutation_type": "phenotype",
             "permutation_num": 1000,
-            "method": "signal_to_noise",
+            "method": "s2n",
             "seed": 123,
             "threads": 4
           }
@@ -474,9 +477,11 @@
         "params": {
           "adata": "adata",
           "groupby": "leiden_clusters",
+          "groups": "all",
           "reference": "rest",
           "method": "wilcoxon",
           "key_added": "wilcoxon",
+          "layer": null,
           "n_genes": 12000,
           "use_raw": false
         }
@@ -501,7 +506,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": true,
         "gene_sets": {
           "api_sets": {
@@ -559,12 +564,13 @@
         },
         "gsea": {
           "func_str": "gp.gsea",
+          "adata_cls_col_name": null,
           "usage": false,
           "params": {
             "data": "adata",
             "permutation_type": "phenotype",
             "permutation_num": 1000,
-            "method": "signal_to_noise",
+            "method": "s2n",
             "seed": 123,
             "threads": 4
           }
@@ -599,7 +605,7 @@
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "epochs": 1200,
+            "epochs": 50,
             "random_seed": 50,
             "deconvolution": true
           }
@@ -727,6 +733,21 @@
             "method_sig_spots": "permutation",
             "fdr_sig_spots": false,
             "threshold_sig_spots": 0.1
+          }
+        }
+      },
+      "stLearn": {
+        "stLearn_ligrec": {
+          "usage": true,
+          "adata_to_use": "deconvoluted_adata",
+          "func_str": "st.tl.cci.run",
+          "data_type": "ST",
+          "params": {
+            "adata": "adata",
+            "min_spots": 20,
+            "distance": null,
+            "n_pairs": 10000,
+            "n_cpus": 4
           }
         }
       }

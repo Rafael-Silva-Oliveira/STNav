@@ -22,6 +22,7 @@ import seaborn as sns
 import spatialdm as sdm
 import squidpy as sq
 from gseapy.plot import gseaplot
+import stlearn as st
 
 # Training a model to predict proportions on spatial data using scRNA seq as reference
 from loguru import logger

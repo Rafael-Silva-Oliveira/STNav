@@ -18,14 +18,14 @@ sc.set_figure_params(facecolor="white", figsize=(20, 20))
 sc.settings.verbosity = 3
 
 from src.modules.plots import run_plots
-from src.modules.single_cell import perform_celltypist, perform_scArches_surgery
-from src.modules.spatial import (
+from src.modules.sc import perform_celltypist, perform_scArches_surgery
+from src.modules.st import (
     ReceptorLigandAnalysis,
     SpatiallyVariableGenes,
     SpatialNeighbors,
     deconvolution,
 )
-from src.STNavCore import STNavCore
+from src.core import STNavCore
 
 username = os.path.expanduser("~")
 
