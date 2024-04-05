@@ -44,6 +44,10 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                 adata = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
                     config_params["adata_to_use"]
                 ].copy()
+
+                adata.var_names = adata.var_names.str.upper()
+                adata.var.index = adata.var.index.str.upper()
+
                 logger.info(
                     f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
                 )
@@ -152,23 +156,55 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     STNavCorePipeline.save_as(f"{config_name}_adata", adata)
 
                 elif method_name == "stLearn":
+                    use_label = "dominant_spot_cell_type"
 
-                    lrs = st.tl.cci.load_lrs(["connectomeDB2020_lit"], species="human")
                     adata = st.convert_scanpy(adata)
-
-                    config_params["params"].setdefault("lrs", lrs)
-                    st.tl.cci.run(
-                        **return_filtered_params(config=config_params, adata=adata),
+                    adata.obs[f"{use_label}"] = (
+                        adata.obs[adata.obsm["deconvolution"].columns]
+                        .idxmax(axis=1)
+                        .astype("category")
                     )
-                    try:
-                        lr_info = adata.uns["lr_summary"]
-                    except Exception as e:
-                        logger.warning(
-                            f"Could not retrieve ligand-receptor interactions: {e}"
+                    if config_name == "stLearn_ligrec":
+                        logger.info(
+                            f"Running Receptor Ligand Analysis for {STNavCorePipeline.data_type} with connectomeDB2020_lit ligand-receptor pairs."
+                        )
+                        lrs = st.tl.cci.load_lrs(
+                            ["connectomeDB2020_lit"], species="human"
                         )
 
-                    logger.info(
-                        f"Receptor-Ligand Analysis with {method_name} using {config_name} configuration \nCalculated ligand-receptor interactions: \n{lr_info}"
-                    )
+                        config_params["params"].setdefault("lrs", lrs)
+                        st.tl.cci.run(
+                            **return_filtered_params(config=config_params, adata=adata),
+                        )
+                        try:
+                            lr_info = adata.uns["lr_summary"]
+                        except Exception as e:
+                            logger.warning(
+                                f"Could not retrieve ligand-receptor interactions: {e}"
+                            )
 
-                    STNavCorePipeline.save_as(f"{config_name}_adata", adata)
+                        logger.info(
+                            f"Receptor-Ligand Analysis with {method_name} using {config_name} configuration \nCalculated ligand-receptor interactions: \n\n{lr_info}.\n\nThe following parameters were used:\n\n{config_params} "
+                        )
+
+                        STNavCorePipeline.save_as(f"{config_name}_adata", adata)
+
+                    elif config_name == "stLearn_cci":
+
+                        assert config["stLearn"]["stLearn_ligrec"][
+                            "usage"
+                        ], "stLearn_ligrec must be set to true before running stLearn_cci"
+
+                        logger.infor(
+                            f"Predicting significant CCIs.\n\nWith the establishment of significant areas of LR interaction from stLearn_ligrec, we can now determine the significantly interacting cell types using the label '{use_label}'."
+                        )
+                        config_params["params"].setdefault("use_label", use_label)
+                        st.tl.cci.run_cci(
+                            **return_filtered_params(config=config_params, adata=adata)
+                        )
+
+                        logger.info(
+                            f"CCI analysis with {method_name} using {config_name} configuration.\n\nThe following parameters were used:\n\n{config_params}"
+                        )
+
+                        STNavCorePipeline.save_as(f"{config_name}_adata", adata)

@@ -78,10 +78,14 @@ class STNavCore(object):
                 f"Warning: {name} is already in the dictionary. The results will be overwritten."
             )
         if copy:
-            logger.info(f"Saving adata to adata_dict as '{name}'.")
+            logger.info(
+                f"Saving a copy of adata to adata_dict as '{name}' for {self.data_type} data type."
+            )
             self.adata_dict[self.data_type][name] = adata.copy()
         else:
-            logger.info(f"Saving res to adata_dict as '{name}'.")
+            logger.info(
+                f"Saving data to adata_dict as '{name}' for {self.data_type} data type."
+            )
             self.adata_dict[self.data_type][name] = adata
 
     def read_rna(self):

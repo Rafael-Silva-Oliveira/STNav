@@ -769,6 +769,112 @@
           "show": false
         }
       }
+    },
+    "st_lr_plot": {
+      "st_lr_plot.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_plot",
+        "adata_to_use": "stLearn_ligrec_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "n_top": 50,
+          "inner_size_prop": 0.08,
+          "middle_size_prop": 0.3,
+          "outer_size_prop": 0.5,
+          "outer_mode": "binary",
+          "pt_scale": 150,
+          "use_label": "dominant_spot_cell_type",
+          "show_image": false,
+          "sig_spots": true,
+          "show": false
+        }
+      },
+      "st_lr_cci_plot.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_plot",
+        "adata_to_use": "stLearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "n_top": null,
+          "inner_size_prop": null,
+          "middle_size_prop": null,
+          "outer_size_prop": 1,
+          "outer_mode": null,
+          "pt_scale": 15,
+          "use_label": "dominant_spot_cell_type",
+          "show_arrows": true,
+          "show_image": false,
+          "sig_spots": false,
+          "sig_cci": true,
+          "arrow_head_width": 4,
+          "arrow_width": 2,
+          "arrow_cmap": "YlOrRd",
+          "arrow_vmax": 1,
+          "cell_alpha": 0.8,
+          "show": false
+        }
+      }
+    },
+    "st_cci_diagnostic": {
+      "st_cci_diagnostics.png": {
+        "usage": true,
+        "func_str": "st.pl.cci_check",
+        "adata_to_use": "stLearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "use_label": "dominant_spot_cell_type",
+          "show": false
+        }
+      }
+    },
+    "st_ccinet_plot": {
+      "st_cci_network.png": {
+        "usage": true,
+        "func_str": "st.pl.ccinet_plot",
+        "adata_to_use": "stLearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "min_counts": 2,
+          "use_label": "dominant_spot_cell_type",
+          "show": false
+        }
+      }
+    },
+    "st_LR_CCI_map": {
+      "LR_CCI_map.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_cci_map",
+        "adata_to_use": "stLearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lrs": null,
+          "min_total": 100,
+          "use_label": "dominant_spot_cell_type",
+          "show": false
+        }
+      }
+    },
+    "st_CCI_map": {
+      "CCI_map.png": {
+        "usage": true,
+        "func_str": "st.pl.cci_map",
+        "adata_to_use": "stLearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "use_label": "dominant_spot_cell_type",
+          "show": false
+        }
+      }
     }
   }
 }
