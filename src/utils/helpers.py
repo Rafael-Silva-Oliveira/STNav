@@ -188,6 +188,69 @@ def SpatialDM_wrapper(
     return adata
 
 
+def stLearn_wrapper(
+    adata: an.AnnData,
+    min_spots: int,
+    distance,
+    n_pairs: int,
+    spot_mixtures: bool,
+    sig_spots: bool,
+    cell_prop_cutoff: float,
+    p_cutoff: float,
+    n_perms: int,
+    n_cpus: int,
+    verbose: bool,
+):
+    import stlearn as st
+
+    use_label = "dominant_spot_cell_type"
+
+    adata = st.convert_scanpy(adata)
+    adata.obs[f"{use_label}"] = (
+        adata.obs[adata.obsm["deconvolution"].columns].idxmax(axis=1).astype("category")
+    )
+    logger.info(
+        f"Running Receptor Ligand Analysis with connectomeDB2020_lit ligand-receptor pairs."
+    )
+    lrs = st.tl.cci.load_lrs(["connectomeDB2020_lit"], species="human")
+
+    st.tl.cci.run(
+        adata=adata,
+        lrs=lrs,
+        min_spots=min_spots,  # Filter out any LR pairs with no scores for less than min_spots
+        distance=distance,  # None defaults to spot+immediate neighbours; distance=0 for within-spot mode
+        n_pairs=n_pairs,  # Number of random pairs to generate; low as example, recommend ~10,000
+        n_cpus=n_cpus,  # Number of CPUs for parallel. If None, detects & use all available.
+        verbose=verbose,
+    )
+
+    # st.tl.cci.adj_pvals(adata, correct_axis='spot',
+    #                 pval_adj_cutoff=0.05, adj_method='fdr_bh')
+    try:
+        lr_info = adata.uns["lr_summary"]
+        logger.info(f"LR summary: {lr_info}")
+    except Exception as e:
+        logger.warning(f"Could not retrieve ligand-receptor interactions: {e}")
+
+    logger.info(
+        f"Predicting significant CCIs.\n\nWith the establishment of significant areas of LR interaction from stLearn_ligrec, we can now determine the significantly interacting cell types using the label '{use_label}'."
+    )
+
+    st.tl.cci.run_cci(
+        adata=adata,
+        use_label=use_label,
+        min_spots=min_spots,  # Minimum number of spots for LR to be tested.
+        spot_mixtures=spot_mixtures,  # If True will use the label transfer scores,
+        # so spots can have multiple cell types if score>cell_prop_cutoff
+        sig_spots=sig_spots,  # Only consider neighbourhoods of spots which had significant LR scores.
+        cell_prop_cutoff=cell_prop_cutoff,  # Spot considered to have cell type if score>0.2
+        n_perms=n_perms,  # Permutations of cell information to get background, recommend ~1000
+        verbose=verbose,
+    )
+
+    return adata
+
+
 def return_filtered_params(config, adata=None):
     # TODO: change it so that we don't need to establish the adata parameter. Automatically add it using setdefault in the if statement down below.
 

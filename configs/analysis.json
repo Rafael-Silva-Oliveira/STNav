@@ -737,33 +737,22 @@
         }
       },
       "stLearn": {
-        "stLearn_ligrec": {
-          "usage": true,
-          "adata_to_use": "deconvoluted_adata",
-          "func_str": "st.tl.cci.run",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "min_spots": 2,
-            "distance": null,
-            "n_pairs": 10000,
-            "n_cpus": 4
-          }
-        },
         "stLearn_cci": {
           "usage": true,
           "adata_to_use": "deconvoluted_adata",
-          "func_str": "st.tl.cci.run",
+          "func_str": "stLearn_wrapper",
           "data_type": "ST",
           "params": {
             "adata": "adata",
+            "min_spots": 20,
+            "distance": null,
+            "n_pairs": 10000,
             "spot_mixtures": false,
-            "min_spots": 3,
             "sig_spots": true,
             "cell_prop_cutoff": 0.2,
             "p_cutoff": 0.05,
             "n_perms": 1000,
-            "n_cpus": 4,
+            "n_cpus": null,
             "verbose": true
           }
         }

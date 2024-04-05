@@ -13,7 +13,7 @@ import torch
 from loguru import logger
 from GraphST.utils import project_cell_to_spot
 from src.utils.decorators import pass_STNavCore_params
-from src.utils.helpers import return_filtered_params, SpatialDM_wrapper
+from src.utils.helpers import return_filtered_params, SpatialDM_wrapper, stLearn_wrapper
 import stlearn as st
 
 # Set scanpy parameters
@@ -49,7 +49,7 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                 adata.var.index = adata.var.index.str.upper()
 
                 logger.info(
-                    f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
+                    f"Running {method_name} method with {config_name} configuration \n Configuration parameters:\n\n{config_params} \n ...using the following adata: '{config_params['adata_to_use']}'"
                 )
 
                 if method_name == "Squidpy":
@@ -101,8 +101,6 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                                     writer,
                                     sheet_name=sheet_name,
                                 )
-
-                    STNavCorePipeline.save_as(f"{config_name}_adata", adata)
 
                     # TODO: re-do plots. Add dictionary on the plots for this as well
                     # Filter out sparse interactions with fewer than 3 identified interacting spots. Cluster into 6 patterns.
@@ -156,55 +154,11 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     STNavCorePipeline.save_as(f"{config_name}_adata", adata)
 
                 elif method_name == "stLearn":
-                    use_label = "dominant_spot_cell_type"
 
-                    adata = st.convert_scanpy(adata)
-                    adata.obs[f"{use_label}"] = (
-                        adata.obs[adata.obsm["deconvolution"].columns]
-                        .idxmax(axis=1)
-                        .astype("category")
+                    adata_cci = stLearn_wrapper(
+                        **return_filtered_params(config=config_params, adata=adata)
                     )
-                    if config_name == "stLearn_ligrec":
-                        logger.info(
-                            f"Running Receptor Ligand Analysis for {STNavCorePipeline.data_type} with connectomeDB2020_lit ligand-receptor pairs."
-                        )
-                        lrs = st.tl.cci.load_lrs(
-                            ["connectomeDB2020_lit"], species="human"
-                        )
 
-                        config_params["params"].setdefault("lrs", lrs)
-                        st.tl.cci.run(
-                            **return_filtered_params(config=config_params, adata=adata),
-                        )
-                        try:
-                            lr_info = adata.uns["lr_summary"]
-                        except Exception as e:
-                            logger.warning(
-                                f"Could not retrieve ligand-receptor interactions: {e}"
-                            )
-
-                        logger.info(
-                            f"Receptor-Ligand Analysis with {method_name} using {config_name} configuration \nCalculated ligand-receptor interactions: \n\n{lr_info}.\n\nThe following parameters were used:\n\n{config_params} "
-                        )
-
-                        STNavCorePipeline.save_as(f"{config_name}_adata", adata)
-
-                    elif config_name == "stLearn_cci":
-
-                        assert config["stLearn"]["stLearn_ligrec"][
-                            "usage"
-                        ], "stLearn_ligrec must be set to true before running stLearn_cci"
-
-                        logger.infor(
-                            f"Predicting significant CCIs.\n\nWith the establishment of significant areas of LR interaction from stLearn_ligrec, we can now determine the significantly interacting cell types using the label '{use_label}'."
-                        )
-                        config_params["params"].setdefault("use_label", use_label)
-                        st.tl.cci.run_cci(
-                            **return_filtered_params(config=config_params, adata=adata)
-                        )
-
-                        logger.info(
-                            f"CCI analysis with {method_name} using {config_name} configuration.\n\nThe following parameters were used:\n\n{config_params}"
-                        )
-
-                        STNavCorePipeline.save_as(f"{config_name}_adata", adata)
+                    STNavCorePipeline.save_as(
+                        f"{config_name}_adata", adata_cci, copy=True
+                    )
