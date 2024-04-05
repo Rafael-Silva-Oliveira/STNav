@@ -807,7 +807,7 @@
           "pt_scale": 15,
           "use_label": "dominant_spot_cell_type",
           "show_arrows": true,
-          "show_image": false,
+          "show_image": true,
           "sig_spots": false,
           "sig_cci": true,
           "arrow_head_width": 4,
