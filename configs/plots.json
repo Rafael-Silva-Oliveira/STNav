@@ -732,11 +732,11 @@
         }
       }
     },
-    "st_ligrec": {
+    "st_ligrec_summary": {
       "st_ligand_receptor.png": {
         "usage": true,
         "func_str": "st.pl.lr_summary",
-        "adata_to_use": "stLearn_ligrec_adata",
+        "adata_to_use": "stLearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -749,7 +749,7 @@
       "st_lr_diagnostics.png": {
         "usage": true,
         "func_str": "st.pl.lr_diagnostics",
-        "adata_to_use": "stLearn_ligrec_adata",
+        "adata_to_use": "stLearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -761,7 +761,7 @@
       "st_lr_n_spots.png": {
         "usage": true,
         "func_str": "st.pl.lr_n_spots",
-        "adata_to_use": "stLearn_ligrec_adata",
+        "adata_to_use": "stLearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -774,7 +774,7 @@
       "st_lr_plot.png": {
         "usage": true,
         "func_str": "st.pl.lr_plot",
-        "adata_to_use": "stLearn_ligrec_adata",
+        "adata_to_use": "stLearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -786,7 +786,7 @@
           "outer_mode": "binary",
           "pt_scale": 150,
           "use_label": "dominant_spot_cell_type",
-          "show_image": false,
+          "show_image": true,
           "sig_spots": true,
           "show": false
         }
