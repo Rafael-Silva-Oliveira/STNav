@@ -331,10 +331,10 @@
   },
   "ST": {
     "usage": true,
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external",
-    "count_file": "CytAssist_FFPE_Human_Lung_Squamous_Cell_Carcinoma_filtered_feature_bc_matrix.h5",
+    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
+    "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external\\spatial",
+    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
     "quality_control": {
       "calculate_qc_metrics": {
         "func_str": "sc.pp.calculate_qc_metrics",
@@ -459,7 +459,7 @@
           "params": { "adata": "adata", "key_added": "louvain_clusters" }
         },
         "hclust": {
-          "usage": true,
+          "usage": false,
           "func_str": "AgglomerativeClustering",
           "params": {
             "n_clusters": 7,

@@ -19,6 +19,7 @@ from sklearn.cluster import AgglomerativeClustering
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
+sc.settings.n_jobs >= -1
 import inspect
 
 # Unnormalize data
