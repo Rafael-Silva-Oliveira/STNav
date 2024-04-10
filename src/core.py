@@ -16,6 +16,9 @@ import torch
 from GraphST import GraphST
 from loguru import logger
 from sklearn.cluster import AgglomerativeClustering
+import scvi
+from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
+from scvi.model import CondSCVI, DestVI
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
@@ -38,6 +41,7 @@ from src.utils.helpers import (
     run_gsea,
     run_prerank,
     unnormalize,
+    transform_adata,
 )
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -48,6 +52,7 @@ import anndata as ad
 
 class STNavCore(object):
     adata_dict_suffix = "_adata"
+    sc_model = None
 
     def __init__(
         self, config: dict, saving_path: str, data_type: str, adata_dict: dict = None
@@ -835,7 +840,7 @@ class STNavCore(object):
 
         if train:
             logger.info(
-                f"Training the {model_name} model for deconvolution with '{config['model']['adata_to_use']}' adata file using the layer {config['model']['layer']} and the following parameters {config['model']['params']}."
+                f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
             )
             sc_model = model(adata)
             logger.info(sc_model.view_anndata_setup())
@@ -884,14 +889,14 @@ class STNavCore(object):
             )
         adata = self.adata_dict[self.data_type][
             config["model"]["model_type"][model_name]["adata_to_use"]
-        ].copy()
+        ]
 
         if train:
             if model_name == "GraphST":
                 device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
                 adata_sc = self.adata_dict["scRNA"][
                     config["model"]["model_type"][model_name]["adata_to_use"]
-                ].copy()
+                ]
 
                 GraphST.get_feature(adata)
 
@@ -937,7 +942,7 @@ class STNavCore(object):
                 )
 
                 logger.info(
-                    f"Training the {model_name} model for deconvolution with '{config['model']['adata_to_use']}' adata file adata file using the layer {config['model']['layer']} and the following parameters {config['model']['params']}."
+                    f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
                 )
                 st_model = model.from_rna_model(adata, sc_model)
                 st_model.view_anndata_setup()

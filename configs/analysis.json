@@ -317,7 +317,7 @@
         },
         "RNAStereoscope": {
           "train": false,
-          "usage": false,
+          "usage": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
@@ -326,15 +326,15 @@
           }
         }
       },
-      "pre_trained_model_path": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/DAIgnostics/scmodel"
+      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\scmodel"
     }
   },
   "ST": {
     "usage": true,
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
+    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
+    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um\\spatial",
     "quality_control": {
       "calculate_qc_metrics": {
         "func_str": "sc.pp.calculate_qc_metrics",
@@ -590,18 +590,18 @@
           }
         },
         "SpatialStereoscope": {
-          "train": false,
-          "usage": false,
+          "train": true,
+          "usage": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 500,
+            "max_epochs": 5,
             "early_stopping": true
           }
         },
         "GraphST": {
-          "usage": true,
-          "train": true,
+          "usage": false,
+          "train": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {

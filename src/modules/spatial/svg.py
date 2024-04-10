@@ -46,7 +46,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
             if config_params["usage"]:
                 adata = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
                     config_params["adata_to_use"]
-                ].copy()
+                ]
                 current_config_params = config_params["params"]
 
                 logger.info(

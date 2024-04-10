@@ -80,9 +80,7 @@ class Orchestrator(object):
 
     def run_analysis_steps(self, data_type, data_type_dict, STNavCorePipeline):
         if data_type == self.SCRNA:
-            self.sc_model = self.run_scrna_analysis_steps(
-                data_type_dict, STNavCorePipeline
-            )
+            self.run_scrna_analysis_steps(data_type_dict, STNavCorePipeline)
         if data_type == self.ST:
             self.run_st_analysis_steps(STNavCorePipeline)
 

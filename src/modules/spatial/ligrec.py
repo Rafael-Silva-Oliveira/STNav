@@ -43,7 +43,7 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
             if config_params["usage"]:
                 adata = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
                     config_params["adata_to_use"]
-                ].copy()
+                ]
 
                 adata.var_names = adata.var_names.str.upper()
                 adata.var.index = adata.var.index.str.upper()

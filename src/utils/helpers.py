@@ -42,6 +42,26 @@ sc.settings.verbosity = 3
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
 
+def transform_adata(
+    adata: an.AnnData, layer_type, column: str, astype, chunk_size: int
+):
+    assert isinstance(adata, an.AnnData), "adata must be an instance of anndata.AnnData"
+    assert column in adata.obsm, f"{column} not found in adata[{layer_type}]"
+    assert astype in [
+        int,
+        str,
+        float,
+        np.int64,
+        np.float64,
+    ], "astype must be int, str, float, np.int64, or np.float64"
+
+    for start in range(0, adata.obsm[column].shape[0], chunk_size):
+        end = start + chunk_size
+        adata.obsm[column][start:end] = adata.obsm[column][start:end].astype(astype)
+
+    return adata
+
+
 @logger_wraps()
 def unnormalize(adata: an.AnnData, count_col: str):
     logger.info("Performing unnormalization of adata.X count data.")

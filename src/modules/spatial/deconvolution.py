@@ -14,6 +14,9 @@ from loguru import logger
 from GraphST.utils import project_cell_to_spot
 from src.utils.decorators import pass_STNavCore_params
 from src.utils.helpers import return_filtered_params, SpatialDM_wrapper
+import scvi
+from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
+from scvi.model import CondSCVI, DestVI
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
