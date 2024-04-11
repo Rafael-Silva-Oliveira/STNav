@@ -11,12 +11,12 @@ import scanpy as sc
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
-
 from loguru import logger
 
 sc.set_figure_params(facecolor="white", figsize=(20, 20))
 sc.settings.verbosity = 3
 
+from STNav import STNavCore
 from STNav.modules.pl import run_plots
 from STNav.modules.sc import perform_celltypist, perform_scArches_surgery
 from STNav.modules.st import (
@@ -25,12 +25,12 @@ from STNav.modules.st import (
     SpatialNeighbors,
     deconvolution,
 )
-from STNav.core import STNavCore
 
 username = os.path.expanduser("~")
 
 
 class Orchestrator(object):
+
     STNavCore_cls = STNavCore
     SCRNA = "scRNA"
     ST = "ST"
