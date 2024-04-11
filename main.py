@@ -10,7 +10,7 @@ import scanpy as sc
 from loguru import logger
 
 from configs.constants import ANALYSIS_CONFIG, PLOTTING_CONFIG
-from src.orchestrator import Orchestrator
+from STNav.orchestrator import Orchestrator
 
 sc.set_figure_params(facecolor="white", figsize=(20, 20))
 sc.settings.verbosity = 3

@@ -326,7 +326,7 @@
           }
         }
       },
-      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\scmodel"
+      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\src\\models\\scmodel"
     }
   },
   "ST": {
@@ -590,7 +590,7 @@
           }
         },
         "SpatialStereoscope": {
-          "train": true,
+          "train": false,
           "usage": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
@@ -611,7 +611,7 @@
           }
         }
       },
-      "pre_trained_model_path": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/DAIgnostics/stmodel"
+      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\src\\models\\stmodel"
     },
     "SpatialNeighbors": {
       "Squidpy": {
@@ -692,7 +692,7 @@
     "ReceptorLigandAnalysis": {
       "Squidpy": {
         "ligrec": {
-          "usage": true,
+          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "func_str": "sq.gr.ligrec",
           "data_type": "ST",
