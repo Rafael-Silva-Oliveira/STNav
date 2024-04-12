@@ -17,6 +17,7 @@ from STNav.utils.helpers import (
     return_filtered_params,
     SpatialDM_wrapper,
     save_processed_adata,
+    return_from_checkpoint,
 )
 import scvi
 from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope

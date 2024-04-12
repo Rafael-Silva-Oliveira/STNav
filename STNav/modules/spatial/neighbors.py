@@ -17,6 +17,7 @@ from STNav.utils.helpers import (
     return_filtered_params,
     SpatialDM_wrapper,
     save_processed_adata,
+    return_from_checkpoint,
 )
 
 
@@ -35,16 +36,29 @@ import squidpy as sq
 
 @pass_STNavCore_params
 def SpatialNeighbors(STNavCorePipeline):
-    config = STNavCorePipeline.config[STNavCorePipeline.data_type]["SpatialNeighbors"]
+    step = "SpatialNeighbors"
+    config = STNavCorePipeline.config[STNavCorePipeline.data_type][step]
     logger.info("Calcualting Spatial Neighbors scores.")
     for method_name, methods in config.items():
         for config_name, config_params in methods.items():
             if config_params["usage"]:
-                adata = sc.read_h5ad(
-                    STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                        config_params["adata_to_use"]
-                    ]
-                )
+                adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                    config_params["adata_to_use"]
+                ]
+                adata = sc.read_h5ad(adata_path)
+
+                if return_from_checkpoint(
+                    STNavCorePipeline,
+                    path_to_check=adata_path,
+                    checkpoint_step=step,
+                    checkpoint_boolean=STNavCorePipeline.config[
+                        STNavCorePipeline.data_type
+                    ][step]["checkpoint"]["usage"],
+                ):
+                    logger.info(
+                        f"Returning adata from checkpoint '{STNavCorePipeline.config[STNavCorePipeline.data_type][step]['checkpoint']['pipeline_run']}' with the following adata:\n\n {adata}."
+                    )
+                    return adata
                 logger.info(
                     f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
                 )

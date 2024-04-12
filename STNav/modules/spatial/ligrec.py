@@ -18,6 +18,7 @@ from STNav.utils.helpers import (
     SpatialDM_wrapper,
     stLearn_wrapper,
     save_processed_adata,
+    return_from_checkpoint,
 )
 import stlearn as st
 
@@ -36,21 +37,31 @@ import squidpy as sq
 
 @pass_STNavCore_params
 def ReceptorLigandAnalysis(STNavCorePipeline):
-
-    config = STNavCorePipeline.config[STNavCorePipeline.data_type][
-        "ReceptorLigandAnalysis"
-    ]
+    step = "ReceptorLigandAnalysis"
+    config = STNavCorePipeline.config[STNavCorePipeline.data_type][step]
 
     logger.info(f"Running Receptor Ligand Analysis for {STNavCorePipeline.data_type}.")
 
     for method_name, methods in config.items():
         for config_name, config_params in methods.items():
             if config_params["usage"]:
-                adata = sc.read_h5ad(
-                    STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                        config_params["adata_to_use"]
-                    ]
-                )
+                adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                    config_params["adata_to_use"]
+                ]
+                adata = sc.read_h5ad(adata_path)
+
+                if return_from_checkpoint(
+                    STNavCorePipeline,
+                    path_to_check=adata_path,
+                    checkpoint_step=step,
+                    checkpoint_boolean=STNavCorePipeline.config[
+                        STNavCorePipeline.data_type
+                    ][step]["checkpoint"]["usage"],
+                ):
+                    logger.info(
+                        f"Returning adata from checkpoint '{STNavCorePipeline.config[STNavCorePipeline.data_type][step]['checkpoint']['pipeline_run']}' with the following adata:\n\n {adata}."
+                    )
+                    return adata
 
                 adata.var_names = adata.var_names.str.upper()
                 adata.var.index = adata.var.index.str.upper()
