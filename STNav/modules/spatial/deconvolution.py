@@ -279,4 +279,6 @@ def train_or_load_st_deconvolution_model(STNavCorePipeline):
                 config["model"]["pre_trained_model_path"],
                 adata,
             )
+    STNavCorePipeline.st_model = st_model
+
     return st_model, model_name

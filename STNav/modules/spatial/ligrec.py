@@ -87,7 +87,7 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     save_processed_adata(
                         STNavCorePipeline=STNavCorePipeline,
                         adata=adata,
-                        name=f"{config_name}_adata",
+                        name=f"{config_params['save_as']}",
                     )
                     save_processed_adata(
                         STNavCorePipeline=STNavCorePipeline,
@@ -166,7 +166,7 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     save_processed_adata(
                         STNavCorePipeline=STNavCorePipeline,
                         adata=adata,
-                        name=f"{config_name}_adata",
+                        name=f"{config_params['save_as']}",
                     )
                 elif method_name == "stLearn":
 
@@ -177,5 +177,5 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     save_processed_adata(
                         STNavCorePipeline=STNavCorePipeline,
                         adata=adata_cci,
-                        name=f"{config_name}_adata",
+                        name=f"{config_params['save_as']}",
                     )

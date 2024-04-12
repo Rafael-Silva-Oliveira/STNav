@@ -172,8 +172,8 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                         save_processed_adata(
                             STNavCorePipeline,
-                            "SpatiallyVariableGenes_adata",
-                            adata,
+                            name=f"{config_params['save_as']}",
+                            adata=adata,
                         )
 
                         logger.info("		Saving spatially variable genes with AEH.")
@@ -280,6 +280,8 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                     logger.info(f"Saving adata to adata_dict as '{config_name}_adata'.")
 
                     save_processed_adata(
-                        STNavCorePipeline, f"{method_name}_adata", adata
+                        STNavCorePipeline,
+                        adata=adata,
+                        name=f"{config_params['save_as']}",
                     )
                     # sq.pl.spatial_scatter(adata, color=["Olfm1", "Plp1", "Itpka", "cluster"])

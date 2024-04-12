@@ -67,4 +67,5 @@ def train_or_load_sc_deconvolution_model(STNavCorePipeline):
             adata,
         )
 
-    return sc_model
+    # Save to class instance the trained sc_model
+    STNavCorePipeline.sc_model = sc_model

@@ -62,6 +62,12 @@
       }
     },
     "quality_control": {
+      "checkpoint": {
+        "usage": true,
+        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+      },
+      "adata_to_use": "raw_adata",
+      "save_as": "QCed_adata",
       "calculate_qc_metrics": {
         "func_str": "sc.pp.calculate_qc_metrics",
         "usage": true,
@@ -89,7 +95,12 @@
       "print_mt": false
     },
     "preprocessing": {
+      "checkpoint": {
+        "usage": true,
+        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+      },
       "adata_to_use": "QCed_adata",
+      "save_as": "preprocessed_adata",
       "unnormalize": {
         "usage": false,
         "col_name": "n_counts"
@@ -196,7 +207,13 @@
       }
     },
     "DEG": {
+      "checkpoint": {
+        "usage": true,
+        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+      },
       "adata_to_use": "preprocessed_adata",
+      "adata_to_use_for_DEG": "DEG_adata",
+      "save_as": ["preprocessed_DEG_adata", "DEG_adata"],
       "rank_genes_groups": {
         "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
@@ -232,6 +249,10 @@
         }
       },
       "GSEA": {
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+        },
         "usage": false,
         "stratify_by_group": false,
         "gene_sets": {
@@ -336,6 +357,12 @@
     "load_images": true,
     "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um\\spatial",
     "quality_control": {
+      "checkpoint": {
+        "usage": true,
+        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+      },
+      "adata_to_use": "raw_adata",
+      "save_as": "QCed_adata",
       "calculate_qc_metrics": {
         "func_str": "sc.pp.calculate_qc_metrics",
         "usage": true,
@@ -363,7 +390,12 @@
       "print_mt": false
     },
     "preprocessing": {
+      "checkpoint": {
+        "usage": true,
+        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+      },
       "adata_to_use": "QCed_adata",
+      "save_as": "preprocessed_adata",
       "unnormalize": {
         "usage": false,
         "col_name": "total_counts"
@@ -470,7 +502,13 @@
       }
     },
     "DEG": {
+      "checkpoint": {
+        "usage": true,
+        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+      },
       "adata_to_use": "preprocessed_adata",
+      "adata_to_use_for_DEG": "DEG_adata",
+      "save_as": ["preprocessed_DEG_adata", "DEG_adata"],
       "rank_genes_groups": {
         "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
@@ -616,8 +654,13 @@
     "SpatialNeighbors": {
       "Squidpy": {
         "NHoodEnrichment": {
-          "usage": true,
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+          },
           "adata_to_use": "preprocessed_adata",
+          "save_as": "NHoodEnrichment_adata",
+          "usage": true,
           "func_str": "sq.gr.nhood_enrichment",
           "data_type": "ST",
           "params": {
@@ -626,8 +669,13 @@
           }
         },
         "Co_Ocurrence": {
-          "usage": true,
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+          },
           "adata_to_use": "preprocessed_adata",
+          "save_as": "co_occurrence_adata",
+          "usage": true,
           "func_str": "sq.gr.co_occurrence",
           "data_type": "ST",
           "params": {
@@ -674,8 +722,13 @@
       },
       "Squidpy_MoranI": {
         "Squidpy_MoranI": {
-          "usage": true,
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+          },
           "adata_to_use": "preprocessed_adata",
+          "save_as": "MoranI_adata",
+          "usage": true,
           "func_str": "sq.gr.spatial_autocorr",
           "data_type": "ST",
           "n_genes": 1000,
@@ -692,8 +745,13 @@
     "ReceptorLigandAnalysis": {
       "Squidpy": {
         "ligrec": {
-          "usage": false,
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+          },
           "adata_to_use": "preprocessed_adata",
+          "save_as": "squidpy_ligrec_adata",
+          "usage": false,
           "func_str": "sq.gr.ligrec",
           "data_type": "ST",
           "params": {
@@ -738,8 +796,13 @@
       },
       "stLearn": {
         "stLearn_cci": {
-          "usage": false,
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
+          },
           "adata_to_use": "deconvoluted_adata",
+          "save_as": "stlearn_cci_adata",
+          "usage": false,
           "func_str": "stLearn_wrapper",
           "data_type": "ST",
           "params": {

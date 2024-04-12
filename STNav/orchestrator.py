@@ -30,6 +30,11 @@ from STNav.modules.st import (
     deconvolution,
     train_or_load_st_deconvolution_model,
 )
+from STNav.utils.helpers import (
+    return_filtered_params,
+    SpatialDM_wrapper,
+    save_processed_adata,
+)
 
 username = os.path.expanduser("~")
 
@@ -65,9 +70,63 @@ class Orchestrator(object):
 
     def initialize_adata_dict(self):
         adata_dict = {}
-        for data_type in self.analysis_config.keys():
+        for data_type, steps in self.analysis_config.items():
             if data_type != "saving_path":
                 adata_dict.setdefault(data_type, {})
+                for step, params in steps.items():
+                    try:
+                        if "checkpoint" in params:
+                            if params["checkpoint"]["usage"]:
+                                pipeline_run = params["checkpoint"]["pipeline_run"]
+                                adata_name = params["save_as"]
+                                if isinstance(adata_name, list):
+                                    for sub_adata_name in adata_name:
+                                        checkpoint_path = (
+                                            f"{self.analysis_config['saving_path']}"
+                                            + "\\"
+                                            + pipeline_run
+                                            + "\\"
+                                            + f"{data_type}\\Files"
+                                            + "\\"
+                                            + f"{sub_adata_name}.h5ad"
+                                        )
+
+                                        if os.path.exists(checkpoint_path):
+                                            adata_dict[data_type].update(
+                                                {sub_adata_name: checkpoint_path}
+                                            )
+                                            logger.info(
+                                                f"Successfully created checkpoint on the {data_type} data type path for\n\n'{sub_adata_name}' under the path:\n\n'{checkpoint_path}'."
+                                            )
+                                        else:
+                                            logger.warning(
+                                                f"File '{checkpoint_path}' does not exist in the directory."
+                                            )
+                                else:
+                                    checkpoint_path = (
+                                        f"{self.analysis_config['saving_path']}"
+                                        + "\\"
+                                        + pipeline_run
+                                        + "\\"
+                                        + f"{data_type}\\Files"
+                                        + "\\"
+                                        + f"{adata_name}.h5ad"
+                                    )
+
+                                    if os.path.exists(checkpoint_path):
+                                        adata_dict[data_type].update(
+                                            {adata_name: checkpoint_path}
+                                        )
+                                        logger.info(
+                                            f"Successfully created checkpoint on the {data_type} data type path for\n\n'{adata_name}' under the path:\n\n'{checkpoint_path}'."
+                                        )
+                                    else:
+                                        logger.warning(
+                                            f"File '{checkpoint_path}' does not exist in the directory."
+                                        )
+                    except Exception as e:
+                        continue
+
         return adata_dict
 
     def run_pipeline_for_data_type(
@@ -80,7 +139,7 @@ class Orchestrator(object):
             adata_dict=adata_dict,
         )
         logger.info(f"Running Analysis for {data_type}")
-
+        # TODO: check if the above code doesn't put sc_model back to None...
         self.run_analysis_steps(data_type, data_type_dict, STNavCorePipeline)
 
     def run_analysis_steps(self, data_type, data_type_dict, STNavCorePipeline):
@@ -94,7 +153,7 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        self.sc_model = train_or_load_sc_deconvolution_model(STNavCorePipeline)
+        train_or_load_sc_deconvolution_model(STNavCorePipeline)
 
     def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
         if data_type_dict["cell_annotation"]["scArches_surgery"]["usage"]:
@@ -135,26 +194,52 @@ class Orchestrator(object):
         self.log_subset_info(STNavCorePipeline)
 
     def get_intersect(self, STNavCorePipeline):
+
+        sc_adata = sc.read_h5ad(
+            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"]
+        )
+        st_adata = sc.read_h5ad(
+            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"]
+        )
+
         return np.intersect1d(
-            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"].var_names,
-            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"].var_names,
+            sc_adata.var_names,
+            st_adata.var_names,
         )
 
     def apply_subset(self, STNavCorePipeline, intersect):
-        STNavCorePipeline.adata_dict[self.ST]["subset_preprocessed_adata"] = (
-            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"][
-                :, intersect
-            ].copy()
+        st_adata_intersect = sc.read_h5ad(
+            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"]
+        )[:, intersect].copy()
+
+        sc_adata_intersect = sc.read_h5ad(
+            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"]
+        )[:, intersect].copy()
+
+        save_processed_adata(
+            STNavCorePipeline,
+            name="subset_preprocessed_adata",
+            adata=sc_adata_intersect,
+            data_type=self.SCRNA,
         )
-        STNavCorePipeline.adata_dict[self.SCRNA]["subset_preprocessed_adata"] = (
-            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"][
-                :, intersect
-            ].copy()
+        save_processed_adata(
+            STNavCorePipeline,
+            name="subset_preprocessed_adata",
+            adata=st_adata_intersect,
+            data_type=self.ST,
         )
 
     def log_subset_info(self, STNavCorePipeline):
+
+        st_adata = sc.read_h5ad(
+            STNavCorePipeline.adata_dict[self.ST]["subset_preprocessed_adata"]
+        )
+        sc_adata = sc.read_h5ad(
+            STNavCorePipeline.adata_dict[self.SCRNA]["subset_preprocessed_adata"]
+        )
+
         logger.info(
-            f"N_obs x N_var for ST and scRNA after intersection: \n{STNavCorePipeline.adata_dict[self.ST]['subset_preprocessed_adata'].n_obs} x {STNavCorePipeline.adata_dict[self.ST]['subset_preprocessed_adata'].n_vars} \n {STNavCorePipeline.adata_dict[self.SCRNA]['subset_preprocessed_adata'].n_obs} x {STNavCorePipeline.adata_dict[self.SCRNA]['subset_preprocessed_adata'].n_vars}"
+            f"N_obs x N_var for ST and scRNA after intersection: \n{st_adata.n_obs} x {st_adata.n_vars} \n {sc_adata.n_obs} x {sc_adata.n_vars}"
         )
 
     def run_plots(

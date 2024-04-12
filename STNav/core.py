@@ -24,7 +24,7 @@ date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 sc.settings.n_jobs >= -1
 import inspect
 
-
+import os
 from STNav.utils.helpers import (
     GARD,
     fix_write_h5ad,
@@ -36,6 +36,8 @@ from STNav.utils.helpers import (
     unnormalize,
     transform_adata,
     save_processed_adata,
+    return_from_checkpoint,
+    extract_pipeline_run,
 )
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -47,6 +49,7 @@ import anndata as ad
 class STNavCore(object):
     adata_dict_suffix = "_adata"
     sc_model = None
+    st_model = None
 
     def __init__(
         self, config: dict, saving_path: str, data_type: str, adata_dict: dict = None
@@ -113,8 +116,22 @@ class STNavCore(object):
         return adata
 
     def QC(self):
-        config = self.config[self.data_type]["quality_control"]
-        adata = sc.read_h5ad(self.adata_dict[self.data_type]["raw_adata"])
+        step = "quality_control"
+        config = self.config[self.data_type][step]
+        adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
+        adata = sc.read_h5ad(adata_path)
+
+        # If checkpoint is found, return the adata without running the rest of the function
+        if return_from_checkpoint(
+            self,
+            path_to_check=adata_path,
+            checkpoint_step=step,
+            checkpoint_boolean=self.config[self.data_type][step]["checkpoint"]["usage"],
+        ):
+            logger.info(
+                f"Returning adata from checkpoint '{self.config[self.data_type][step]['checkpoint']['pipeline_run']}' with the following adata:\n\n {adata}."
+            )
+            return adata
 
         logger.info("Running quality control.")
         adata_original = adata.copy()
@@ -233,12 +250,31 @@ class STNavCore(object):
             print(
                 f"{sum(genes_to_remove)} genes removed. Original size was {adata_original.n_obs} cells and {adata_original.n_vars} genes. New size is {adata.n_obs} cells and {adata.n_vars} genes"
             )
-        save_processed_adata(STNavCorePipeline=self, name="QCed_adata", adata=adata)
+        save_processed_adata(
+            STNavCorePipeline=self,
+            name=config["save_as"],
+            adata=adata,
+            checkpoint_step=step,
+        )
         return adata
 
     def preprocessing(self) -> an.AnnData:
-        config = self.config[self.data_type]["preprocessing"]
-        adata = sc.read_h5ad(self.adata_dict[self.data_type][config["adata_to_use"]])
+        step = "preprocessing"
+        config = self.config[self.data_type][step]
+        adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
+        adata = sc.read_h5ad(adata_path)
+
+        # If checkpoint is found, return the adata without running the rest of the function
+        if return_from_checkpoint(
+            self,
+            path_to_check=adata_path,
+            checkpoint_step=step,
+            checkpoint_boolean=self.config[self.data_type][step]["checkpoint"]["usage"],
+        ):
+            logger.info(
+                f"Returning adata from checkpoint '{self.config[self.data_type][step]['checkpoint']['pipeline_run']}' with the following adata:\n\n {adata}."
+            )
+            return adata
 
         adata.var_names_make_unique()
         logger.info(
@@ -474,77 +510,105 @@ class STNavCore(object):
         logger.info(log_adataX(adata=adata, raw=False))
 
         logger.info(
-            log_adataX(
-                adata=adata, layer="preprocessed_counts", raw=True, step="preprocessing"
-            )
+            log_adataX(adata=adata, layer="preprocessed_counts", raw=True, step=step)
         )
 
-        logger.info(
-            log_adataX(adata=adata, layer="raw_counts", raw=True, step="preprocessing")
-        )
+        logger.info(log_adataX(adata=adata, layer="raw_counts", raw=True, step=step))
 
-        logger.info(log_adataX(adata=adata, layer="raw_counts", step="preprocessing"))
+        logger.info(log_adataX(adata=adata, layer="raw_counts", step=step))
 
         save_processed_adata(
-            STNavCorePipeline=self, name="preprocessed_adata", adata=adata
+            STNavCorePipeline=self,
+            name=config["save_as"],
+            adata=adata,
+            checkpoint_step=step,
         )
         return adata
 
     def DEG(self):
-        config = self.config[self.data_type]["DEG"]
-        adata = sc.read_h5ad(self.adata_dict[self.data_type][config["adata_to_use"]])
 
-        logger.info(
-            f"Running DEG for {self.data_type} with '{config['adata_to_use']}' adata file."
-        )
+        step = "DEG"
+        config = self.config[self.data_type][step]
+        adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
+        adata = sc.read_h5ad(adata_path)
 
-        # TODO: have an assert that verifies that the data is not raw. It has to be lognormalized instead of raw data counts to run DEG
-        # assert (), f"Adata for {config['adata_to_use']} seems to be raw counts Use a lognormalized version instead
-        adata_for_DEG = adata.raw.to_adata()
-
-        # For DGE analysis we would like to run with all genes, on normalized values, so we will have to revert back to the raw matrix. In case you have raw counts in the matrix you also have to renormalize and logtransform. In this case, raw already has the normalized and log data for scRNA
-        if (
-            adata_for_DEG.n_vars
-            == self.config[self.data_type]["preprocessing"]["highly_variable_genes"][
-                "params"
-            ]["n_top_genes"]
+        # If checkpoint is found, return the adata without running the rest of the function
+        if return_from_checkpoint(
+            self,
+            path_to_check=adata_path,
+            checkpoint_step=step,
+            checkpoint_boolean=self.config[self.data_type][step]["checkpoint"]["usage"],
         ):
-            logger.warning(
-                f"DEG will be run on {adata_for_DEG.n_vars}, but DEG is expected to run on all lognormalized genes. Make sure the AnnData you're using for DEG has not been subsetted by highly_variable_genes. n_top_genes = {self.config[self.data_type]['preprocessing']['highly_variable_genes']['params']['n_top_genes']}"
+            logger.info(
+                f"Returning adata from checkpoint '{self.config[self.data_type][step]['checkpoint']['pipeline_run']}'"
             )
+            adata_for_DEG = sc.read_h5ad(
+                self.adata_dict[self.data_type][config["adata_to_use_for_DEG"]]
+            )
+            if (
+                adata_for_DEG.n_vars
+                == self.config[self.data_type]["preprocessing"][
+                    "highly_variable_genes"
+                ]["params"]["n_top_genes"]
+            ):
+                logger.warning(
+                    f"DEG will be run on {adata_for_DEG.n_vars}, but DEG is expected to run on all lognormalized genes. Make sure the AnnData you're using for DEG has not been subsetted by highly_variable_genes. n_top_genes = {self.config[self.data_type]['preprocessing']['highly_variable_genes']['params']['n_top_genes']}"
+                )
+        else:
+            # TODO: have an assert that verifies that the data is not raw. It has to be lognormalized instead of raw data counts to run DEG
+            # assert (), f"Adata for {config['adata_to_use']} seems to be raw counts Use a lognormalized version instead
 
-        # Rank genes groups - Differential Expression of Genes (DEG)
-        if config["rank_genes_groups"]["usage"]:
-            sc.tl.rank_genes_groups(
-                **return_filtered_params(
-                    config=config["rank_genes_groups"], adata=adata_for_DEG
+            # For DGE analysis we would like to run with all genes, on normalized values, so we will have to revert back to the raw matrix. In case you have raw counts in the matrix you also have to renormalize and logtransform. In this case, raw already has the normalized and log data for scRNA
+            if (
+                adata_for_DEG.n_vars
+                == self.config[self.data_type]["preprocessing"][
+                    "highly_variable_genes"
+                ]["params"]["n_top_genes"]
+            ):
+                logger.warning(
+                    f"DEG will be run on {adata_for_DEG.n_vars}, but DEG is expected to run on all lognormalized genes. Make sure the AnnData you're using for DEG has not been subsetted by highly_variable_genes. n_top_genes = {self.config[self.data_type]['preprocessing']['highly_variable_genes']['params']['n_top_genes']}"
                 )
+            logger.info(
+                f"Running DEG for {self.data_type} with '{config['adata_to_use']}' adata file."
             )
+            # Rank genes groups - Differential Expression of Genes (DEG)
+            if config["rank_genes_groups"]["usage"]:
+                sc.tl.rank_genes_groups(
+                    **return_filtered_params(
+                        config=config["rank_genes_groups"], adata=adata_for_DEG
+                    )
+                )
+                save_processed_adata(
+                    STNavCorePipeline=self,
+                    name="DEG_adata",
+                    adata=adata_for_DEG,
+                    checkpoint_step="DEG",
+                )
+                # Add this one just to make sure we have ranked genes on the subset with the highly variable genes as well. Mainly for plotting reasons.
+                sc.tl.rank_genes_groups(
+                    **return_filtered_params(
+                        config=config["rank_genes_groups"], adata=adata
+                    )
+                )
 
-            # Add this one just to make sure we have ranked genes on the subset with the highly variable genes as well. Mainly for plotting reasons.
-            sc.tl.rank_genes_groups(
-                **return_filtered_params(
-                    config=config["rank_genes_groups"], adata=adata
+                save_processed_adata(
+                    STNavCorePipeline=self,
+                    name="preprocessed_DEG_adata",
+                    adata=adata,
                 )
-            )
-            save_processed_adata(
-                STNavCorePipeline=self, name="DEG_adata", adata=adata_for_DEG
-            )
-            save_processed_adata(
-                STNavCorePipeline=self, name="preprocessed_DEG_adata", adata=adata
-            )
-        # Filter rank genes groups
-        if config["filter_rank_genes_groups"]["usage"]:
-            sc.tl.filter_rank_genes_groups(
-                **return_filtered_params(
-                    config=config["filter_rank_genes_groups"], adata=adata_for_DEG
+            # Filter rank genes groups
+            if config["filter_rank_genes_groups"]["usage"]:
+                sc.tl.filter_rank_genes_groups(
+                    **return_filtered_params(
+                        config=config["filter_rank_genes_groups"], adata=adata_for_DEG
+                    )
                 )
-            )
-            sc.tl.filter_rank_genes_groups(
-                **return_filtered_params(
-                    config=config["filter_rank_genes_groups"], adata=adata
+                sc.tl.filter_rank_genes_groups(
+                    **return_filtered_params(
+                        config=config["filter_rank_genes_groups"], adata=adata
+                    )
                 )
-            )
+
         # Save DEG as dataframe
         if config["rank_genes_groups_df"]["usage"]:
             rank_genes_groups_df = config["rank_genes_groups_df"]["params"]["key"]
@@ -753,7 +817,9 @@ class STNavCore(object):
                 adata.obs = GARD_final_df
 
                 save_processed_adata(
-                    STNavCorePipeline=self, name="preprocessed_adata_GARD", adata=adata
+                    STNavCorePipeline=self,
+                    name="preprocessed_adata_GARD",
+                    adata=adata,
                 )
                 GARD_final_df.to_excel(
                     f"{self.saving_path}\\{self.data_type}\\Files\\GARD_score.xlsx"

@@ -55,26 +55,19 @@ def SpatialNeighbors(STNavCorePipeline):
                         sq.gr.nhood_enrichment(
                             **return_filtered_params(config=config_params, adata=adata)
                         )
-                        # STNavCorePipeline.adata_dict[
-                        #     config_params["data_type"]
-                        # ].setdefault(f"{config_name}_adata", adata.copy())
+
                         save_processed_adata(
                             STNavCorePipeline=STNavCorePipeline,
                             adata=adata,
-                            name=f"{config_name}_adata",
+                            name=f"{config_params['save_as']}",
                         )
                     elif config_name == "Co_Ocurrence":
                         # TODO: try to save the file with the matrix of co-occurrence probabilities within each spot. Apply this mask over the predictions from deconvolution to adjust based on co-ocurrence (clusters that have high value of co-occurrence will probably have similar cell proportions within each spot)
                         sq.gr.co_occurrence(
                             **return_filtered_params(config=config_params, adata=adata)
                         )
-
-                        # STNavCorePipeline.adata_dict[
-                        #     config_params["data_type"]
-                        # ].setdefault(f"{config_name}_adata", adata.copy())
-
                         save_processed_adata(
                             STNavCorePipeline=STNavCorePipeline,
                             adata=adata,
-                            name=f"{config_name}_adata",
+                            name=f"{config_params['save_as']}",
                         )

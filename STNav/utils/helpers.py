@@ -45,60 +45,140 @@ from STNav.utils.decorators import logger_wraps, pass_STNavCore_params
 
 
 @pass_STNavCore_params
+def return_from_checkpoint(
+    STNavCorePipeline,
+    path_to_check: str,
+    checkpoint_step: str,
+    checkpoint_boolean: bool = False,
+):
+
+    if checkpoint_boolean:
+        logger.info(f"Looking for checkpoint {checkpoint_step}.")
+
+        current_pipeline_run = f"{STNavCorePipeline.saving_path}".split(os.sep)[-1]
+        look_for_checkpoint_run = extract_pipeline_run(path_to_check)
+
+        if current_pipeline_run == look_for_checkpoint_run:
+            logger.info(f"Checkpoint not found for {checkpoint_step}.")
+            return False
+        else:
+            logger.warning(
+                f"Checkpoint found.\n\nThe following step '{checkpoint_step}' is being returned from the following pipeline run: '{look_for_checkpoint_run}."
+            )
+            return True
+    else:
+        logger.info(f"Checkpoint is not being used for {checkpoint_step}.")
+        return False
+
+
+def extract_pipeline_run(path):
+    # Split the path into a list of directories
+    dirs = path.split(os.sep)
+
+    # Find the index of the first directory that starts with "PipelineRun"
+    index = next(
+        (i for i, dir in enumerate(dirs) if dir.startswith("PipelineRun")), None
+    )
+
+    # If a directory starting with "PipelineRun" was found, return it
+    if index is not None:
+        return dirs[index]
+
+    # If no directory starting with "PipelineRun" was found, return None
+    return None
+
+
+@pass_STNavCore_params
 def save_processed_adata(
     STNavCorePipeline,
     name,
     adata,
     fix_write: bool = None,
-):
+    data_type=None,
+    checkpoint_step: str = None,
+):  # noqa: F811
+
+    if data_type is not None:
+        STNavCorePipeline.data_type = data_type
+
     logger.info(
         f"Saving {STNavCorePipeline.data_type} data type with the name {name}.h5ad file."
     )
     adata_name = name
 
     if isinstance(adata, an.AnnData):
-        # Saving file after processing
-        adata_final = adata.copy()
-        try:
-            del adata_final.uns["rank_genes_groups"]
 
-        except Exception as e:
-            pass
+        if checkpoint_step is not None:  # using checkpoint pipeline run
+            checkpoint = STNavCorePipeline.config[STNavCorePipeline.data_type][
+                checkpoint_step
+            ]["checkpoint"]["usage"]
+            if checkpoint:
+                checkpoint_name = STNavCorePipeline.config[STNavCorePipeline.data_type][
+                    checkpoint_step
+                ]["checkpoint"]["pipeline_run"]
+                # Split the path into a list of directories
+                dirs = f"{STNavCorePipeline.saving_path}".split(os.sep)
 
-        try:
-            del adata_final.uns["rank_genes_groups_filtered"]
+                # Replace the last directory in the list with the checkpoint_name
+                dirs[-1] = checkpoint_name
 
-        except Exception as e:
-            pass
+                # Join the directories back into a path
+                new_path = os.sep.join(dirs)
+                # Replace the pipeline run name with the checkpoint name
 
-        final_path = (
-            f"{STNavCorePipeline.saving_path}"
-            + "\\"
-            + f"{STNavCorePipeline.data_type}\\Files"
-            + "\\"
-            + f"{STNavCorePipeline.data_type}_{adata_name}.h5ad"
-        )
-        if fix_write:
+                final_path = (
+                    f"{new_path}"
+                    + "\\"
+                    + f"{STNavCorePipeline.data_type}\\Files"
+                    + "\\"
+                    + f"{adata_name}.h5ad"
+                )
+        else:  # saving data from scratch
+
+            # Saving file after processing
+            adata_final = adata.copy()
             try:
-                adata_final = fix_write_h5ad(adata=adata_final)
-            except Exception as e:
-                logger.warning(f"fix_write_h5ad failed {e}")
-            adata_final.write_h5ad(final_path)
-        else:
-            try:
-                adata_final.write_h5ad(final_path)
-            except Exception as e:
-                logger.error(f"Exception occurred saving {adata_name} - {e}")
+                del adata_final.uns["rank_genes_groups"]
 
-        # Save the path to the adata_dict for later use
-        if adata_name in STNavCorePipeline.adata_dict[STNavCorePipeline.data_type]:
-            logger.warning(
-                f"Warning: {adata_name} path is already in the dictionary. The path will be overwritten."
+            except Exception as e:
+                pass
+
+            try:
+                del adata_final.uns["rank_genes_groups_filtered"]
+
+            except Exception as e:
+                pass
+
+            final_path = (
+                f"{STNavCorePipeline.saving_path}"
+                + "\\"
+                + f"{STNavCorePipeline.data_type}\\Files"
+                + "\\"
+                + f"{adata_name}.h5ad"
             )
 
-        logger.info(
-            f"Saving data to adata_dict as '{adata_name}' for {STNavCorePipeline.data_type} data type."
-        )
+            if fix_write:
+                try:
+                    adata_final = fix_write_h5ad(adata=adata_final)
+                except Exception as e:
+                    logger.warning(f"fix_write_h5ad failed {e}")
+                adata_final.write_h5ad(final_path)
+            else:
+                try:
+                    adata_final.write_h5ad(final_path)
+                except Exception as e:
+                    logger.error(f"Exception occurred saving {adata_name} - {e}")
+
+            # Save the path to the adata_dict for later use
+            if adata_name in STNavCorePipeline.adata_dict[STNavCorePipeline.data_type]:
+                logger.warning(
+                    f"Warning: {adata_name} path is already in the dictionary. The path will be overwritten."
+                )
+
+            logger.info(
+                f"Saving data to adata_dict as '{adata_name}' for {STNavCorePipeline.data_type} data type."
+            )
+
         STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
             adata_name
         ] = final_path
