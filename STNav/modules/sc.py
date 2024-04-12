@@ -1,1 +1,2 @@
 from .single_cell.cell_annotation import perform_celltypist, perform_scArches_surgery
+from .single_cell.sc_deconvolution import train_or_load_sc_deconvolution_model

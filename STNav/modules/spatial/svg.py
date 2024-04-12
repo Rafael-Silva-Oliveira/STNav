@@ -13,7 +13,12 @@ import torch
 from loguru import logger
 from GraphST.utils import project_cell_to_spot
 from STNav.utils.decorators import pass_STNavCore_params
-from STNav.utils.helpers import return_filtered_params, SpatialDM_wrapper
+from STNav.utils.helpers import (
+    return_filtered_params,
+    SpatialDM_wrapper,
+    save_processed_adata,
+)
+
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -44,9 +49,11 @@ def SpatiallyVariableGenes(STNavCorePipeline):
     for method_name, methods in config.items():
         for config_name, config_params in methods.items():
             if config_params["usage"]:
-                adata = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                    config_params["adata_to_use"]
-                ]
+                adata = sc.read_h5ad(
+                    STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                        config_params["adata_to_use"]
+                    ]
+                )
                 current_config_params = config_params["params"]
 
                 logger.info(
@@ -163,7 +170,11 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                         # Add the results to the adata and save it as SpatiallyVariableGenes adata
 
-                        STNavCorePipeline.save_as("SpatiallyVariableGenes_adata", adata)
+                        save_processed_adata(
+                            STNavCorePipeline,
+                            "SpatiallyVariableGenes_adata",
+                            adata,
+                        )
 
                         logger.info("		Saving spatially variable genes with AEH.")
 
@@ -268,5 +279,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                         )
                     logger.info(f"Saving adata to adata_dict as '{config_name}_adata'.")
 
-                    STNavCorePipeline.save_as(f"{method_name}_adata", adata)
+                    save_processed_adata(
+                        STNavCorePipeline, f"{method_name}_adata", adata
+                    )
                     # sq.pl.spatial_scatter(adata, color=["Olfm1", "Plp1", "Itpka", "cluster"])

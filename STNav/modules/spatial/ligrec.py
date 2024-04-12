@@ -17,6 +17,7 @@ from STNav.utils.helpers import (
     return_filtered_params,
     SpatialDM_wrapper,
     stLearn_wrapper,
+    save_processed_adata,
 )
 import stlearn as st
 
@@ -45,9 +46,11 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
     for method_name, methods in config.items():
         for config_name, config_params in methods.items():
             if config_params["usage"]:
-                adata = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                    config_params["adata_to_use"]
-                ]
+                adata = sc.read_h5ad(
+                    STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                        config_params["adata_to_use"]
+                    ]
+                )
 
                 adata.var_names = adata.var_names.str.upper()
                 adata.var.index = adata.var.index.str.upper()
@@ -81,10 +84,15 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
 
                     # TODO: add plots here for each group and save plot individually similar to how I+m doing on the spatial proportions
 
-                    STNavCorePipeline.save_as(f"{config_name}_adata", adata)
-
-                    STNavCorePipeline.save_as(
-                        f"{config_name}_dictionary", res, copy=False
+                    save_processed_adata(
+                        STNavCorePipeline=STNavCorePipeline,
+                        adata=adata,
+                        name=f"{config_name}_adata",
+                    )
+                    save_processed_adata(
+                        STNavCorePipeline=STNavCorePipeline,
+                        adata=res,
+                        name=f"{config_name}_dictionary",
                     )
 
                 elif method_name == "SpatialDM":
@@ -155,14 +163,19 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                             )
                         plt.savefig("mel_DE_clusters.pdf")
 
-                    STNavCorePipeline.save_as(f"{config_name}_adata", adata)
-
+                    save_processed_adata(
+                        STNavCorePipeline=STNavCorePipeline,
+                        adata=adata,
+                        name=f"{config_name}_adata",
+                    )
                 elif method_name == "stLearn":
 
                     adata_cci = stLearn_wrapper(
                         **return_filtered_params(config=config_params, adata=adata)
                     )
 
-                    STNavCorePipeline.save_as(
-                        f"{config_name}_adata", adata_cci, copy=True
+                    save_processed_adata(
+                        STNavCorePipeline=STNavCorePipeline,
+                        adata=adata_cci,
+                        name=f"{config_name}_adata",
                     )

@@ -41,6 +41,82 @@ sc.settings.verbosity = 3
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
+from STNav.utils.decorators import logger_wraps, pass_STNavCore_params
+
+
+@pass_STNavCore_params
+def save_processed_adata(
+    STNavCorePipeline,
+    name,
+    adata,
+    fix_write: bool = None,
+):
+    logger.info(
+        f"Saving {STNavCorePipeline.data_type} data type with the name {name}.h5ad file."
+    )
+    adata_name = name
+
+    if isinstance(adata, an.AnnData):
+        # Saving file after processing
+        adata_final = adata.copy()
+        try:
+            del adata_final.uns["rank_genes_groups"]
+
+        except Exception as e:
+            pass
+
+        try:
+            del adata_final.uns["rank_genes_groups_filtered"]
+
+        except Exception as e:
+            pass
+
+        final_path = (
+            f"{STNavCorePipeline.saving_path}"
+            + "\\"
+            + f"{STNavCorePipeline.data_type}\\Files"
+            + "\\"
+            + f"{STNavCorePipeline.data_type}_{adata_name}.h5ad"
+        )
+        if fix_write:
+            try:
+                adata_final = fix_write_h5ad(adata=adata_final)
+            except Exception as e:
+                logger.warning(f"fix_write_h5ad failed {e}")
+            adata_final.write_h5ad(final_path)
+        else:
+            try:
+                adata_final.write_h5ad(final_path)
+            except Exception as e:
+                logger.error(f"Exception occurred saving {adata_name} - {e}")
+
+        # Save the path to the adata_dict for later use
+        if adata_name in STNavCorePipeline.adata_dict[STNavCorePipeline.data_type]:
+            logger.warning(
+                f"Warning: {adata_name} path is already in the dictionary. The path will be overwritten."
+            )
+
+        logger.info(
+            f"Saving data to adata_dict as '{adata_name}' for {STNavCorePipeline.data_type} data type."
+        )
+        STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+            adata_name
+        ] = final_path
+
+    else:
+        logger.warning(f"Adata {adata_name} is not an AnnData object.")
+
+        # Save the path to the adata_dict for later use
+        if adata_name in STNavCorePipeline.adata_dict[STNavCorePipeline.data_type]:
+            logger.warning(
+                f"Warning: {adata_name} path is already in the dictionary. The path will be overwritten."
+            )
+
+        logger.info(
+            f"Saving data to adata_dict as '{adata_name}' for {STNavCorePipeline.data_type} data type."
+        )
+        STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][adata_name] = adata
+
 
 def transform_adata(
     adata: an.AnnData, layer_type, column: str, astype, chunk_size: int

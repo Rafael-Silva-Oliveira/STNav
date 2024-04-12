@@ -13,7 +13,6 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import torch
-from GraphST import GraphST
 from loguru import logger
 from sklearn.cluster import AgglomerativeClustering
 import scvi
@@ -36,6 +35,7 @@ from STNav.utils.helpers import (
     run_prerank,
     unnormalize,
     transform_adata,
+    save_processed_adata,
 )
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -55,38 +55,6 @@ class STNavCore(object):
         self.saving_path = saving_path
         self.data_type = data_type
         self.adata_dict = adata_dict
-
-    def save_as(self, name: str, adata: Union[an.AnnData, dict], copy: bool = True):
-        """
-        Save the given AnnData object in the adata_dict under the provided name.
-
-        If the name already exists in the dictionary, a warning is logged and the existing data is overwritten.
-        If the copy parameter is True, a copy of the AnnData object is saved. Otherwise, the object itself is saved.
-
-        Parameters
-        ----------
-        name : str - The name under which the AnnData object will be saved in the dictionary.
-        adata : Union[an.AnnData, dict] - The AnnData object to be saved (in case copy = True) or a dictionary (in case copy = False)
-        copy : bool, optional - If True, a copy of the AnnData object is saved. Otherwise, the object itself is saved. Default is True.
-
-        Returns
-        -------
-        None
-        """
-        if name in self.adata_dict[self.data_type]:
-            logger.warning(
-                f"Warning: {name} is already in the dictionary. The results will be overwritten."
-            )
-        if copy:
-            logger.info(
-                f"Saving a copy of adata to adata_dict as '{name}' for {self.data_type} data type."
-            )
-            self.adata_dict[self.data_type][name] = adata.copy()
-        else:
-            logger.info(
-                f"Saving data to adata_dict as '{name}' for {self.data_type} data type."
-            )
-            self.adata_dict[self.data_type][name] = adata
 
     def read_rna(self):
         config = self.config[self.data_type]
@@ -111,7 +79,7 @@ class STNavCore(object):
                 f"Failed to set new index. This might've happened because the index of var is already the genes/feature names, so no changes need to be made."
             )
 
-        self.save_as("raw_adata", adata)
+        save_processed_adata(STNavCorePipeline=self, name="raw_adata", adata=adata)
 
         return adata
 
@@ -141,13 +109,12 @@ class STNavCore(object):
                 f"Failed to set new index _index. This might've happened because the index of var is already the genes/feature names, so no changes need to be made."
             )
 
-        self.save_as("raw_adata", adata)
-
+        save_processed_adata(STNavCorePipeline=self, name="raw_adata", adata=adata)
         return adata
 
     def QC(self):
         config = self.config[self.data_type]["quality_control"]
-        adata = self.adata_dict[self.data_type]["raw_adata"].copy()
+        adata = sc.read_h5ad(self.adata_dict[self.data_type]["raw_adata"])
 
         logger.info("Running quality control.")
         adata_original = adata.copy()
@@ -193,6 +160,7 @@ class STNavCore(object):
             # tmp.plot.bar(stacked=True).legend(loc="upper right")
 
         if config["calculate_qc_metrics"]["usage"]:
+
             sc.pp.calculate_qc_metrics(
                 **return_filtered_params(
                     config=config["calculate_qc_metrics"], adata=adata
@@ -265,14 +233,12 @@ class STNavCore(object):
             print(
                 f"{sum(genes_to_remove)} genes removed. Original size was {adata_original.n_obs} cells and {adata_original.n_vars} genes. New size is {adata.n_obs} cells and {adata.n_vars} genes"
             )
-
-        self.save_as("QCed_adata", adata)
-
+        save_processed_adata(STNavCorePipeline=self, name="QCed_adata", adata=adata)
         return adata
 
     def preprocessing(self) -> an.AnnData:
         config = self.config[self.data_type]["preprocessing"]
-        adata = self.adata_dict[self.data_type][config["adata_to_use"]].copy()
+        adata = sc.read_h5ad(self.adata_dict[self.data_type][config["adata_to_use"]])
 
         adata.var_names_make_unique()
         logger.info(
@@ -519,13 +485,14 @@ class STNavCore(object):
 
         logger.info(log_adataX(adata=adata, layer="raw_counts", step="preprocessing"))
 
-        self.save_as("preprocessed_adata", adata)
-
+        save_processed_adata(
+            STNavCorePipeline=self, name="preprocessed_adata", adata=adata
+        )
         return adata
 
     def DEG(self):
         config = self.config[self.data_type]["DEG"]
-        adata = self.adata_dict[self.data_type][config["adata_to_use"]].copy()
+        adata = sc.read_h5ad(self.adata_dict[self.data_type][config["adata_to_use"]])
 
         logger.info(
             f"Running DEG for {self.data_type} with '{config['adata_to_use']}' adata file."
@@ -560,9 +527,12 @@ class STNavCore(object):
                     config=config["rank_genes_groups"], adata=adata
                 )
             )
-            self.save_as("DEG_adata", adata_for_DEG)
-            self.save_as("preprocessed_DEG_adata", adata)
-
+            save_processed_adata(
+                STNavCorePipeline=self, name="DEG_adata", adata=adata_for_DEG
+            )
+            save_processed_adata(
+                STNavCorePipeline=self, name="preprocessed_DEG_adata", adata=adata
+            )
         # Filter rank genes groups
         if config["filter_rank_genes_groups"]["usage"]:
             sc.tl.filter_rank_genes_groups(
@@ -782,10 +752,9 @@ class STNavCore(object):
 
                 adata.obs = GARD_final_df
 
-                self.adata_dict[self.data_type][
-                    "preprocessed_adata_GARD"
-                ] = adata.copy()
-
+                save_processed_adata(
+                    STNavCorePipeline=self, name="preprocessed_adata_GARD", adata=adata
+                )
                 GARD_final_df.to_excel(
                     f"{self.saving_path}\\{self.data_type}\\Files\\GARD_score.xlsx"
                 )
@@ -797,214 +766,3 @@ class STNavCore(object):
                     gsea_df.to_excel(writer, sheet_name=sheet_name, index=False)
 
         return adata
-
-    def train_or_load_sc_deconvolution_model(self):
-        config = self.config[self.data_type]
-
-        model_types = [
-            model_name
-            for model_name, model_config in config["model"]["model_type"].items()
-            if model_config["usage"]
-        ]
-        if len(model_types) >= 2:
-            raise ValueError(
-                logger.error(
-                    f"Please, choose only 1 model to use. Current active models {model_types = }"
-                )
-            )
-        elif len(model_types) == 0:
-            logger.warning(
-                f"Returning no model as no models were set to True for training or loading. "
-            )
-            return None
-        model_name = model_types[0]
-
-        adata = self.adata_dict[self.data_type][
-            config["model"]["model_type"][model_name]["adata_to_use"]
-        ].copy()
-        model = eval(model_name)
-        # TODO: add assertion that checks if selected layer is normalized or unnormalized counts [0,15,0,23] instead of [0,6.2123,0,8.2123] etc
-        model.setup_anndata(
-            adata,
-            layer=config["model"]["model_type"][model_name]["layer"],
-            labels_key=config["DEG"]["rank_genes_groups"]["params"]["groupby"],
-        )
-
-        train = config["model"]["model_type"][model_name]["train"]
-
-        if train:
-            logger.info(
-                f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
-            )
-            sc_model = model(adata)
-            logger.info(sc_model.view_anndata_setup())
-            training_params = config["model"]["model_type"][model_name]["params"]
-            valid_arguments = inspect.signature(sc_model.train).parameters.keys()
-            filtered_params = {
-                k: v for k, v in training_params.items() if k in valid_arguments
-            }
-            sc_model.train(**filtered_params)
-            sc_model.history["elbo_train"][10:].plot()
-            sc_model.save("scmodel", overwrite=True)
-        else:
-            logger.info(
-                f"Loading the pre-trained {model_name} model for deconvolution."
-            )
-            sc_model = model.load(
-                config["model"]["pre_trained_model_path"],
-                adata,
-            )
-
-        return sc_model
-
-    def train_or_load_st_deconvolution_model(self, sc_model):
-        config = self.config[self.data_type]
-
-        model_types = [
-            model_name
-            for model_name, model_config in config["model"]["model_type"].items()
-            if model_config["usage"]
-        ]
-        if len(model_types) >= 2:
-            raise ValueError(
-                logger.error(
-                    f"Please, choose only 1 model to use. Current active models {model_types = }"
-                )
-            )
-
-        model_name = model_types[0]
-
-        train = config["model"]["model_type"][model_name]["train"]
-        if model_name == "GraphST" and not train:
-            raise ValueError(
-                logger.error(
-                    f"Mode name is {model_name}, but training is set to {train}. When using GraphST, please make sure training is set to True."
-                )
-            )
-        adata = self.adata_dict[self.data_type][
-            config["model"]["model_type"][model_name]["adata_to_use"]
-        ]
-
-        if train:
-            if model_name == "GraphST":
-                device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
-                adata_sc = self.adata_dict["scRNA"][
-                    config["model"]["model_type"][model_name]["adata_to_use"]
-                ]
-
-                GraphST.get_feature(adata)
-
-                # Change to cell_type as GraphST only accepts cell_type ...
-                adata_sc.obs.rename(
-                    columns={
-                        f"{self.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}": "cell_type"
-                    },
-                    inplace=True,
-                )
-
-                adata.obsm["spatial"] = adata.obsm["spatial"].astype(int)
-
-                st_model = GraphST.GraphST(
-                    adata,
-                    adata_sc,
-                    epochs=config["model"]["model_type"][model_name]["params"][
-                        "epochs"
-                    ],
-                    random_seed=config["model"]["model_type"][model_name]["params"][
-                        "random_seed"
-                    ],
-                    device=device,
-                    deconvolution=config["model"]["model_type"][model_name]["params"][
-                        "deconvolution"
-                    ],
-                )
-
-                adata, adata_sc = st_model.train_map()
-
-                self.adata_dict[self.data_type]["preprocessed_adata"] = adata.copy()
-
-                self.adata_dict["scRNA"]["preprocessed_adata"] = adata_sc.copy()
-
-            if model_name != "GraphST":
-
-                model = eval(model_name)
-                logger.info(
-                    model.setup_anndata(
-                        adata,
-                        layer=config["model"]["model_type"][model_name]["layer"],
-                    )
-                )
-
-                logger.info(
-                    f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
-                )
-                st_model = model.from_rna_model(adata, sc_model)
-                st_model.view_anndata_setup()
-                training_params = config["model"]["model_type"][model_name]["params"]
-                valid_arguments = inspect.signature(st_model.train).parameters.keys()
-                filtered_params = {
-                    k: v for k, v in training_params.items() if k in valid_arguments
-                }
-                st_model.train(**filtered_params)
-                plt.plot(st_model.history["elbo_train"], label="train")
-                plt.title("loss over training epochs")
-                plt.legend()
-                plt.show()
-                st_model.save("stmodel", overwrite=True)
-        else:
-            if model_name != "GraphST":
-                model = eval(model_name)
-                logger.info(
-                    f"Loading the pre-trained {model_name} model for deconvolution."
-                )
-                st_model = model.load(
-                    config["model"]["pre_trained_model_path"],
-                    adata,
-                )
-        return st_model, model_name
-
-    def save_processed_adata(self, fix_write: bool = None):
-        logger.info(
-            f"Saving {self.data_type}.h5ad file.\nPlease note that if you have several configurations defined for plotting, this might change the saved settings in the .h5ad files (i.e. latest settings from the latest plotting configs will be used)."
-        )
-        for adata_name, adata in self.adata_dict[self.data_type].items():
-            if isinstance(adata, ad.AnnData):
-                # Saving file after processing
-                adata_final = adata.copy()
-                try:
-                    del adata_final.uns["rank_genes_groups"]
-
-                except Exception as e:
-                    pass
-
-                try:
-                    del adata_final.uns["rank_genes_groups_filtered"]
-
-                except Exception as e:
-                    pass
-
-                if fix_write:
-                    try:
-                        adata_final = fix_write_h5ad(adata=adata_final)
-                    except Exception as e:
-                        logger.warning(f"fix_write_h5ad failed {e}")
-                    adata_final.write_h5ad(
-                        self.saving_path
-                        + "\\"
-                        + f"{self.data_type}\\Files"
-                        + "\\"
-                        + f"{self.data_type}_{adata_name}.h5ad"
-                    )
-                else:
-                    try:
-                        adata_final.write_h5ad(
-                            self.saving_path
-                            + "\\"
-                            + f"{self.data_type}\\Files"
-                            + "\\"
-                            + f"{self.data_type}_{adata_name}.h5ad"
-                        )
-                    except Exception as e:
-                        logger.error(f"Exception occurred saving {adata_name} - {e}")
-            else:
-                logger.warning(f"Adata {adata_name} is not an AnnData object.")

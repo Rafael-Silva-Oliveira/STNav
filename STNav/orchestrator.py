@@ -18,12 +18,17 @@ sc.settings.verbosity = 3
 
 from STNav import STNavCore
 from STNav.modules.pl import run_plots
-from STNav.modules.sc import perform_celltypist, perform_scArches_surgery
+from STNav.modules.sc import (
+    perform_celltypist,
+    perform_scArches_surgery,
+    train_or_load_sc_deconvolution_model,
+)
 from STNav.modules.st import (
     ReceptorLigandAnalysis,
     SpatiallyVariableGenes,
     SpatialNeighbors,
     deconvolution,
+    train_or_load_st_deconvolution_model,
 )
 
 username = os.path.expanduser("~")
@@ -89,8 +94,7 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        self.sc_model = STNavCorePipeline.train_or_load_sc_deconvolution_model()
-        STNavCorePipeline.save_processed_adata(fix_write=True)
+        self.sc_model = train_or_load_sc_deconvolution_model(STNavCorePipeline)
 
     def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
         if data_type_dict["cell_annotation"]["scArches_surgery"]["usage"]:
@@ -111,8 +115,8 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        self.st_model, model_name = (
-            STNavCorePipeline.train_or_load_st_deconvolution_model(self.sc_model)
+        self.st_model, model_name = train_or_load_st_deconvolution_model(
+            STNavCorePipeline=STNavCorePipeline
         )
         self.apply_subset_and_log(STNavCorePipeline)
 
@@ -121,8 +125,6 @@ class Orchestrator(object):
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)
-
-        STNavCorePipeline.save_processed_adata()
 
     def apply_subset_and_log(self, STNavCorePipeline):
         logger.warning(
