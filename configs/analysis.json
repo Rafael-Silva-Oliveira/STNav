@@ -326,7 +326,7 @@
           }
         }
       },
-      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\src\\models\\scmodel"
+      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
     }
   },
   "ST": {
@@ -611,7 +611,7 @@
           }
         }
       },
-      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\src\\models\\stmodel"
+      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\stmodel"
     },
     "SpatialNeighbors": {
       "Squidpy": {
@@ -710,7 +710,7 @@
       },
       "SpatialDM": {
         "SpatialDM_LigRec": {
-          "usage": true,
+          "usage": false,
           "adata_to_use": "deconvoluted_adata",
           "func_str": "SpatialDM_wrapper",
           "data_type": "ST",
@@ -738,7 +738,7 @@
       },
       "stLearn": {
         "stLearn_cci": {
-          "usage": true,
+          "usage": false,
           "adata_to_use": "deconvoluted_adata",
           "func_str": "stLearn_wrapper",
           "data_type": "ST",

@@ -37,7 +37,7 @@ def SpatialNeighbors(STNavCorePipeline):
             if config_params["usage"]:
                 adata = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
                     config_params["adata_to_use"]
-                ].copy()
+                ]
                 logger.info(
                     f"Running {method_name} method with {config_name} configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
                 )

@@ -25,12 +25,6 @@ date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 sc.settings.n_jobs >= -1
 import inspect
 
-# Unnormalize data
-
-
-# Training a model to predict proportions on Spatial data using scRNA seq as reference
-
-# from scvi.data import register_tensor_from_anndata
 
 from STNav.utils.helpers import (
     GARD,
@@ -959,11 +953,12 @@ class STNavCore(object):
                 st_model.save("stmodel", overwrite=True)
         else:
             if model_name != "GraphST":
+                model = eval(model_name)
                 logger.info(
                     f"Loading the pre-trained {model_name} model for deconvolution."
                 )
                 st_model = model.load(
-                    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\DAIgnostics\stmodel",
+                    config["model"]["pre_trained_model_path"],
                     adata,
                 )
         return st_model, model_name
