@@ -62,11 +62,7 @@ class Orchestrator(object):
                 data_type, data_type_dict, adata_dict, saving_dir
             )
 
-        return (
-            adata_dict,
-            self.sc_model,
-            self.st_model,
-        )
+        return adata_dict
 
     def initialize_adata_dict(self):
         adata_dict = {}

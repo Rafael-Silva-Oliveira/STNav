@@ -60,7 +60,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                     checkpoint_step=step,
                     checkpoint_boolean=STNavCorePipeline.config[
                         STNavCorePipeline.data_type
-                    ][step]["checkpoint"]["usage"],
+                    ][step][method_name][config_name]["checkpoint"]["usage"],
                 ):
                     logger.info(
                         f"Returning adata from checkpoint '{STNavCorePipeline.config[STNavCorePipeline.data_type][step]['checkpoint']['pipeline_run']}' with the following adata:\n\n {adata}."

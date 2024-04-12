@@ -29,8 +29,8 @@ def main(ANALYSIS_CONFIG: str, PLOTTING_CONFIG: str):
     directory = analysis_json["saving_path"] + "\\" + f"PipelineRun_{date}"
 
     subdirs = {
-        Orchestrator.SCRNA: ["Files", "Model"],
-        Orchestrator.ST: ["Files", "Model"],
+        Orchestrator.SCRNA: ["Files"],
+        Orchestrator.ST: ["Files"],
         "Plots": [],
         "log": [],
     }
@@ -57,11 +57,7 @@ def main(ANALYSIS_CONFIG: str, PLOTTING_CONFIG: str):
     # Has to be after creating the dir otherwise it will print directory already exists.
     logger.add(f"{directory}\\log\\loguru.log")
     logger.info(f"Directory where outputs will be saved: {directory}")
-    (
-        adata_dict,
-        sc_model,
-        st_model,
-    ) = ORCHESTRATOR.run_analysis(saving_dir=directory)
+    adata_dict = ORCHESTRATOR.run_analysis(saving_dir=directory)
 
     ORCHESTRATOR.run_plots(
         saving_dir=directory,
