@@ -101,9 +101,6 @@ def save_processed_adata(
     if data_type is not None:
         STNavCorePipeline.data_type = data_type
 
-    logger.info(
-        f"Saving {STNavCorePipeline.data_type} data type with the name {name}.h5ad file."
-    )
     adata_name = name
 
     if isinstance(adata, an.AnnData):
@@ -133,8 +130,69 @@ def save_processed_adata(
                     + "\\"
                     + f"{adata_name}.h5ad"
                 )
-        else:  # saving data from scratch
 
+                logger.info(f"Saving checkpoint path to adata_dict: {final_path}.")
+                STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                    adata_name
+                ] = final_path
+            else:
+                logger.info(
+                    f"Saving {STNavCorePipeline.data_type} data type with the name {name}.h5ad file."
+                )
+                # Saving file after processing
+                adata_final = adata.copy()
+                try:
+                    del adata_final.uns["rank_genes_groups"]
+
+                except Exception as e:
+                    pass
+
+                try:
+                    del adata_final.uns["rank_genes_groups_filtered"]
+
+                except Exception as e:
+                    pass
+
+                final_path = (
+                    f"{STNavCorePipeline.saving_path}"
+                    + "\\"
+                    + f"{STNavCorePipeline.data_type}\\Files"
+                    + "\\"
+                    + f"{adata_name}.h5ad"
+                )
+
+                if fix_write:
+                    try:
+                        adata_final = fix_write_h5ad(adata=adata_final)
+                    except Exception as e:
+                        logger.warning(f"fix_write_h5ad failed {e}")
+                    adata_final.write_h5ad(final_path)
+                else:
+                    try:
+                        adata_final.write_h5ad(final_path)
+                    except Exception as e:
+                        logger.error(f"Exception occurred saving {adata_name} - {e}")
+
+                # Save the path to the adata_dict for later use
+                if (
+                    adata_name
+                    in STNavCorePipeline.adata_dict[STNavCorePipeline.data_type]
+                ):
+                    logger.warning(
+                        f"Warning: {adata_name} path is already in the dictionary. The path will be overwritten."
+                    )
+
+                logger.info(
+                    f"Saving data to adata_dict as '{adata_name}' for {STNavCorePipeline.data_type} data type."
+                )
+
+                STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                    adata_name
+                ] = final_path
+        else:  # saving data from scratch
+            logger.info(
+                f"Saving {STNavCorePipeline.data_type} data type with the name {name}.h5ad file."
+            )
             # Saving file after processing
             adata_final = adata.copy()
             try:
@@ -162,6 +220,10 @@ def save_processed_adata(
                     adata_final = fix_write_h5ad(adata=adata_final)
                 except Exception as e:
                     logger.warning(f"fix_write_h5ad failed {e}")
+                if "lrfeatures" in adata_final.uns.keys():
+                    adata_final.uns["lrfeatures"] = adata_final.uns[
+                        "lrfeatures"
+                    ].astype(float)
                 adata_final.write_h5ad(final_path)
             else:
                 try:
@@ -179,9 +241,9 @@ def save_processed_adata(
                 f"Saving data to adata_dict as '{adata_name}' for {STNavCorePipeline.data_type} data type."
             )
 
-        STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-            adata_name
-        ] = final_path
+            STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                adata_name
+            ] = final_path
 
     else:
         logger.warning(f"Adata {adata_name} is not an AnnData object.")
@@ -379,6 +441,13 @@ def stLearn_wrapper(
 ):
     import stlearn as st
 
+    if "norm" not in adata.layers.keys():
+        logger.warning(
+            f"norm layer not found in adata.layers. Please make sure to run the normalization step before running stLearn LR analysis. See more: https://stlearn.readthedocs.io/en/latest/tutorials/Xenium_CCI.html."
+        )
+
+    adata.X = adata.layers["norm"]
+    # TODO: check if adata is just norm and not log norm
     use_label = "dominant_spot_cell_type"
 
     adata = st.convert_scanpy(adata)

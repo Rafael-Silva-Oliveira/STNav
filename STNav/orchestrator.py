@@ -65,62 +65,47 @@ class Orchestrator(object):
         return adata_dict
 
     def initialize_adata_dict(self):
+        def process_checkpoint(params, data_type):
+            if "checkpoint" in params and params["checkpoint"]["usage"]:
+                pipeline_run = params["checkpoint"]["pipeline_run"]
+                adata_name = params["save_as"]
+
+                checkpoint_path = (
+                    f"{self.analysis_config['saving_path']}"
+                    + "\\"
+                    + pipeline_run
+                    + "\\"
+                    + f"{data_type}\\Files"
+                    + "\\"
+                    + f"{adata_name}.h5ad"
+                )
+
+                if os.path.exists(checkpoint_path):
+                    adata_dict[data_type].update({adata_name: checkpoint_path})
+                    logger.info(
+                        f"Successfully created checkpoint on the {data_type} data type path for\n\n'{adata_name}' under the path:\n\n'{checkpoint_path}'."
+                    )
+                else:
+                    logger.warning(
+                        f"File '{checkpoint_path}' does not exist in the directory."
+                    )
+
         adata_dict = {}
         for data_type, steps in self.analysis_config.items():
             if data_type != "saving_path":
                 adata_dict.setdefault(data_type, {})
                 for step, params in steps.items():
                     try:
-                        if "checkpoint" in params:
-                            if params["checkpoint"]["usage"]:
-                                pipeline_run = params["checkpoint"]["pipeline_run"]
-                                adata_name = params["save_as"]
-                                if isinstance(adata_name, list):
-                                    for sub_adata_name in adata_name:
-                                        checkpoint_path = (
-                                            f"{self.analysis_config['saving_path']}"
-                                            + "\\"
-                                            + pipeline_run
-                                            + "\\"
-                                            + f"{data_type}\\Files"
-                                            + "\\"
-                                            + f"{sub_adata_name}.h5ad"
-                                        )
-
-                                        if os.path.exists(checkpoint_path):
-                                            adata_dict[data_type].update(
-                                                {sub_adata_name: checkpoint_path}
-                                            )
-                                            logger.info(
-                                                f"Successfully created checkpoint on the {data_type} data type path for\n\n'{sub_adata_name}' under the path:\n\n'{checkpoint_path}'."
-                                            )
-                                        else:
-                                            logger.warning(
-                                                f"File '{checkpoint_path}' does not exist in the directory."
-                                            )
-                                else:
-                                    checkpoint_path = (
-                                        f"{self.analysis_config['saving_path']}"
-                                        + "\\"
-                                        + pipeline_run
-                                        + "\\"
-                                        + f"{data_type}\\Files"
-                                        + "\\"
-                                        + f"{adata_name}.h5ad"
-                                    )
-
-                                    if os.path.exists(checkpoint_path):
-                                        adata_dict[data_type].update(
-                                            {adata_name: checkpoint_path}
-                                        )
-                                        logger.info(
-                                            f"Successfully created checkpoint on the {data_type} data type path for\n\n'{adata_name}' under the path:\n\n'{checkpoint_path}'."
-                                        )
-                                    else:
-                                        logger.warning(
-                                            f"File '{checkpoint_path}' does not exist in the directory."
-                                        )
+                        if step in [
+                            "SpatialNeighbors",
+                            "SpatiallyVariableGenes",
+                            "ReceptorLigandAnalysis",
+                        ]:
+                            for method_name, config_params in params.items():
+                                process_checkpoint(config_params, data_type)
+                        process_checkpoint(params, data_type)
                     except Exception as e:
+                        logger.error(f"Error on {step}: {e}")
                         continue
 
         return adata_dict

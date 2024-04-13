@@ -62,10 +62,6 @@
       }
     },
     "quality_control": {
-      "checkpoint": {
-        "usage": true,
-        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-      },
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
       "calculate_qc_metrics": {
@@ -95,10 +91,6 @@
       "print_mt": false
     },
     "preprocessing": {
-      "checkpoint": {
-        "usage": true,
-        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-      },
       "adata_to_use": "QCed_adata",
       "save_as": "preprocessed_adata",
       "unnormalize": {
@@ -207,13 +199,8 @@
       }
     },
     "DEG": {
-      "checkpoint": {
-        "usage": true,
-        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-      },
       "adata_to_use": "preprocessed_adata",
-      "adata_to_use_for_DEG": "DEG_adata",
-      "save_as": ["preprocessed_DEG_adata", "DEG_adata"],
+      "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
         "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
@@ -249,10 +236,6 @@
         }
       },
       "GSEA": {
-        "checkpoint": {
-          "usage": false,
-          "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-        },
         "usage": false,
         "stratify_by_group": false,
         "gene_sets": {
@@ -342,7 +325,7 @@
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 500,
+            "max_epochs": 750,
             "early_stopping": true
           }
         }
@@ -357,10 +340,6 @@
     "load_images": true,
     "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um\\spatial",
     "quality_control": {
-      "checkpoint": {
-        "usage": true,
-        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-      },
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
       "calculate_qc_metrics": {
@@ -390,10 +369,6 @@
       "print_mt": false
     },
     "preprocessing": {
-      "checkpoint": {
-        "usage": true,
-        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-      },
       "adata_to_use": "QCed_adata",
       "save_as": "preprocessed_adata",
       "unnormalize": {
@@ -502,13 +477,8 @@
       }
     },
     "DEG": {
-      "checkpoint": {
-        "usage": true,
-        "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-      },
       "adata_to_use": "preprocessed_adata",
-      "adata_to_use_for_DEG": "DEG_adata",
-      "save_as": ["preprocessed_DEG_adata", "DEG_adata"],
+      "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
         "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
@@ -633,7 +603,7 @@
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 5,
+            "max_epochs": 750,
             "early_stopping": true
           }
         },
@@ -652,172 +622,101 @@
       "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\stmodel"
     },
     "SpatialNeighbors": {
-      "Squidpy": {
-        "NHoodEnrichment": {
-          "checkpoint": {
-            "usage": true,
-            "pipeline_run": "PipelineRun_2024_04_12-10_00_45_PM"
-          },
-          "adata_to_use": "preprocessed_adata",
-          "save_as": "NHoodEnrichment_adata",
+      "Squidpy_NHoodEnrichment": {
+        "checkpoint": {
           "usage": true,
-          "func_str": "sq.gr.nhood_enrichment",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "cluster_key": "leiden_clusters"
-          }
+          "pipeline_run": "PipelineRun_Checkpoint"
         },
-        "Co_Ocurrence": {
-          "checkpoint": {
-            "usage": true,
-            "pipeline_run": "PipelineRun_2024_04_12-10_00_45_PM"
-          },
-          "adata_to_use": "preprocessed_adata",
-          "save_as": "co_occurrence_adata",
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "NHoodEnrichment_adata",
+        "usage": true,
+        "func_str": "sq.gr.nhood_enrichment",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "cluster_key": "leiden_clusters"
+        }
+      },
+      "Squidpy_Co_Ocurrence": {
+        "checkpoint": {
           "usage": true,
-          "func_str": "sq.gr.co_occurrence",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "cluster_key": "leiden_clusters"
-          }
+          "pipeline_run": "PipelineRun_Checkpoint"
+        },
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "co_occurrence_adata",
+        "usage": true,
+        "func_str": "sq.gr.co_occurrence",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "cluster_key": "leiden_clusters"
         }
       }
     },
     "SpatiallyVariableGenes": {
-      "SpatialDE": {
-        "config_1": {
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "data_type": "ST",
-          "params": {
-            "x_coord_name": "array_row",
-            "y_coord_name": "array_col"
-          },
-          "AEH": {
-            "usage": false,
-            "params": {
-              "C": 3,
-              "l": 1.5
-            }
-          }
-        },
-        "config_2": {
-          "usage": false,
-          "data_type": "ST",
-          "params": {
-            "x_coord_name": "array_row",
-            "y_coord_name": "array_col",
-            "counts": "total_counts"
-          },
-          "AEH": {
-            "usage": false,
-            "params": {
-              "C": 3,
-              "l": 1.5
-            }
-          }
-        }
-      },
       "Squidpy_MoranI": {
-        "Squidpy_MoranI": {
-          "checkpoint": {
-            "usage": true,
-            "pipeline_run": "PipelineRun_2024_04_12-10_00_45_PM"
-          },
-          "adata_to_use": "preprocessed_adata",
-          "save_as": "MoranI_adata",
+        "checkpoint": {
           "usage": true,
-          "func_str": "sq.gr.spatial_autocorr",
-          "data_type": "ST",
-          "n_genes": 1000,
-          "params": {
-            "adata": "adata",
-            "mode": "moran",
-            "n_perms": 1000,
-            "n_jobs": 1
-          }
+          "pipeline_run": "PipelineRun_Checkpoint"
+        },
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "MoranI_adata",
+        "usage": true,
+        "func_str": "sq.gr.spatial_autocorr",
+        "data_type": "ST",
+        "n_genes": 1000,
+        "params": {
+          "adata": "adata",
+          "mode": "moran",
+          "n_perms": 1000,
+          "n_jobs": 1
         }
-      },
-      "Squidpy_Speal": {}
+      }
     },
     "ReceptorLigandAnalysis": {
-      "Squidpy": {
-        "ligrec": {
-          "checkpoint": {
-            "usage": false,
-            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-          },
-          "adata_to_use": "preprocessed_adata",
-          "save_as": "squidpy_ligrec_adata",
+      "Squidpy_ligrec": {
+        "checkpoint": {
           "usage": false,
-          "func_str": "sq.gr.ligrec",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "n_perms": 1000,
-            "cluster_key": "leiden_clusters",
-            "copy": true,
-            "use_raw": false,
-            "transmitter_params": { "categories": "ligand" },
-            "receiver_params": { "categories": "receptor" },
-            "key_added": "ligrec"
-          }
+          "pipeline_run": "PipelineRun_Checkpoint"
+        },
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "squidpy_ligrec_adata",
+        "usage": false,
+        "func_str": "sq.gr.ligrec",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "n_perms": 1000,
+          "cluster_key": "leiden_clusters",
+          "copy": true,
+          "use_raw": false,
+          "transmitter_params": { "categories": "ligand" },
+          "receiver_params": { "categories": "receptor" },
+          "key_added": "ligrec"
         }
       },
-      "SpatialDM": {
-        "SpatialDM_LigRec": {
-          "usage": false,
-          "adata_to_use": "deconvoluted_adata",
-          "func_str": "SpatialDM_wrapper",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "l": 1.2,
-            "cutoff": 0.2,
-            "single_cell": false,
-            "species": "human",
-            "min_cell": 3,
-            "n_perm": 1000,
-            "specified_ind_global": null,
-            "method_global": "both",
-            "specified_ind_local": null,
-            "method_local": "both",
-            "nproc": 1,
-            "method_sig_pairs": "permutation",
-            "fdr_sig_pairs": true,
-            "threshold_sig_pairs": 0.1,
-            "method_sig_spots": "permutation",
-            "fdr_sig_spots": false,
-            "threshold_sig_spots": 0.1
-          }
-        }
-      },
-      "stLearn": {
-        "stLearn_cci": {
-          "checkpoint": {
-            "usage": false,
-            "pipeline_run": "PipelineRun_2024_04_12-04_38_44_PM"
-          },
-          "adata_to_use": "deconvoluted_adata",
-          "save_as": "stlearn_cci_adata",
-          "usage": false,
-          "func_str": "stLearn_wrapper",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "min_spots": 20,
-            "distance": null,
-            "n_pairs": 10000,
-            "spot_mixtures": false,
-            "sig_spots": true,
-            "cell_prop_cutoff": 0.2,
-            "p_cutoff": 0.05,
-            "n_perms": 1000,
-            "n_cpus": null,
-            "verbose": true
-          }
+      "stLearn_cci": {
+        "checkpoint": {
+          "usage": true,
+          "pipeline_run": "PipelineRun_Checkpoint"
+        },
+        "adata_to_use": "deconvoluted_adata",
+        "save_as": "stlearn_cci_adata",
+        "usage": true,
+        "func_str": "stLearn_wrapper",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "min_spots": 20,
+          "distance": null,
+          "n_pairs": 10000,
+          "spot_mixtures": false,
+          "sig_spots": true,
+          "cell_prop_cutoff": 0.2,
+          "p_cutoff": 0.05,
+          "n_perms": 1000,
+          "n_cpus": null,
+          "verbose": true
         }
       }
     }

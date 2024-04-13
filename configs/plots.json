@@ -391,7 +391,7 @@
       "ST_co_occurrence_1.png": {
         "usage": true,
         "func_str": "sq.pl.co_occurrence",
-        "adata_to_use": "Co_Ocurrence_adata",
+        "adata_to_use": "co_occurrence_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -402,7 +402,7 @@
       "ST_co_occurrence_all.png": {
         "usage": true,
         "func_str": "sq.pl.co_occurrence",
-        "adata_to_use": "Co_Ocurrence_adata",
+        "adata_to_use": "co_occurrence_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -695,7 +695,7 @@
       "ST_spatial_scatter.png": {
         "usage": true,
         "func_str": "sq.pl.spatial_scatter",
-        "adata_to_use": "Squidpy_MoranI_adata",
+        "adata_to_use": "MoranI_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -705,38 +705,11 @@
         }
       }
     },
-    "sdm_global_plot": {
-      "ST_global_plot.png": {
-        "usage": true,
-        "func_str": "sdm.plottings.global_plot",
-        "adata_to_use": "SpatialDM_LigRec_adata",
-        "data_type": "ST",
-        "params": {
-          "sample": "adata",
-          "pairs": null,
-          "show": false
-        }
-      }
-    },
-    "sdm_plotting_pairs": {
-      "ST_plotting_pairs.png": {
-        "usage": true,
-        "func_str": "sdm.plottings.plot_pairs",
-        "adata_to_use": "SpatialDM_LigRec_adata",
-        "data_type": "ST",
-        "params": {
-          "sample": "adata",
-          "pairs_to_plot": ["FN1_SDC4", "THBS2_SDC4"],
-          "marker": "s",
-          "show": false
-        }
-      }
-    },
     "st_ligrec_summary": {
       "st_ligand_receptor.png": {
         "usage": true,
         "func_str": "st.pl.lr_summary",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -749,7 +722,7 @@
       "st_lr_diagnostics.png": {
         "usage": true,
         "func_str": "st.pl.lr_diagnostics",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -761,7 +734,7 @@
       "st_lr_n_spots.png": {
         "usage": true,
         "func_str": "st.pl.lr_n_spots",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -774,7 +747,7 @@
       "st_lr_plot.png": {
         "usage": true,
         "func_str": "st.pl.lr_plot",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -794,7 +767,7 @@
       "st_lr_cci_plot.png": {
         "usage": true,
         "func_str": "st.pl.lr_plot",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -823,7 +796,7 @@
       "st_cci_diagnostics.png": {
         "usage": true,
         "func_str": "st.pl.cci_check",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -836,7 +809,7 @@
       "st_cci_network.png": {
         "usage": true,
         "func_str": "st.pl.ccinet_plot",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -851,7 +824,7 @@
       "LR_CCI_map.png": {
         "usage": true,
         "func_str": "st.pl.lr_cci_map",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -866,7 +839,7 @@
       "CCI_map.png": {
         "usage": true,
         "func_str": "st.pl.cci_map",
-        "adata_to_use": "stLearn_cci_adata",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",

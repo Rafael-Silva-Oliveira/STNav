@@ -51,123 +51,51 @@ def deconvolution(STNavCorePipeline, st_model, model_name):
         ]
     )
 
-    if model_name == "GraphST":
+    # Deconvolution
+    st_adata.obsm["deconvolution"] = st_model.get_proportions()
+    with torch.no_grad():
+        keep_noise = False
+        res = torch.nn.functional.softplus(st_model.module.V).cpu().numpy().T
+        if not keep_noise:
+            res = res[:, :-1]
 
-        adata_sc = sc.read_h5ad(
-            STNavCorePipeline.adata_dict["scRNA"]["subset_preprocessed_adata"]
-        )
-        adata_sc_preprocessed = sc.read_h5ad(
-            STNavCorePipeline.adata_dict["scRNA"]["preprocessed_adata"]
-        )
+    column_names = st_model.cell_type_mapping
+    st_adata.obsm["deconvolution_unconstr"] = pd.DataFrame(
+        data=res,
+        columns=column_names,
+        index=st_model.adata.obs.index,
+    )
 
-        project_cell_to_spot(st_adata, adata_sc, retain_percent=0.15)
+    for ct in st_adata.obsm["deconvolution"].columns:
+        st_adata.obs[ct] = st_adata.obsm["deconvolution"][ct]
 
-        columns_cell_type_names = list(adata_sc.obs["cell_type"].unique())
+    st_adata.obs[
+        f"spatial_{STNavCorePipeline.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
+    ] = st_adata.obs[column_names].idxmax(axis=1)
 
-        for cell_type in columns_cell_type_names:
-            save_path = STNavCorePipeline.saving_path + "\\Plots\\" + cell_type + ".png"
-            with plt.rc_context():  # Use this to set figure params like size and dpi
-                plot_func = sc.pl.spatial(
-                    st_adata,
-                    cmap="magma",
-                    color=cell_type,
-                    img_key="hires",
-                    size=1.5,
-                    alpha_img=0.5,
-                    show=False,
-                )
-                plt.savefig(save_path, bbox_inches="tight")
+    save_processed_adata(
+        STNavCorePipeline=STNavCorePipeline,
+        name="deconvoluted_adata",
+        adata=st_adata,
+    )
+    for cell_type in st_adata.obsm["deconvolution"].columns:
+        save_path = STNavCorePipeline.saving_path + "\\Plots\\" + cell_type + ".png"
+        with plt.rc_context():  # Use this to set figure params like size and dpi
+            plot_func = sc.pl.spatial(
+                st_adata,
+                cmap="magma",
+                color=cell_type,
+                img_key="hires",
+                size=1.6,
+                alpha_img=0.5,
+                show=False,
+            )
+            plt.savefig(save_path, bbox_inches="tight")
 
-        # Return to the original naming convention for plotting purposes
-        adata_sc.obs.rename(
-            columns={
-                "cell_type": f"{STNavCorePipeline.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-            },
-            inplace=True,
-        )
-        adata_sc_preprocessed.obs.rename(
-            columns={
-                "cell_type": f"{STNavCorePipeline.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-            },
-            inplace=True,
-        )
-
-        # save_processed_adata(
-        #     STNavCorePipeline=STNavCorePipeline,
-        #     name="subset_preprocessed_adata",
-        #     adata=adata_sc,
-        # )
-        # STNavCorePipeline.adata_dict["scRNA"][
-        #     "subset_preprocessed_adata"
-        # ] = adata_sc.copy()
-        # STNavCorePipeline.adata_dict["scRNA"][
-        #     "preprocessed_adata"
-        # ] = adata_sc_preprocessed.copy()
-
-        st_adata.obsm["deconvolution"] = st_adata.obs[columns_cell_type_names]
-
-        STNavCorePipeline.save_as("deconvoluted_adata", st_adata)
-
-        st_adata.obs.to_excel(
-            f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\Deconvoluted_{date}.xlsx",
-            index=False,
-        )
-        adata_sc.obs.rename(
-            columns={
-                "cell_type": {
-                    STNavCorePipeline.config["scRNA"]["DEG"]["rank_genes_groups"][
-                        "params"
-                    ]["groupby"]
-                }
-            },
-            inplace=True,
-        )
-    else:
-        # Deconvolution
-        st_adata.obsm["deconvolution"] = st_model.get_proportions()
-        with torch.no_grad():
-            keep_noise = False
-            res = torch.nn.functional.softplus(st_model.module.V).cpu().numpy().T
-            if not keep_noise:
-                res = res[:, :-1]
-
-        column_names = st_model.cell_type_mapping
-        st_adata.obsm["deconvolution_unconstr"] = pd.DataFrame(
-            data=res,
-            columns=column_names,
-            index=st_model.adata.obs.index,
-        )
-
-        for ct in st_adata.obsm["deconvolution"].columns:
-            st_adata.obs[ct] = st_adata.obsm["deconvolution"][ct]
-
-        st_adata.obs[
-            f"spatial_{STNavCorePipeline.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}"
-        ] = st_adata.obs[column_names].idxmax(axis=1)
-
-        save_processed_adata(
-            STNavCorePipeline=STNavCorePipeline,
-            name="deconvoluted_adata",
-            adata=st_adata,
-        )
-        for cell_type in st_adata.obsm["deconvolution"].columns:
-            save_path = STNavCorePipeline.saving_path + "\\Plots\\" + cell_type + ".png"
-            with plt.rc_context():  # Use this to set figure params like size and dpi
-                plot_func = sc.pl.spatial(
-                    st_adata,
-                    cmap="magma",
-                    color=cell_type,
-                    img_key="hires",
-                    size=1.6,
-                    alpha_img=0.5,
-                    show=False,
-                )
-                plt.savefig(save_path, bbox_inches="tight")
-
-        st_adata.obs.to_excel(
-            f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\Deconvoluted_{date}.xlsx",
-            index=False,
-        )
+    st_adata.obs.to_excel(
+        f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\Deconvoluted_{date}.xlsx",
+        index=False,
+    )
     return st_model
 
 
