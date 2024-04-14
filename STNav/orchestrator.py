@@ -44,6 +44,7 @@ class Orchestrator(object):
     STNavCore_cls = STNavCore
     SCRNA = "scRNA"
     ST = "ST"
+    sc_model = None
 
     def __init__(self, analysis_config, plotting_config) -> None:
         self.analysis_config = self._update_config(analysis_config)
@@ -134,7 +135,7 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        train_or_load_sc_deconvolution_model(STNavCorePipeline)
+        self.sc_model = train_or_load_sc_deconvolution_model(STNavCorePipeline)
 
     def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
         if data_type_dict["cell_annotation"]["scArches_surgery"]["usage"]:
@@ -155,6 +156,7 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
+        STNavCorePipeline.sc_model = self.sc_model
         self.st_model, model_name = train_or_load_st_deconvolution_model(
             STNavCorePipeline=STNavCorePipeline
         )

@@ -49,10 +49,13 @@ import anndata as ad
 class STNavCore(object):
     adata_dict_suffix = "_adata"
     sc_model = None
-    st_model = None
 
     def __init__(
-        self, config: dict, saving_path: str, data_type: str, adata_dict: dict = None
+        self,
+        config: dict,
+        saving_path: str,
+        data_type: str,
+        adata_dict: dict = None,
     ) -> None:
         self.config = config
         self.saving_path = saving_path

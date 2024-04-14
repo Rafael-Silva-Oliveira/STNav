@@ -185,7 +185,7 @@ def train_or_load_st_deconvolution_model(STNavCorePipeline):
             logger.info(
                 f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
             )
-            st_model = model.from_rna_model(adata, self.sc_model)
+            st_model = model.from_rna_model(adata, STNavCorePipeline.sc_model)
             st_model.view_anndata_setup()
             training_params = config["model"]["model_type"][model_name]["params"]
             valid_arguments = inspect.signature(st_model.train).parameters.keys()

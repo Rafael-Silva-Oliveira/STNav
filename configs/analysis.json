@@ -598,7 +598,7 @@
           }
         },
         "SpatialStereoscope": {
-          "train": false,
+          "train": true,
           "usage": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
