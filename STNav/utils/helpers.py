@@ -47,12 +47,19 @@ from STNav.utils.decorators import logger_wraps, pass_STNavCore_params
 @pass_STNavCore_params
 def return_from_checkpoint(
     STNavCorePipeline,
-    path_to_check: str,
+    config_params,
     checkpoint_step: str,
-    checkpoint_boolean: bool = False,
+    method_name: str,
 ):
 
+    checkpoint_boolean = STNavCorePipeline.config[STNavCorePipeline.data_type][
+        checkpoint_step
+    ][method_name]["checkpoint"]["usage"]
+
     if checkpoint_boolean:
+        path_to_check = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+            config_params["save_as"]
+        ]
         logger.info(f"Looking for checkpoint {checkpoint_step}.")
 
         current_pipeline_run = f"{STNavCorePipeline.saving_path}".split(os.sep)[-1]

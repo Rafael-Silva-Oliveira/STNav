@@ -118,12 +118,6 @@ def train_or_load_st_deconvolution_model(STNavCorePipeline):
     model_name = model_types[0]
 
     train = config["model"]["model_type"][model_name]["train"]
-    if model_name == "GraphST" and not train:
-        raise ValueError(
-            logger.error(
-                f"Mode name is {model_name}, but training is set to {train}. When using GraphST, please make sure training is set to True."
-            )
-        )
     adata = sc.read_h5ad(
         STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
             config["model"]["model_type"][model_name]["adata_to_use"]
@@ -131,83 +125,37 @@ def train_or_load_st_deconvolution_model(STNavCorePipeline):
     )
 
     if train:
-        if model_name == "GraphST":
-            device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
-            adata_sc = STNavCorePipeline.adata_dict["scRNA"][
-                config["model"]["model_type"][model_name]["adata_to_use"]
-            ]
-
-            GraphST.get_feature(adata)
-
-            # Change to cell_type as GraphST only accepts cell_type ...
-            adata_sc.obs.rename(
-                columns={
-                    f"{STNavCorePipeline.config['scRNA']['DEG']['rank_genes_groups']['params']['groupby']}": "cell_type"
-                },
-                inplace=True,
-            )
-
-            adata.obsm["spatial"] = adata.obsm["spatial"].astype(int)
-
-            st_model = GraphST.GraphST(
+        model = eval(model_name)
+        logger.info(
+            model.setup_anndata(
                 adata,
-                adata_sc,
-                epochs=config["model"]["model_type"][model_name]["params"]["epochs"],
-                random_seed=config["model"]["model_type"][model_name]["params"][
-                    "random_seed"
-                ],
-                device=device,
-                deconvolution=config["model"]["model_type"][model_name]["params"][
-                    "deconvolution"
-                ],
+                layer=config["model"]["model_type"][model_name]["layer"],
             )
+        )
 
-            adata, adata_sc = st_model.train_map()
-
-            STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                "preprocessed_adata"
-            ] = adata.copy()
-
-            STNavCorePipeline.adata_dict["scRNA"][
-                "preprocessed_adata"
-            ] = adata_sc.copy()
-
-        if model_name != "GraphST":
-
-            model = eval(model_name)
-            logger.info(
-                model.setup_anndata(
-                    adata,
-                    layer=config["model"]["model_type"][model_name]["layer"],
-                )
-            )
-
-            logger.info(
-                f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
-            )
-            st_model = model.from_rna_model(adata, STNavCorePipeline.sc_model)
-            st_model.view_anndata_setup()
-            training_params = config["model"]["model_type"][model_name]["params"]
-            valid_arguments = inspect.signature(st_model.train).parameters.keys()
-            filtered_params = {
-                k: v for k, v in training_params.items() if k in valid_arguments
-            }
-            st_model.train(**filtered_params)
-            plt.plot(st_model.history["elbo_train"], label="train")
-            plt.title("loss over training epochs")
-            plt.legend()
-            plt.show()
-            st_model.save("stmodel", overwrite=True)
+        logger.info(
+            f"Training the {model_name} model for deconvolution with '{config['model']['model_type'][model_name]['adata_to_use']}' adata file using the layer {config['model']['model_type'][model_name]['layer']} and the following parameters {config['model']['model_type'][model_name]['params']}."
+        )
+        st_model = model.from_rna_model(adata, STNavCorePipeline.sc_model)
+        st_model.view_anndata_setup()
+        training_params = config["model"]["model_type"][model_name]["params"]
+        valid_arguments = inspect.signature(st_model.train).parameters.keys()
+        filtered_params = {
+            k: v for k, v in training_params.items() if k in valid_arguments
+        }
+        st_model.train(**filtered_params)
+        plt.plot(st_model.history["elbo_train"], label="train")
+        plt.title("loss over training epochs")
+        plt.legend()
+        plt.show()
+        st_model.save("stmodel", overwrite=True)
     else:
-        if model_name != "GraphST":
-            model = eval(model_name)
-            logger.info(
-                f"Loading the pre-trained {model_name} model for deconvolution."
-            )
-            st_model = model.load(
-                config["model"]["pre_trained_model_path"],
-                adata,
-            )
+        model = eval(model_name)
+        logger.info(f"Loading the pre-trained {model_name} model for deconvolution.")
+        st_model = model.load(
+            config["model"]["pre_trained_model_path"],
+            adata,
+        )
     STNavCorePipeline.st_model = st_model
 
     return st_model, model_name

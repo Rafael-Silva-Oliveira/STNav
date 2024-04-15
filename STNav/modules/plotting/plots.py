@@ -52,13 +52,12 @@ def run_plots(plotting_config, adata_dict: dict, directory: str):
                     f"Running plot type {plot_type} with the config name {config_name}"
                 )
 
+                # Check if adata is being loaded
                 try:
                     adata_path = adata_dict[params["data_type"]][params["adata_to_use"]]
                     adata = sc.read_h5ad(adata_path)
                 except Exception as e:
-                    logger.error(
-                        f"\n\n\n\n{params['adata_to_use']} doesn't seem to be present in the dictionary of adata. Make sure all calculations are done if you want to use {params['adata_to_use']} for the {config_name} plot type.\n\n\n\n"
-                    )
+                    logger.error(f"Error: {e}. The adata could not be loaded.")
                     continue
 
                 if any(

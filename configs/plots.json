@@ -385,6 +385,18 @@
           "adata": "adata",
           "cluster_key": "leiden_clusters"
         }
+      },
+      "ST_nhood_average.png": {
+        "usage": true,
+        "func_str": "sq.pl.nhood_enrichment",
+        "adata_to_use": "NHoodEnrichment_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "cluster_key": "leiden_clusters",
+          "method": "average",
+          "cmap": "inferno"
+        }
       }
     },
     "sq_co_occurrence": {
@@ -700,7 +712,7 @@
         "params": {
           "adata": "adata",
           "size": 1.5,
-          "color": ["Samd11", "Perm1", "Hes4"],
+          "color": ["Igkc", "Scg2", "Rgs5"],
           "show": false
         }
       }

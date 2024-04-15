@@ -41,29 +41,29 @@ def SpatialNeighbors(STNavCorePipeline):
     logger.info("Calcualting Spatial Neighbors scores.")
     for method_name, config_params in config.items():
         if config_params["usage"]:
+
+            if return_from_checkpoint(
+                STNavCorePipeline,
+                config_params=config_params,
+                checkpoint_step=step,
+                method_name=method_name,
+            ):
+                adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
+                    config_params["save_as"]
+                ]
+                adata = sc.read_h5ad(adata_path)
+                continue
             adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
                 config_params["adata_to_use"]
             ]
             adata = sc.read_h5ad(adata_path)
 
-            if return_from_checkpoint(
-                STNavCorePipeline,
-                path_to_check=adata_path,
-                checkpoint_step=step,
-                checkpoint_boolean=STNavCorePipeline.config[
-                    STNavCorePipeline.data_type
-                ][step][method_name]["checkpoint"]["usage"],
-            ):
-                logger.info(
-                    f"Returning adata from checkpoint '{STNavCorePipeline.config[STNavCorePipeline.data_type][step][method_name]['checkpoint']['pipeline_run']}' with the following adata:\n\n {adata}."
-                )
-                return adata
             logger.info(
                 f"Running {method_name} method configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
             )
 
             if method_name == "Squidpy_NHoodEnrichment":
-                sq.gr.spatial_neighbors(adata)
+                sq.gr.spatial_neighbors(adata, coord_type="generic")
                 sq.gr.nhood_enrichment(
                     **return_filtered_params(config=config_params, adata=adata)
                 )

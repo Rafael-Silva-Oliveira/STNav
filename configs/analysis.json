@@ -144,7 +144,7 @@
         "params": {
           "adata": "adata",
           "subset": true,
-          "n_top_genes": 5000,
+          "n_top_genes": 10000,
           "min_mean": 0.0125,
           "max_mean": 2,
           "min_disp": 0.25,
@@ -212,7 +212,7 @@
           "method": "wilcoxon",
           "key_added": "wilcoxon",
           "layer": null,
-          "n_genes": 5000,
+          "n_genes": 10000,
           "use_raw": false
         }
       },
@@ -311,17 +311,17 @@
       "model_type": {
         "CondSCVI": {
           "train": false,
-          "usage": false,
+          "usage": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 500,
+            "max_epochs": 750,
             "early_stopping": true
           }
         },
         "RNAStereoscope": {
           "train": false,
-          "usage": true,
+          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
@@ -422,7 +422,7 @@
         "params": {
           "adata": "adata",
           "subset": true,
-          "n_top_genes": 5000,
+          "n_top_genes": 10000,
           "min_mean": 0.0125,
           "max_mean": 3,
           "min_disp": 0.5,
@@ -589,33 +589,22 @@
       "model_type": {
         "DestVI": {
           "train": false,
-          "usage": false,
+          "usage": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 500,
+            "max_epochs": 100,
             "early_stopping": true
           }
         },
         "SpatialStereoscope": {
-          "train": true,
-          "usage": true,
+          "train": false,
+          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
             "max_epochs": 750,
             "early_stopping": true
-          }
-        },
-        "GraphST": {
-          "usage": false,
-          "train": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "epochs": 1200,
-            "random_seed": 50,
-            "deconvolution": true
           }
         }
       },
@@ -624,7 +613,7 @@
     "SpatialNeighbors": {
       "Squidpy_NHoodEnrichment": {
         "checkpoint": {
-          "usage": true,
+          "usage": false,
           "pipeline_run": "PipelineRun_Checkpoint"
         },
         "adata_to_use": "preprocessed_adata",
@@ -639,7 +628,7 @@
       },
       "Squidpy_Co_Ocurrence": {
         "checkpoint": {
-          "usage": true,
+          "usage": false,
           "pipeline_run": "PipelineRun_Checkpoint"
         },
         "adata_to_use": "preprocessed_adata",
@@ -649,14 +638,15 @@
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "cluster_key": "leiden_clusters"
+          "cluster_key": "leiden_clusters",
+          "interval": null
         }
       }
     },
     "SpatiallyVariableGenes": {
       "Squidpy_MoranI": {
         "checkpoint": {
-          "usage": true,
+          "usage": false,
           "pipeline_run": "PipelineRun_Checkpoint"
         },
         "adata_to_use": "preprocessed_adata",
@@ -697,7 +687,7 @@
       },
       "stLearn_cci": {
         "checkpoint": {
-          "usage": true,
+          "usage": false,
           "pipeline_run": "PipelineRun_Checkpoint"
         },
         "adata_to_use": "deconvoluted_adata",
