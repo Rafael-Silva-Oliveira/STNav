@@ -51,11 +51,6 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                 checkpoint_step=step,
                 method_name=method_name,
             ):
-
-                adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                    config_params["save_as"]
-                ]
-                adata = sc.read_h5ad(adata_path)
                 continue
 
             adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][

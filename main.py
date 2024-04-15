@@ -40,7 +40,6 @@ def main(ANALYSIS_CONFIG: str, PLOTTING_CONFIG: str):
         for main_dir, sub_dir_list in subdirs.items():
             if sub_dir_list:
                 for subdir in sub_dir_list:
-                    # TODO: add a flag that adds the model sub-folder if the train model is set to true. Else, don't add that model sub-folder.
                     curr_dir = directory + "\\" + main_dir + "\\" + subdir
                     # Create the directory
                     os.makedirs(curr_dir)

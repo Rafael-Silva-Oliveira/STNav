@@ -59,7 +59,7 @@ def train_or_load_sc_deconvolution_model(STNavCorePipeline):
         }
         sc_model.train(**filtered_params)
         sc_model.history["elbo_train"][10:].plot()
-        sc_model.save("scmodel", overwrite=True)
+        sc_model.save(r".\\STNav\\models\\scmodel", overwrite=True)
     else:
         logger.info(f"Loading the pre-trained {model_name} model for deconvolution.")
         sc_model = model.load(

@@ -48,16 +48,14 @@ def SpatiallyVariableGenes(STNavCorePipeline):
     logger.info("Obtaining spatially variable genes.")
     for method_name, config_params in config.items():
         if config_params["usage"]:
+
+            # TODO: If config[save_as] in adata_dict.keys() then we already know the step has been checkpointed
             if return_from_checkpoint(
                 STNavCorePipeline,
                 config_params=config_params,
                 checkpoint_step=step,
                 method_name=method_name,
             ):
-                adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
-                    config_params["save_as"]
-                ]
-                adata = sc.read_h5ad(adata_path)
                 continue
             adata_path = STNavCorePipeline.adata_dict[STNavCorePipeline.data_type][
                 config_params["adata_to_use"]

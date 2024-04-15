@@ -315,7 +315,7 @@
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 750,
+            "max_epochs": 1250,
             "early_stopping": true
           }
         },
@@ -325,7 +325,7 @@
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 750,
+            "max_epochs": 1250,
             "early_stopping": true
           }
         }

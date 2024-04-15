@@ -148,7 +148,7 @@ def train_or_load_st_deconvolution_model(STNavCorePipeline):
         plt.title("loss over training epochs")
         plt.legend()
         plt.show()
-        st_model.save("stmodel", overwrite=True)
+        st_model.save(r".\\STNav\\models\\stmodel", overwrite=True)
     else:
         model = eval(model_name)
         logger.info(f"Loading the pre-trained {model_name} model for deconvolution.")
