@@ -115,3 +115,8 @@ notebooks/experimental/EC venous systemic.png
 notebooks/experimental/Neuroendocrine.png
 test.h5ad
 scmodel/model.pt
+notebooks/experimental/cell2location/reference_signatures/sc.h5ad
+notebooks/experimental/cell2location/reference_signatures/model.pt
+notebooks/experimental/tangram/data/visium_fluo_adata_crop.h5ad
+notebooks/experimental/tangram/data/visium_fluo_image_crop.h5ad.tiff
+STNav/models/scmodel/model.pt

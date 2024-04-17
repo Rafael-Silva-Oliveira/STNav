@@ -21,14 +21,12 @@ from STNav.modules.pl import run_plots
 from STNav.modules.sc import (
     perform_celltypist,
     perform_scArches_surgery,
-    train_or_load_sc_deconvolution_model,
 )
 from STNav.modules.st import (
     ReceptorLigandAnalysis,
     SpatiallyVariableGenes,
     SpatialNeighbors,
-    deconvolution,
-    train_or_load_st_deconvolution_model,
+    Deconvolution,
 )
 from STNav.utils.helpers import (
     return_filtered_params,
@@ -44,7 +42,6 @@ class Orchestrator(object):
     STNavCore_cls = STNavCore
     SCRNA = "scRNA"
     ST = "ST"
-    sc_model = None
 
     def __init__(self, analysis_config, plotting_config) -> None:
         self.analysis_config = self._update_config(analysis_config)
@@ -121,7 +118,6 @@ class Orchestrator(object):
             adata_dict=adata_dict,
         )
         logger.info(f"Running Analysis for {data_type}")
-        # TODO: check if the above code doesn't put sc_model back to None...
         self.run_analysis_steps(data_type, data_type_dict, STNavCorePipeline)
 
     def run_analysis_steps(self, data_type, data_type_dict, STNavCorePipeline):
@@ -135,7 +131,6 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        self.sc_model = train_or_load_sc_deconvolution_model(STNavCorePipeline)
 
     def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
         if data_type_dict["cell_annotation"]["scArches_surgery"]["usage"]:
@@ -156,14 +151,10 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        STNavCorePipeline.sc_model = self.sc_model
-        self.st_model, model_name = train_or_load_st_deconvolution_model(
-            STNavCorePipeline=STNavCorePipeline
-        )
         self.apply_subset_and_log(STNavCorePipeline)
 
-        # External modules to the core pipeline
-        deconvolution(STNavCorePipeline, st_model=self.st_model, model_name=model_name)
+        DECONV = Deconvolution(STNavCorePipeline)
+        DECONV.run_deconvolution()
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)
@@ -193,11 +184,11 @@ class Orchestrator(object):
     def apply_subset(self, STNavCorePipeline, intersect):
         st_adata_intersect = sc.read_h5ad(
             STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"]
-        )[:, intersect].copy()
+        )[:, intersect]
 
         sc_adata_intersect = sc.read_h5ad(
             STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"]
-        )[:, intersect].copy()
+        )[:, intersect]
 
         save_processed_adata(
             STNavCorePipeline,

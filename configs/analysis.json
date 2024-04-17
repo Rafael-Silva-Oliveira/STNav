@@ -202,7 +202,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -225,7 +225,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -442,12 +442,12 @@
           "params": { "adata": "adata", "n_pcs": 30, "n_neighbors": 20 }
         },
         "umap": {
-          "usage": true,
+          "usage": false,
           "func_str": "sc.tl.umap",
           "params": { "adata": "adata" }
         },
         "tsne": {
-          "usage": true,
+          "usage": false,
           "func_str": "sc.tl.tsne",
           "params": { "adata": "adata", "n_pcs": 30 }
         },
@@ -480,7 +480,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -503,7 +503,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -602,6 +602,18 @@
           "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
+          "params": {
+            "max_epochs": 750,
+            "early_stopping": true
+          }
+        },
+        "Tangram": {
+          "train": false,
+          "usage": false,
+          "adata_sc_to_use": "raw_adata",
+          "adata_st_to_use": "raw_adata",
+          "layer": null,
+          "image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\Visium_HD_Human_Lung_Cancer_tissue_image.tif",
           "params": {
             "max_epochs": 750,
             "early_stopping": true
