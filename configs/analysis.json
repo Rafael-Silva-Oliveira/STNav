@@ -650,8 +650,7 @@
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "cluster_key": "leiden_clusters",
-          "interval": null
+          "cluster_key": "leiden_clusters"
         }
       }
     },

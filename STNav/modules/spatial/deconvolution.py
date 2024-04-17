@@ -92,7 +92,7 @@ class Deconvolution:
 
         train = config["model"]["model_type"][model_name]["train"]
 
-        if model_name.isin(["RNAStereoscope", "CondSCVI"]):
+        if model_name in ["RNAStereoscope", "CondSCVI"]:
             sc_model = siceVI(
                 self.STNavCorePipeline, adata, model_name, config, train, model
             )
@@ -139,10 +139,10 @@ class Deconvolution:
                 config=config,
                 train=train,
             )
-        elif model_name.isin(["SpatialStereoscope", "DestVI"]):
-            adata = sc.read_h5ad(
-                config["model"]["model_type"][model_name]["adata_sc_to_use"]
-            )
+        elif model_name in ["SpatialStereoscope", "DestVI"]:
+            st_adata_to_use = config["model"]["model_type"][model_name]["adata_to_use"]
+            st_path = self.STNavCorePipeline.adata_dict["ST"][st_adata_to_use]
+            adata = sc.read_h5ad(st_path)
             st_model = spatVI(
                 self.STNavCorePipeline,
                 adata,
@@ -153,11 +153,7 @@ class Deconvolution:
             )
 
             adata_st_subset = sc.read_h5ad(
-                self.STNavCorePipeline.adata_dict["ST"][
-                    config["model"]["model_type"][model_name][
-                        "subset_preprocessed_adata"
-                    ]
-                ]
+                self.STNavCorePipeline.adata_dict["ST"]["subset_preprocessed_adata"]
             )
             # Deconvolution
             adata_st_subset.obsm["deconvolution"] = st_model.get_proportions()
