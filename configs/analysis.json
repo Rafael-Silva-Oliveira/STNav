@@ -311,11 +311,11 @@
       "model_type": {
         "CondSCVI": {
           "train": false,
-          "usage": true,
+          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 1250,
+            "max_epochs": 25,
             "early_stopping": true
           }
         },
@@ -589,11 +589,11 @@
       "model_type": {
         "DestVI": {
           "train": false,
-          "usage": true,
+          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 100,
+            "max_epochs": 2,
             "early_stopping": true
           }
         },
@@ -608,14 +608,14 @@
           }
         },
         "Tangram": {
-          "train": false,
-          "usage": false,
+          "train": true,
+          "usage": true,
           "adata_sc_to_use": "raw_adata",
           "adata_st_to_use": "raw_adata",
           "layer": null,
           "image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\Visium_HD_Human_Lung_Cancer_tissue_image.tif",
           "params": {
-            "max_epochs": 750,
+            "max_epochs": 25,
             "early_stopping": true
           }
         }

@@ -238,6 +238,7 @@ def siceVI(STNavCorePipeline, adata, model_name, config, train, model):
             config["model"]["pre_trained_model_path"],
             adata,
         )
+    return sc_model
 
 
 def spatVI(STNavCorePipeline, adata, model_name, config, train, sc_model=None):
