@@ -1,0 +1,226 @@
+Gene name,Function
+MCAM,2_Smooth muscle marker
+MYH11,2_Smooth muscle marker
+UCY1A2,2_Smooth muscle marker
+LGI4,2_Smooth muscle marker
+KLHL23,2_Smooth muscle marker
+AD-1,2_Smooth muscle marker
+AN2,2_Smooth muscle marker
+ARMN,2_Smooth muscle marker
+IP1,2_Smooth muscle marker
+HIGD1B,2_Smooth muscle marker
+TINAGL1,2_Smooth muscle marker
+AMD2B,2_Smooth muscle marker
+NOTCH3,2_Smooth muscle marker
+HMOX2,2_Smooth muscle marker
+LMN,2_Smooth muscle marker
+SFTPD,AT1 marker
+OL4A3,AT1 marker
+SDC1,AT1 marker
+PRC5A,AT1 marker
+SLC34A2,AT1 marker
+EPCAM,AT1 marker
+LDN18,AT1 marker
+ITGB6,AT1 marker
+SCEL,AT1 marker
+MUC1,AT1 marker
+KRT18,AT1 marker
+AGER,AT1 marker
+AQP4,AT1 marker
+EPS8L2,AT1 marker
+SUSD2,AT1 marker
+EPS8L2,AT2 marker
+MUC1,AT2 marker
+LMO3,AT2 marker
+ATP1B1,AT2 marker
+FXYD3,AT2 marker
+EPCAM,AT2 marker
+PRC5A,AT2 marker
+FAM53B,AT2 marker
+KRT18,AT2 marker
+DHCR24,AT2 marker
+AQP4,AT2 marker
+ITGB6,AT2 marker
+EACAM6,AT2 marker
+SFTPD,AT2 marker
+19ORF33,AT2 marker
+KDM4C,B cell lineage marker
+IGHV3-23,B cell lineage marker
+MZB1,B cell lineage marker
+IGLV2-23,B cell lineage marker
+IGHG2,B cell lineage marker
+SEC11C,B cell lineage marker
+IGHV4-39,B cell lineage marker
+IGHG3,B cell lineage marker
+IGHGP,B cell lineage marker
+IGLC3,B cell lineage marker
+IGHG1,B cell lineage marker
+DOK2,B cell lineage marker
+YTIP,B cell lineage marker
+LIMD2,B cell lineage marker
+JCHAIN,B cell lineage marker
+SELP,EC arterial marker
+L23,EC arterial marker
+HEY1,EC arterial marker
+SEMA3G,EC arterial marker
+ITGA6,EC arterial marker
+FLT4,EC arterial marker
+NRN1,EC arterial marker
+SMAD6,EC arterial marker
+NPR3,EC arterial marker
+PLA1A,EC arterial marker
+DYSF,EC arterial marker
+AQP1,EC arterial marker
+EDN1,EC arterial marker
+IDO1,EC arterial marker
+MET,EC arterial marker
+A4,EC capillary marker
+BTNL9,EC capillary marker
+VIPR1,EC capillary marker
+PREX1,EC capillary marker
+SOSTDC1,EC capillary marker
+SAD2,EC capillary marker
+SEMA3G,EC capillary marker
+PRX,EC capillary marker
+HPGD,EC capillary marker
+SLCO4A1,EC capillary marker
+PCDH12,EC capillary marker
+PDGFB,EC capillary marker
+,EC capillary marker
+D34,EC capillary marker
+SLC6A4,EC capillary marker
+ACKR1,EC venous marker
+LU,EC venous marker
+MMRN1,EC venous marker
+SELP,EC venous marker
+PE-1,EC venous marker
+L23,EC venous marker
+SRPX,EC venous marker
+MET,EC venous marker
+PLA1A,EC venous marker
+IL33,EC venous marker
+VWF,EC venous marker
+ADGRG6,EC venous marker
+MPZL2,EC venous marker
+PRSS23,EC venous marker
+LYST,EC venous marker
+OL3A1,Fibroblasts marker
+OL6A3,Fibroblasts marker
+OL1A1,Fibroblasts marker
+OL1A2,Fibroblasts marker
+LUM,Fibroblasts marker
+LSAMP,Fibroblasts marker
+OL5A2,Fibroblasts marker
+SCN7A,Fibroblasts marker
+OL5A1,Fibroblasts marker
+ARRES2,Fibroblasts marker
+MXRA8,Fibroblasts marker
+FN1,Fibroblasts marker
+LAMA2,Fibroblasts marker
+VCAN,Fibroblasts marker
+MOXD1,Fibroblasts marker
+NKG7,Innate lymphoid cell NK marker
+D2,Innate lymphoid cell NK marker
+LF3,Innate lymphoid cell NK marker
+NLY,Innate lymphoid cell NK marker
+L3,Innate lymphoid cell NK marker
+L5,Innate lymphoid cell NK marker
+12ORF76,Innate lymphoid cell NK marker
+PTPRC,Innate lymphoid cell NK marker
+IFNG,Innate lymphoid cell NK marker
+D52,Innate lymphoid cell NK marker
+DOK2,Innate lymphoid cell NK marker
+L4,Innate lymphoid cell NK marker
+TRBC1,Innate lymphoid cell NK marker
+HCST,Innate lymphoid cell NK marker
+DC73,Innate lymphoid cell NK marker
+TFF3,Lymphatic EC differentiating marker
+SEMA3A,Lymphatic EC differentiating marker
+TBX1,Lymphatic EC differentiating marker
+ANGPT2,Lymphatic EC differentiating marker
+PROX1,Lymphatic EC differentiating marker
+SCN3B,Lymphatic EC differentiating marker
+6ORF141,Lymphatic EC differentiating marker
+FABP4,Lymphatic EC differentiating marker
+STAB2,Lymphatic EC differentiating marker
+KLF6,Lymphatic EC differentiating marker
+ELN-1,Lymphatic EC differentiating marker
+L21,Lymphatic EC differentiating marker
+ARL4A,Lymphatic EC differentiating marker
+PM6A,Lymphatic EC differentiating marker
+MAN1A1,Lymphatic EC differentiating marker
+FABP4,Lymphatic EC mature marker
+TFF3,Lymphatic EC mature marker
+L21,Lymphatic EC mature marker
+ELN-1,Lymphatic EC mature marker
+ARL4A,Lymphatic EC mature marker
+ANGPT2,Lymphatic EC mature marker
+STAB2,Lymphatic EC mature marker
+6ORF141,Lymphatic EC mature marker
+PROX1,Lymphatic EC mature marker
+TBX1,Lymphatic EC mature marker
+MRC1,Lymphatic EC mature marker
+SCN3B,Lymphatic EC mature marker
+LYVE1,Lymphatic EC mature marker
+SMAD1,Lymphatic EC mature marker
+KLF6,Lymphatic EC mature marker
+1QA,Macrophages marker
+1QB,Macrophages marker
+LAPTM5,Macrophages marker
+TSD,Macrophages marker
+PNMB,Macrophages marker
+D68,Macrophages marker
+LUL,Macrophages marker
+STB,Macrophages marker
+APOC1,Macrophages marker
+XCR4,Macrophages marker
+FTL,Macrophages marker
+MRC1,Macrophages marker
+PTPRC,Macrophages marker
+LIPA,Macrophages marker
+SLCO2B1,Macrophages marker
+TPSAB1,Mast cells marker
+TPSB2,Mast cells marker
+S1,Mast cells marker
+YCS,Mast cells marker
+PTPRC,Mast cells marker
+D69,Mast cells marker
+LAPTM5,Mast cells marker
+S10,Mast cells marker
+KRT19,Mast cells marker
+A1BG,Mast cells marker
+NR4A2,Mast cells marker
+PHKG1,Mast cells marker
+KNOP1,Mast cells marker
+S2,Mast cells marker
+D52,Mast cells marker
+D2,T cell lineage marker
+S1,T cell lineage marker
+DOK2,T cell lineage marker
+KLRB1,T cell lineage marker
+D52,T cell lineage marker
+PTPRC,T cell lineage marker
+YTIP,T cell lineage marker
+IFNG,T cell lineage marker
+TRBC1,T cell lineage marker
+HCST,T cell lineage marker
+DUSP2,T cell lineage marker
+XCR4,T cell lineage marker
+L5,T cell lineage marker
+D69,T cell lineage marker
+NKG7,T cell lineage marker
+TFF3,Unknown marker
+L14,Unknown marker
+D36,Unknown marker
+FLT4,Unknown marker
+PIHBP1,Unknown marker
+TM4SF18,Unknown marker
+ELN-1,Unknown marker
+FABP5,Unknown marker
+6ORF141,Unknown marker
+FABP4,Unknown marker
+NPR3,Unknown marker
+STAB2,Unknown marker
+PKHD1L1,Unknown marker
+PM6A,Unknown marker
+DYSF,Unknown marker

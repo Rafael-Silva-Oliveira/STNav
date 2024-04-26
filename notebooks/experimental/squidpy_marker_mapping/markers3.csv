@@ -1,0 +1,1831 @@
+Gene name,Function
+SCGB3A2,AT0 marker
+SLPI,AT0 marker
+CD207,AT0 marker
+HLA-DPB1,AT0 marker
+TYRP1,AT0 marker
+SH2D6,AT0 marker
+KCNN2,AT0 marker
+TRH,AT0 marker
+GATA5,AT0 marker
+GDF15,AT0 marker
+AADACL2,AT0 marker
+TPSG1,AT0 marker
+KRT1,AT0 marker
+RP11-501J20.5,AT0 marker
+RP11-826N14.8,AT0 marker
+HPD,AT0 marker
+XIST,AT0 marker
+SPIC,AT0 marker
+GPR182,AT0 marker
+SIGLEC6,AT0 marker
+OTC,AT0 marker
+HSPB3,AT0 marker
+NTRK1,AT0 marker
+B4GALNT1,AT0 marker
+BST2,AT0 marker
+EPGN,AT0 marker
+TRGV2,AT0 marker
+SPINK14,AT0 marker
+NUGGC,AT0 marker
+BRINP3,AT0 marker
+HOPX,AT1 marker
+EMP2,AT1 marker
+AGER,AT1 marker
+SFTA2,AT1 marker
+SFTPB,AT1 marker
+CCL11,AT1 marker
+KCNN2,AT1 marker
+DSTN,AT1 marker
+TRGV2,AT1 marker
+SPIC,AT1 marker
+RP11-322E11.5,AT1 marker
+TFF2,AT1 marker
+CAV1,AT1 marker
+TPSG1,AT1 marker
+SEZ6L,AT1 marker
+COMP,AT1 marker
+CD1B,AT1 marker
+LINC00636,AT1 marker
+AVPR1A,AT1 marker
+EBF2,AT1 marker
+LINC02106,AT1 marker
+HSPB3,AT1 marker
+GPC2,AT1 marker
+GPR182,AT1 marker
+TRH,AT1 marker
+CDH19,AT1 marker
+BRINP3,AT1 marker
+MPIG6B,AT1 marker
+RP11-501J20.5,AT1 marker
+PAEP,AT1 marker
+SFTPC,AT2 marker
+NAPSA,AT2 marker
+SFTPB,AT2 marker
+SFTPA1,AT2 marker
+SFTPA2,AT2 marker
+SLPI,AT2 marker
+NPC2,AT2 marker
+SERPINA1,AT2 marker
+OMG,AT2 marker
+S100A6,AT2 marker
+SLC34A2,AT2 marker
+SFTA2,AT2 marker
+CD74,AT2 marker
+FTL,AT2 marker
+TPPP3,AT2 marker
+CLDN4,AT2 marker
+CYB5A,AT2 marker
+NEAT1,AT2 marker
+SSUH2,AT2 marker
+PIMREG,AT2 marker
+DCN,AT2 marker
+EPPIN,AT2 marker
+MRLN,AT2 marker
+KCNA4,AT2 marker
+IGHV3-30,AT2 marker
+MUC1,AT2 marker
+OTC,AT2 marker
+LRRK2,AT2 marker
+KLF1,AT2 marker
+A2M,AT2 marker
+PEG10,AT2 proliferating marker
+TPSG1,AT2 proliferating marker
+SFN,AT2 proliferating marker
+TYMS,AT2 proliferating marker
+TK1,AT2 proliferating marker
+SIGLEC6,AT2 proliferating marker
+CCL11,AT2 proliferating marker
+SCT,AT2 proliferating marker
+TNFSF11,AT2 proliferating marker
+BRINP3,AT2 proliferating marker
+TRGV2,AT2 proliferating marker
+TOP2A,AT2 proliferating marker
+COMP,AT2 proliferating marker
+TFF2,AT2 proliferating marker
+CRLF2,AT2 proliferating marker
+ADRA2C,AT2 proliferating marker
+KCNN2,AT2 proliferating marker
+GREM2,AT2 proliferating marker
+PTTG1,AT2 proliferating marker
+RUNDC3B,AT2 proliferating marker
+LINC01705,AT2 proliferating marker
+OTC,AT2 proliferating marker
+CD207,AT2 proliferating marker
+KRT1,AT2 proliferating marker
+HSPB3,AT2 proliferating marker
+CTD-2531D15.4,AT2 proliferating marker
+AMHR2,AT2 proliferating marker
+LINC01122,AT2 proliferating marker
+RP11-817J15.2,AT2 proliferating marker
+SOX10,AT2 proliferating marker
+DCN,Adventitial fibroblasts marker
+SFTPC,Adventitial fibroblasts marker
+MT2A,Adventitial fibroblasts marker
+FIBCD1,Adventitial fibroblasts marker
+NTNG2,Adventitial fibroblasts marker
+CFD,Adventitial fibroblasts marker
+IGFBP6,Adventitial fibroblasts marker
+LUM,Adventitial fibroblasts marker
+GPRC5A,Adventitial fibroblasts marker
+IGFBP4,Adventitial fibroblasts marker
+TIMP1,Adventitial fibroblasts marker
+COL24A1,Adventitial fibroblasts marker
+RP11-817J15.2,Adventitial fibroblasts marker
+CLEC9A,Adventitial fibroblasts marker
+HOXD9,Adventitial fibroblasts marker
+HOXA9,Adventitial fibroblasts marker
+CTD-2547H18.1,Adventitial fibroblasts marker
+SH2D6,Adventitial fibroblasts marker
+SPIC,Adventitial fibroblasts marker
+APOD,Adventitial fibroblasts marker
+ADH1B,Adventitial fibroblasts marker
+KCNN2,Adventitial fibroblasts marker
+MGST1,Adventitial fibroblasts marker
+TRH,Adventitial fibroblasts marker
+ADCYAP1,Adventitial fibroblasts marker
+VIM,Adventitial fibroblasts marker
+SEZ6L,Adventitial fibroblasts marker
+PAEP,Adventitial fibroblasts marker
+ACTA1,Adventitial fibroblasts marker
+IFNG-AS1,Adventitial fibroblasts marker
+MT2A,Alveolar Mph CCL3+ marker
+HLA-DRB1,Alveolar Mph CCL3+ marker
+C1QC,Alveolar Mph CCL3+ marker
+SOD2,Alveolar Mph CCL3+ marker
+CCL4L2,Alveolar Mph CCL3+ marker
+RPS4Y1,Alveolar Mph CCL3+ marker
+MT1E,Alveolar Mph CCL3+ marker
+CCL4,Alveolar Mph CCL3+ marker
+GREM2,Alveolar Mph CCL3+ marker
+BRINP3,Alveolar Mph CCL3+ marker
+SNX10,Alveolar Mph CCL3+ marker
+TYRP1,Alveolar Mph CCL3+ marker
+VSIG4,Alveolar Mph CCL3+ marker
+STOM,Alveolar Mph CCL3+ marker
+RP11-826N14.8,Alveolar Mph CCL3+ marker
+MT1X,Alveolar Mph CCL3+ marker
+SIGLEC6,Alveolar Mph CCL3+ marker
+GLUL,Alveolar Mph CCL3+ marker
+IL7R,Alveolar Mph CCL3+ marker
+CCL11,Alveolar Mph CCL3+ marker
+PAEP,Alveolar Mph CCL3+ marker
+TFF2,Alveolar Mph CCL3+ marker
+EPGN,Alveolar Mph CCL3+ marker
+C4B,Alveolar Mph CCL3+ marker
+HLA-DQA2,Alveolar Mph CCL3+ marker
+NFIA-AS2,Alveolar Mph CCL3+ marker
+S100A8,Alveolar Mph CCL3+ marker
+SYT10,Alveolar Mph CCL3+ marker
+SMPX,Alveolar Mph CCL3+ marker
+KCNA5,Alveolar Mph CCL3+ marker
+MT1X,Alveolar Mph MT-positive marker
+MT2A,Alveolar Mph MT-positive marker
+HMOX1,Alveolar Mph MT-positive marker
+CCL18,Alveolar Mph MT-positive marker
+CCL11,Alveolar Mph MT-positive marker
+DTX1,Alveolar Mph MT-positive marker
+GPR25,Alveolar Mph MT-positive marker
+VEGFD,Alveolar Mph MT-positive marker
+MT1F,Alveolar Mph MT-positive marker
+TRGV2,Alveolar Mph MT-positive marker
+JPH2,Alveolar Mph MT-positive marker
+LINC00636,Alveolar Mph MT-positive marker
+NFIA-AS2,Alveolar Mph MT-positive marker
+MT1G,Alveolar Mph MT-positive marker
+FDCSP,Alveolar Mph MT-positive marker
+APLN,Alveolar Mph MT-positive marker
+KCNN2,Alveolar Mph MT-positive marker
+DLL3,Alveolar Mph MT-positive marker
+AVPR1A,Alveolar Mph MT-positive marker
+RP11-557H15.4,Alveolar Mph MT-positive marker
+SCT,Alveolar Mph MT-positive marker
+MT1E,Alveolar Mph MT-positive marker
+BRINP3,Alveolar Mph MT-positive marker
+TFF2,Alveolar Mph MT-positive marker
+KLK14,Alveolar Mph MT-positive marker
+KRT1,Alveolar Mph MT-positive marker
+RP11-817J15.2,Alveolar Mph MT-positive marker
+ADRA2C,Alveolar Mph MT-positive marker
+OTC,Alveolar Mph MT-positive marker
+HSPB3,Alveolar Mph MT-positive marker
+CCL11,Alveolar Mph proliferating marker
+CDH19,Alveolar Mph proliferating marker
+PCLAF,Alveolar Mph proliferating marker
+TYMS,Alveolar Mph proliferating marker
+KLK14,Alveolar Mph proliferating marker
+TFF2,Alveolar Mph proliferating marker
+GPR25,Alveolar Mph proliferating marker
+BRINP3,Alveolar Mph proliferating marker
+PAEP,Alveolar Mph proliferating marker
+JPH2,Alveolar Mph proliferating marker
+NNAT,Alveolar Mph proliferating marker
+LINC02106,Alveolar Mph proliferating marker
+LRCOL1,Alveolar Mph proliferating marker
+CASQ2,Alveolar Mph proliferating marker
+AADACL2,Alveolar Mph proliferating marker
+EGFLAM,Alveolar Mph proliferating marker
+LRRN4,Alveolar Mph proliferating marker
+SLC38A11,Alveolar Mph proliferating marker
+KCNN2,Alveolar Mph proliferating marker
+GPR182,Alveolar Mph proliferating marker
+SYT10,Alveolar Mph proliferating marker
+RP11-501J20.5,Alveolar Mph proliferating marker
+HPD,Alveolar Mph proliferating marker
+ADRA2C,Alveolar Mph proliferating marker
+RP11-817J15.2,Alveolar Mph proliferating marker
+NFIA-AS2,Alveolar Mph proliferating marker
+UBE2C,Alveolar Mph proliferating marker
+TYRP1,Alveolar Mph proliferating marker
+LHX6,Alveolar Mph proliferating marker
+CD207,Alveolar Mph proliferating marker
+RGCC,Alveolar fibroblasts marker
+A2M,Alveolar fibroblasts marker
+SIGLEC6,Alveolar fibroblasts marker
+TFF2,Alveolar fibroblasts marker
+RP11-501J20.5,Alveolar fibroblasts marker
+GNAO1,Alveolar fibroblasts marker
+GPX3,Alveolar fibroblasts marker
+KLK14,Alveolar fibroblasts marker
+TRGV2,Alveolar fibroblasts marker
+SMR3A,Alveolar fibroblasts marker
+OTC,Alveolar fibroblasts marker
+CD207,Alveolar fibroblasts marker
+KRT1,Alveolar fibroblasts marker
+AADACL2,Alveolar fibroblasts marker
+CLEC9A,Alveolar fibroblasts marker
+GCOM1,Alveolar fibroblasts marker
+SEZ6L,Alveolar fibroblasts marker
+HSPB3,Alveolar fibroblasts marker
+RAB3C,Alveolar fibroblasts marker
+GPR25,Alveolar fibroblasts marker
+SNORC,Alveolar fibroblasts marker
+TRH,Alveolar fibroblasts marker
+SOX10,Alveolar fibroblasts marker
+CALHM3,Alveolar fibroblasts marker
+SPIC,Alveolar fibroblasts marker
+CDH19,Alveolar fibroblasts marker
+LINC01781,Alveolar fibroblasts marker
+IDO2,Alveolar fibroblasts marker
+PAEP,Alveolar fibroblasts marker
+CCL2,Alveolar fibroblasts marker
+FTH1,Alveolar macrophages marker
+FTL,Alveolar macrophages marker
+C1QB,Alveolar macrophages marker
+FABP4,Alveolar macrophages marker
+S100A11,Alveolar macrophages marker
+HLA-DRA,Alveolar macrophages marker
+C1QA,Alveolar macrophages marker
+ALOX5AP,Alveolar macrophages marker
+S100A10,Alveolar macrophages marker
+NKG7,Alveolar macrophages marker
+SCGB3A2,Alveolar macrophages marker
+CD74,Alveolar macrophages marker
+MT-ND2,Alveolar macrophages marker
+CTSD,Alveolar macrophages marker
+LYZ,Alveolar macrophages marker
+DCN,Alveolar macrophages marker
+KCNQ1OT1,Alveolar macrophages marker
+RPL26,Alveolar macrophages marker
+RND3,Alveolar macrophages marker
+APOC1,Alveolar macrophages marker
+TYROBP,Alveolar macrophages marker
+HLA-DRB5,Alveolar macrophages marker
+HLA-DPA1,Alveolar macrophages marker
+HLA-DPB1,Alveolar macrophages marker
+XIST,Alveolar macrophages marker
+CRIP1,Alveolar macrophages marker
+MRC1,Alveolar macrophages marker
+KRT1,Alveolar macrophages marker
+FCN3,Alveolar macrophages marker
+ANXA1,Alveolar macrophages marker
+HLA-DRA,B cells marker
+MS4A1,B cells marker
+CD74,B cells marker
+TRGV2,B cells marker
+ROCR,B cells marker
+CDK15,B cells marker
+CCL11,B cells marker
+CDH19,B cells marker
+GPR182,B cells marker
+CD79A,B cells marker
+GPR25,B cells marker
+GCOM1,B cells marker
+KCNN2,B cells marker
+AADACL2,B cells marker
+LINC00636,B cells marker
+VEGFD,B cells marker
+PAEP,B cells marker
+B4GALNT1,B cells marker
+BRINP3,B cells marker
+COMP,B cells marker
+TPSG1,B cells marker
+TFF2,B cells marker
+MYBPC1,B cells marker
+SIGLEC6,B cells marker
+CD83,B cells marker
+ITPRID1,B cells marker
+RP11-322E11.5,B cells marker
+AVPR1A,B cells marker
+DIO2,B cells marker
+IGKC,B cells marker
+KRT15,Basal resting marker
+KRT17,Basal resting marker
+RPLP1,Basal resting marker
+CLU,Basal resting marker
+BCAM,Basal resting marker
+CYB5A,Basal resting marker
+CDH19,Basal resting marker
+RPS4Y1,Basal resting marker
+RPL41,Basal resting marker
+ALDH3A1,Basal resting marker
+ADH1C,Basal resting marker
+BST2,Basal resting marker
+IFITM1,Basal resting marker
+KRT1,Basal resting marker
+MPIG6B,Basal resting marker
+OTC,Basal resting marker
+CLEC4O,Basal resting marker
+AVPR1A,Basal resting marker
+RPL3,Basal resting marker
+ZFP36L2,Basal resting marker
+MSMB,Basal resting marker
+GREM2,Basal resting marker
+CTD-2547H18.1,Basal resting marker
+CXCL10,Basal resting marker
+FOXS1,Basal resting marker
+TEX41,Basal resting marker
+CIRBP,Basal resting marker
+CASQ2,Basal resting marker
+IGFBP2,Basal resting marker
+GATA5,Basal resting marker
+SFTPC,CD4 T cells marker
+LCN2,CD4 T cells marker
+IL7R,CD4 T cells marker
+LTB,CD4 T cells marker
+OTC,CD4 T cells marker
+MALAT1,CD4 T cells marker
+CXCR4,CD4 T cells marker
+VIM,CD4 T cells marker
+KCNN2,CD4 T cells marker
+AVPR1A,CD4 T cells marker
+COMP,CD4 T cells marker
+TSHZ2,CD4 T cells marker
+XIST,CD4 T cells marker
+BTG1,CD4 T cells marker
+MYOCD,CD4 T cells marker
+CDK15,CD4 T cells marker
+APLN,CD4 T cells marker
+ADRA2C,CD4 T cells marker
+B2M,CD4 T cells marker
+BRINP3,CD4 T cells marker
+CCL11,CD4 T cells marker
+RP11-84E17.1,CD4 T cells marker
+GPR182,CD4 T cells marker
+TEX41,CD4 T cells marker
+SLC38A11,CD4 T cells marker
+IQGAP3,CD4 T cells marker
+ZFP36L2,CD4 T cells marker
+KLK14,CD4 T cells marker
+TPSG1,CD4 T cells marker
+SH2D6,CD4 T cells marker
+CCL5,CD8 T cells marker
+MALAT1,CD8 T cells marker
+NKG7,CD8 T cells marker
+TNFSF11,CD8 T cells marker
+SCGB1A1,CD8 T cells marker
+S100A8,CD8 T cells marker
+HLA-DRA,CD8 T cells marker
+CD3D,CD8 T cells marker
+FABP4,CD8 T cells marker
+TMSB4X,CD8 T cells marker
+CES1,CD8 T cells marker
+CD52,CD8 T cells marker
+C1QB,CD8 T cells marker
+MT1X,CD8 T cells marker
+CCL4,CD8 T cells marker
+MSMB,CD8 T cells marker
+RPS27,CD8 T cells marker
+LINC01705,CD8 T cells marker
+GPX3,CD8 T cells marker
+B2M,CD8 T cells marker
+FABP5,CD8 T cells marker
+MT1E,CD8 T cells marker
+TRGC2,CD8 T cells marker
+CCL11,CD8 T cells marker
+SPIC,CD8 T cells marker
+RPS19,CD8 T cells marker
+MYBPC1,CD8 T cells marker
+TPSG1,CD8 T cells marker
+NFIA-AS2,CD8 T cells marker
+IL32,CD8 T cells marker
+S100A8,Classical monocytes marker
+S100A9,Classical monocytes marker
+LYZ,Classical monocytes marker
+TYROBP,Classical monocytes marker
+SCGB1A1,Classical monocytes marker
+SCGB3A1,Classical monocytes marker
+GNLY,Classical monocytes marker
+SAT1,Classical monocytes marker
+FTL,Classical monocytes marker
+S100A12,Classical monocytes marker
+NEAT1,Classical monocytes marker
+TPSB2,Classical monocytes marker
+THBS1,Classical monocytes marker
+CCL21,Classical monocytes marker
+SFTPC,Classical monocytes marker
+S100A4,Classical monocytes marker
+SMPX,Classical monocytes marker
+SH3BGRL3,Classical monocytes marker
+MT-CO3,Classical monocytes marker
+CDH19,Classical monocytes marker
+HLA-B,Classical monocytes marker
+TYRP1,Classical monocytes marker
+APLNR,Classical monocytes marker
+NKG7,Classical monocytes marker
+FOXS1,Classical monocytes marker
+IGHG3,Classical monocytes marker
+DAB1,Classical monocytes marker
+RP11-817J15.2,Classical monocytes marker
+CEBPB,Classical monocytes marker
+RPS2,Classical monocytes marker
+WFDC2,Club (nasal) marker
+PSCA,Club (nasal) marker
+S100A4,Club (nasal) marker
+FABP5,Club (nasal) marker
+SAT1,Club (nasal) marker
+CSF3,Club (nasal) marker
+IFI27,Club (nasal) marker
+SERPINB3,Club (nasal) marker
+S100A6,Club (nasal) marker
+ALDH3A1,Club (nasal) marker
+GPNMB,Club (nasal) marker
+ID1,Club (nasal) marker
+IGFBP7,Club (nasal) marker
+CSRP2,Club (nasal) marker
+FIBCD1,Club (nasal) marker
+TPSG1,Club (nasal) marker
+S100A9,Club (nasal) marker
+AVPR1A,Club (nasal) marker
+JUN,Club (nasal) marker
+SOCS2,Club (nasal) marker
+MT-CO3,Club (nasal) marker
+CDH19,Club (nasal) marker
+KCNN2,Club (nasal) marker
+GATA5,Club (nasal) marker
+CD1B,Club (nasal) marker
+C4B,Club (nasal) marker
+B4GALNT1,Club (nasal) marker
+KRT1,Club (nasal) marker
+C6,Club (nasal) marker
+CCL11,Club (nasal) marker
+SCGB3A1,Club (non-nasal) marker
+SCGB1A1,Club (non-nasal) marker
+SLPI,Club (non-nasal) marker
+WFDC2,Club (non-nasal) marker
+TFF3,Club (non-nasal) marker
+S100P,Club (non-nasal) marker
+LCN2,Club (non-nasal) marker
+TYRP1,Club (non-nasal) marker
+TGM2,Club (non-nasal) marker
+LINC01705,Club (non-nasal) marker
+OTC,Club (non-nasal) marker
+CYP2F1,Club (non-nasal) marker
+RELN,Club (non-nasal) marker
+CXCL8,Club (non-nasal) marker
+GPR25,Club (non-nasal) marker
+IFNG-AS1,Club (non-nasal) marker
+MT2A,Club (non-nasal) marker
+EPGN,Club (non-nasal) marker
+CRLF2,Club (non-nasal) marker
+FOXS1,Club (non-nasal) marker
+AVPR1A,Club (non-nasal) marker
+MT1F,Club (non-nasal) marker
+LINC00520,Club (non-nasal) marker
+RP11-501J20.5,Club (non-nasal) marker
+EEF1A1,Club (non-nasal) marker
+TRGV2,Club (non-nasal) marker
+APLN,Club (non-nasal) marker
+CDK15,Club (non-nasal) marker
+CLEC4O,Club (non-nasal) marker
+SLC34A2,Club (non-nasal) marker
+CLEC9A,DC1 marker
+KCNN2,DC1 marker
+BRINP3,DC1 marker
+GPR25,DC1 marker
+APLN,DC1 marker
+AADACL2,DC1 marker
+GPR182,DC1 marker
+SPIC,DC1 marker
+HOXD9,DC1 marker
+OTC,DC1 marker
+AVPR1A,DC1 marker
+MYBPC1,DC1 marker
+AMHR2,DC1 marker
+RP11-826N14.8,DC1 marker
+DAB1,DC1 marker
+KRT1,DC1 marker
+IDO2,DC1 marker
+EBF2,DC1 marker
+LINC00636,DC1 marker
+TNFSF11,DC1 marker
+SSUH2,DC1 marker
+MYOC,DC1 marker
+ZNF366,DC1 marker
+RUNDC3B,DC1 marker
+TCL1A,DC1 marker
+RELN,DC1 marker
+PAEP,DC1 marker
+MSI1,DC1 marker
+LINC01393,DC1 marker
+FDCSP,DC1 marker
+HLA-DPB1,DC2 marker
+HLA-DRA,DC2 marker
+HLA-DPA1,DC2 marker
+HLA-DQA1,DC2 marker
+HLA-DRB1,DC2 marker
+LYZ,DC2 marker
+CD74,DC2 marker
+TYROBP,DC2 marker
+CST3,DC2 marker
+HLA-DQB1,DC2 marker
+GPX1,DC2 marker
+OTC,DC2 marker
+HSPB3,DC2 marker
+CCL11,DC2 marker
+CASQ2,DC2 marker
+CLEC4O,DC2 marker
+LRCOL1,DC2 marker
+BTG1,DC2 marker
+AADACL2,DC2 marker
+LINC00551,DC2 marker
+C4B,DC2 marker
+CDH19,DC2 marker
+RP11-322E11.5,DC2 marker
+AVPR1A,DC2 marker
+MYOC,DC2 marker
+SLCO1A2,DC2 marker
+SFRP4,DC2 marker
+ANKRD1,DC2 marker
+RP11-817J15.2,DC2 marker
+MPIG6B,DC2 marker
+CDC20B,Deuterosomal marker
+CCNO,Deuterosomal marker
+CCL11,Deuterosomal marker
+TYRP1,Deuterosomal marker
+TRGV2,Deuterosomal marker
+KCNN2,Deuterosomal marker
+MYOC,Deuterosomal marker
+GPR25,Deuterosomal marker
+SPIC,Deuterosomal marker
+OTC,Deuterosomal marker
+FIBCD1,Deuterosomal marker
+RP11-817J15.2,Deuterosomal marker
+APLN,Deuterosomal marker
+AVPR1A,Deuterosomal marker
+LINC01638,Deuterosomal marker
+GPR182,Deuterosomal marker
+TPSG1,Deuterosomal marker
+CLEC9A,Deuterosomal marker
+BMP6,Deuterosomal marker
+GATA5,Deuterosomal marker
+CTAG2,Deuterosomal marker
+MSI1,Deuterosomal marker
+JPH2,Deuterosomal marker
+GNAO1,Deuterosomal marker
+COMP,Deuterosomal marker
+HOXD9,Deuterosomal marker
+KLK14,Deuterosomal marker
+BRINP3,Deuterosomal marker
+NTRK1,Deuterosomal marker
+SCT,Deuterosomal marker
+EDNRB,EC aerocyte capillary marker
+EMCN,EC aerocyte capillary marker
+HPGD,EC aerocyte capillary marker
+IL1RL1,EC aerocyte capillary marker
+CCL11,EC aerocyte capillary marker
+CD207,EC aerocyte capillary marker
+AQP1,EC aerocyte capillary marker
+TYRP1,EC aerocyte capillary marker
+CDH19,EC aerocyte capillary marker
+HSPB3,EC aerocyte capillary marker
+MYBPC1,EC aerocyte capillary marker
+NUGGC,EC aerocyte capillary marker
+AVPR1A,EC aerocyte capillary marker
+LINC01705,EC aerocyte capillary marker
+TFF2,EC aerocyte capillary marker
+NFIA-AS2,EC aerocyte capillary marker
+NTRK1,EC aerocyte capillary marker
+TRH,EC aerocyte capillary marker
+SEZ6L,EC aerocyte capillary marker
+TRGV2,EC aerocyte capillary marker
+LINC01638,EC aerocyte capillary marker
+KRT1,EC aerocyte capillary marker
+CTSG,EC aerocyte capillary marker
+STXBP5L,EC aerocyte capillary marker
+EGFLAM,EC aerocyte capillary marker
+RSPO1,EC aerocyte capillary marker
+TEX41,EC aerocyte capillary marker
+LGALS12,EC aerocyte capillary marker
+ADRA2C,EC aerocyte capillary marker
+SMTNL2,EC aerocyte capillary marker
+IGFBP3,EC arterial marker
+MGP,EC arterial marker
+HSPB1,EC arterial marker
+TMSB10,EC arterial marker
+CD207,EC arterial marker
+HSPB3,EC arterial marker
+CDK15,EC arterial marker
+SIGLEC6,EC arterial marker
+SH2D6,EC arterial marker
+HSPA1A,EC arterial marker
+PLXNC1,EC arterial marker
+CXCL12,EC arterial marker
+VIM,EC arterial marker
+GPR25,EC arterial marker
+TRGV2,EC arterial marker
+CRLF2,EC arterial marker
+SPIC,EC arterial marker
+FDCSP,EC arterial marker
+MYOC,EC arterial marker
+ROCR,EC arterial marker
+CALHM3,EC arterial marker
+LINC00636,EC arterial marker
+CD1B,EC arterial marker
+NUGGC,EC arterial marker
+SEZ6L,EC arterial marker
+DGKB,EC arterial marker
+RP11-817J15.2,EC arterial marker
+CCN1,EC arterial marker
+KCNK12,EC arterial marker
+DTX1,EC arterial marker
+FCN3,EC general capillary marker
+IFI27,EC general capillary marker
+TMSB10,EC general capillary marker
+SFTPC,EC general capillary marker
+CLDN5,EC general capillary marker
+RGCC,EC general capillary marker
+IL7R,EC general capillary marker
+MT2A,EC general capillary marker
+LRRN4,EC general capillary marker
+IL32,EC general capillary marker
+NTRK1,EC general capillary marker
+MYOC,EC general capillary marker
+HPD,EC general capillary marker
+NUGGC,EC general capillary marker
+LINC01638,EC general capillary marker
+TYRP1,EC general capillary marker
+SPARCL1,EC general capillary marker
+SLC2A5,EC general capillary marker
+B3GNT6,EC general capillary marker
+TRGV2,EC general capillary marker
+RSPO1,EC general capillary marker
+CACNA1C-AS2,EC general capillary marker
+OTC,EC general capillary marker
+CDH19,EC general capillary marker
+CGREF1,EC general capillary marker
+FDCSP,EC general capillary marker
+HOXA10,EC general capillary marker
+CD207,EC general capillary marker
+LINC01393,EC general capillary marker
+LINC02812,EC general capillary marker
+ACKR1,EC venous pulmonary marker
+CLU,EC venous pulmonary marker
+IGFBP7,EC venous pulmonary marker
+VWF,EC venous pulmonary marker
+GPR25,EC venous pulmonary marker
+GPX3,EC venous pulmonary marker
+CDH19,EC venous pulmonary marker
+FOXS1,EC venous pulmonary marker
+PRSS23,EC venous pulmonary marker
+CPE,EC venous pulmonary marker
+CCL11,EC venous pulmonary marker
+TNFSF11,EC venous pulmonary marker
+C7,EC venous pulmonary marker
+SIGLEC6,EC venous pulmonary marker
+NTNG2,EC venous pulmonary marker
+EBF2,EC venous pulmonary marker
+KLK14,EC venous pulmonary marker
+UPP2,EC venous pulmonary marker
+TRH,EC venous pulmonary marker
+CLEC9A,EC venous pulmonary marker
+NTRK1,EC venous pulmonary marker
+HPD,EC venous pulmonary marker
+CRLF2,EC venous pulmonary marker
+AADACL2,EC venous pulmonary marker
+LINC00636,EC venous pulmonary marker
+TRGV2,EC venous pulmonary marker
+PTGS1,EC venous pulmonary marker
+UPK3A,EC venous pulmonary marker
+HSPB3,EC venous pulmonary marker
+TIMP1,EC venous pulmonary marker
+SPARCL1,EC venous systemic marker
+VIM,EC venous systemic marker
+ACKR1,EC venous systemic marker
+IGFBP7,EC venous systemic marker
+RP11-501J20.5,EC venous systemic marker
+ITGA11,EC venous systemic marker
+SPIC,EC venous systemic marker
+CCL11,EC venous systemic marker
+LINC01705,EC venous systemic marker
+SIGLEC6,EC venous systemic marker
+LAMC3,EC venous systemic marker
+BRINP3,EC venous systemic marker
+GREM2,EC venous systemic marker
+NUGGC,EC venous systemic marker
+TFF2,EC venous systemic marker
+TRGV2,EC venous systemic marker
+SOX10,EC venous systemic marker
+CD207,EC venous systemic marker
+GATA5,EC venous systemic marker
+MYOCD,EC venous systemic marker
+ATP1B2,EC venous systemic marker
+HLA-DQB1,EC venous systemic marker
+SMR3A,EC venous systemic marker
+AADACL2,EC venous systemic marker
+CD1B,EC venous systemic marker
+CALHM3,EC venous systemic marker
+B3GNT6,EC venous systemic marker
+HSPB3,EC venous systemic marker
+CDH19,EC venous systemic marker
+KLK14,EC venous systemic marker
+MUC5B,Goblet (bronchial) marker
+AGR2,Goblet (bronchial) marker
+CDH19,Goblet (bronchial) marker
+SCGB1A1,Goblet (bronchial) marker
+FDCSP,Goblet (bronchial) marker
+ANKRD36C,Goblet (bronchial) marker
+LINC01705,Goblet (bronchial) marker
+BRINP3,Goblet (bronchial) marker
+DTX1,Goblet (bronchial) marker
+LRRN4,Goblet (bronchial) marker
+OTC,Goblet (bronchial) marker
+LINC01638,Goblet (bronchial) marker
+AMHR2,Goblet (bronchial) marker
+TRGV2,Goblet (bronchial) marker
+FIBCD1,Goblet (bronchial) marker
+KRT1,Goblet (bronchial) marker
+SIGLEC6,Goblet (bronchial) marker
+CD1B,Goblet (bronchial) marker
+KCNN2,Goblet (bronchial) marker
+AADACL2,Goblet (bronchial) marker
+TEX41,Goblet (bronchial) marker
+CD207,Goblet (bronchial) marker
+TYRP1,Goblet (bronchial) marker
+CTAG2,Goblet (bronchial) marker
+UPP2,Goblet (bronchial) marker
+GPR25,Goblet (bronchial) marker
+GATA5,Goblet (bronchial) marker
+GCOM1,Goblet (bronchial) marker
+GREM2,Goblet (bronchial) marker
+SPIC,Goblet (bronchial) marker
+LYPD2,Goblet (nasal) marker
+LCN2,Goblet (nasal) marker
+FTH1,Goblet (nasal) marker
+MUC5AC,Goblet (nasal) marker
+WFDC2,Goblet (nasal) marker
+VMO1,Goblet (nasal) marker
+MT-CO2,Goblet (nasal) marker
+S100A4,Goblet (nasal) marker
+S100A6,Goblet (nasal) marker
+SCGB3A1,Goblet (nasal) marker
+C15orf48,Goblet (nasal) marker
+BPIFB1,Goblet (nasal) marker
+PI3,Goblet (nasal) marker
+PIGR,Goblet (nasal) marker
+CD24,Goblet (nasal) marker
+RPLP0,Goblet (nasal) marker
+KRT19,Goblet (nasal) marker
+MTRNR2L8,Goblet (nasal) marker
+S100A10,Goblet (nasal) marker
+GPRC5A,Goblet (nasal) marker
+TYRP1,Goblet (nasal) marker
+SCGB3A2,Goblet (nasal) marker
+MMP10,Goblet (nasal) marker
+OTC,Goblet (nasal) marker
+HSPB3,Goblet (nasal) marker
+LAMB3,Goblet (nasal) marker
+RP11-501J20.5,Goblet (nasal) marker
+HBB,Goblet (nasal) marker
+CCL11,Goblet (nasal) marker
+CALD1,Goblet (nasal) marker
+SCGB1A1,Goblet (subsegmental) marker
+FOXS1,Goblet (subsegmental) marker
+TRGV2,Goblet (subsegmental) marker
+OTC,Goblet (subsegmental) marker
+CFD,Goblet (subsegmental) marker
+TPSG1,Goblet (subsegmental) marker
+ADRA2C,Goblet (subsegmental) marker
+TYRP1,Goblet (subsegmental) marker
+TNFSF11,Goblet (subsegmental) marker
+CXCR5,Goblet (subsegmental) marker
+SPIC,Goblet (subsegmental) marker
+HPD,Goblet (subsegmental) marker
+GPR182,Goblet (subsegmental) marker
+SSUH2,Goblet (subsegmental) marker
+SIGLEC6,Goblet (subsegmental) marker
+LINC01638,Goblet (subsegmental) marker
+MUC5B,Goblet (subsegmental) marker
+LAMC3,Goblet (subsegmental) marker
+BPIFB1,Goblet (subsegmental) marker
+LINC01393,Goblet (subsegmental) marker
+MSMB,Goblet (subsegmental) marker
+IFNG-AS1,Goblet (subsegmental) marker
+B4GALNT1,Goblet (subsegmental) marker
+BRINP3,Goblet (subsegmental) marker
+HSPB3,Goblet (subsegmental) marker
+LINC02106,Goblet (subsegmental) marker
+CDH19,Goblet (subsegmental) marker
+CTSG,Goblet (subsegmental) marker
+MSI1,Goblet (subsegmental) marker
+MYBPC1,Goblet (subsegmental) marker
+PRSS57,Hematopoietic stem cells marker
+CRHBP,Hematopoietic stem cells marker
+DPPA4,Hematopoietic stem cells marker
+OTC,Hematopoietic stem cells marker
+HPD,Hematopoietic stem cells marker
+LINC01705,Hematopoietic stem cells marker
+BRINP3,Hematopoietic stem cells marker
+HEMGN,Hematopoietic stem cells marker
+AADACL2,Hematopoietic stem cells marker
+DTX1,Hematopoietic stem cells marker
+RSPO1,Hematopoietic stem cells marker
+IFNG-AS1,Hematopoietic stem cells marker
+GPR182,Hematopoietic stem cells marker
+LRCOL1,Hematopoietic stem cells marker
+HTR1F,Hematopoietic stem cells marker
+SIGLEC6,Hematopoietic stem cells marker
+ADRA2C,Hematopoietic stem cells marker
+APLN,Hematopoietic stem cells marker
+SMPX,Hematopoietic stem cells marker
+RP11-817J15.2,Hematopoietic stem cells marker
+GREM2,Hematopoietic stem cells marker
+TRGV2,Hematopoietic stem cells marker
+CALN1,Hematopoietic stem cells marker
+CTAG2,Hematopoietic stem cells marker
+CDH19,Hematopoietic stem cells marker
+CDK15,Hematopoietic stem cells marker
+KLK14,Hematopoietic stem cells marker
+TEX45,Hematopoietic stem cells marker
+CST4,Hematopoietic stem cells marker
+SLC5A5,Hematopoietic stem cells marker
+S100A2,Hillock-like marker
+KRT6A,Hillock-like marker
+S100A8,Hillock-like marker
+S100A9,Hillock-like marker
+KRT17,Hillock-like marker
+IFITM3,Hillock-like marker
+RHCG,Hillock-like marker
+CDH19,Hillock-like marker
+PPP1R15A,Hillock-like marker
+CCL11,Hillock-like marker
+OTC,Hillock-like marker
+IFITM1,Hillock-like marker
+KCNN2,Hillock-like marker
+TYRP1,Hillock-like marker
+LINC00636,Hillock-like marker
+KRT14,Hillock-like marker
+BMP6,Hillock-like marker
+TPSG1,Hillock-like marker
+LAMC3,Hillock-like marker
+NFIA-AS2,Hillock-like marker
+MMP9,Hillock-like marker
+CALD1,Hillock-like marker
+CD207,Hillock-like marker
+TRGV2,Hillock-like marker
+MIF,Hillock-like marker
+HSPB3,Hillock-like marker
+VEGFD,Hillock-like marker
+KRT1,Hillock-like marker
+TFF2,Hillock-like marker
+SCT,Hillock-like marker
+MRC1,Interstitial Mph perivascular marker
+SRGN,Interstitial Mph perivascular marker
+HLA-DRA,Interstitial Mph perivascular marker
+HLA-DPA1,Interstitial Mph perivascular marker
+HLA-DPB1,Interstitial Mph perivascular marker
+MT2A,Interstitial Mph perivascular marker
+SELENOP,Interstitial Mph perivascular marker
+CCL11,Interstitial Mph perivascular marker
+HLA-DRB1,Interstitial Mph perivascular marker
+GPR182,Interstitial Mph perivascular marker
+TPSG1,Interstitial Mph perivascular marker
+TYRP1,Interstitial Mph perivascular marker
+APLN,Interstitial Mph perivascular marker
+GPR25,Interstitial Mph perivascular marker
+BRINP3,Interstitial Mph perivascular marker
+CDH19,Interstitial Mph perivascular marker
+OTC,Interstitial Mph perivascular marker
+AADACL2,Interstitial Mph perivascular marker
+IFNG-AS1,Interstitial Mph perivascular marker
+FDCSP,Interstitial Mph perivascular marker
+NFIA-AS2,Interstitial Mph perivascular marker
+RP11-501J20.5,Interstitial Mph perivascular marker
+HSPB3,Interstitial Mph perivascular marker
+EMP1,Interstitial Mph perivascular marker
+CD74,Interstitial Mph perivascular marker
+PAEP,Interstitial Mph perivascular marker
+RP11-817J15.2,Interstitial Mph perivascular marker
+LINC01638,Interstitial Mph perivascular marker
+TIMP1,Interstitial Mph perivascular marker
+GREM2,Interstitial Mph perivascular marker
+OTC,Ionocyte marker
+LINC00636,Ionocyte marker
+GPR25,Ionocyte marker
+MSI1,Ionocyte marker
+STMN2,Ionocyte marker
+LAMP5,Ionocyte marker
+CD207,Ionocyte marker
+RSPO1,Ionocyte marker
+RP11-322E11.5,Ionocyte marker
+TRGV2,Ionocyte marker
+SPIC,Ionocyte marker
+TPSG1,Ionocyte marker
+LINC01393,Ionocyte marker
+B4GALNT1,Ionocyte marker
+CCL11,Ionocyte marker
+TEX41,Ionocyte marker
+CDH19,Ionocyte marker
+HSPB3,Ionocyte marker
+PACSIN1,Ionocyte marker
+FOXI1,Ionocyte marker
+NTRK1,Ionocyte marker
+ROCR,Ionocyte marker
+BPIFB2,Ionocyte marker
+LINC02106,Ionocyte marker
+CD1B,Ionocyte marker
+RP11-817J15.2,Ionocyte marker
+NFIA-AS2,Ionocyte marker
+COMP,Ionocyte marker
+DTX1,Ionocyte marker
+JPH2,Ionocyte marker
+CDH19,Lymphatic EC differentiating marker
+LAMC3,Lymphatic EC differentiating marker
+CCL11,Lymphatic EC differentiating marker
+TYRP1,Lymphatic EC differentiating marker
+LINC01705,Lymphatic EC differentiating marker
+CD207,Lymphatic EC differentiating marker
+TFF2,Lymphatic EC differentiating marker
+TPSG1,Lymphatic EC differentiating marker
+CD1B,Lymphatic EC differentiating marker
+KCNN2,Lymphatic EC differentiating marker
+PPFIBP1,Lymphatic EC differentiating marker
+LINC01393,Lymphatic EC differentiating marker
+BRINP3,Lymphatic EC differentiating marker
+OTC,Lymphatic EC differentiating marker
+COMP,Lymphatic EC differentiating marker
+AMHR2,Lymphatic EC differentiating marker
+CASQ2,Lymphatic EC differentiating marker
+IFNG-AS1,Lymphatic EC differentiating marker
+SH2D6,Lymphatic EC differentiating marker
+TRGV2,Lymphatic EC differentiating marker
+TNFSF11,Lymphatic EC differentiating marker
+NTRK1,Lymphatic EC differentiating marker
+MSI1,Lymphatic EC differentiating marker
+SIGLEC6,Lymphatic EC differentiating marker
+GATA5,Lymphatic EC differentiating marker
+LINC01781,Lymphatic EC differentiating marker
+LRRN4,Lymphatic EC differentiating marker
+HPD,Lymphatic EC differentiating marker
+CRLF2,Lymphatic EC differentiating marker
+MYOC,Lymphatic EC differentiating marker
+CCL21,Lymphatic EC mature marker
+TFF3,Lymphatic EC mature marker
+TFPI,Lymphatic EC mature marker
+CLDN5,Lymphatic EC mature marker
+RAMP2,Lymphatic EC mature marker
+TRGV2,Lymphatic EC mature marker
+MMRN1,Lymphatic EC mature marker
+PPFIBP1,Lymphatic EC mature marker
+CCL11,Lymphatic EC mature marker
+GPR25,Lymphatic EC mature marker
+BPIFB2,Lymphatic EC mature marker
+IGFBP7,Lymphatic EC mature marker
+NTNG2,Lymphatic EC mature marker
+CDH19,Lymphatic EC mature marker
+SPIC,Lymphatic EC mature marker
+KRT1,Lymphatic EC mature marker
+CDK15,Lymphatic EC mature marker
+CACNA1C-AS2,Lymphatic EC mature marker
+MYOC,Lymphatic EC mature marker
+IDO2,Lymphatic EC mature marker
+COMP,Lymphatic EC mature marker
+BRINP3,Lymphatic EC mature marker
+HSPB3,Lymphatic EC mature marker
+S100A10,Lymphatic EC mature marker
+CLEC9A,Lymphatic EC mature marker
+TPSG1,Lymphatic EC mature marker
+SOX10,Lymphatic EC mature marker
+IGLC7,Lymphatic EC mature marker
+PAX5,Lymphatic EC mature marker
+CRLF2,Lymphatic EC mature marker
+TYRP1,Lymphatic EC proliferating marker
+CCL11,Lymphatic EC proliferating marker
+AMHR2,Lymphatic EC proliferating marker
+COMP,Lymphatic EC proliferating marker
+SEZ6L,Lymphatic EC proliferating marker
+CRHBP,Lymphatic EC proliferating marker
+NFIA-AS2,Lymphatic EC proliferating marker
+CD207,Lymphatic EC proliferating marker
+KCNN2,Lymphatic EC proliferating marker
+LINC01705,Lymphatic EC proliferating marker
+PAX5,Lymphatic EC proliferating marker
+CDH19,Lymphatic EC proliferating marker
+LINC01638,Lymphatic EC proliferating marker
+RSPO1,Lymphatic EC proliferating marker
+APLN,Lymphatic EC proliferating marker
+CLEC4O,Lymphatic EC proliferating marker
+SIGLEC6,Lymphatic EC proliferating marker
+CGREF1,Lymphatic EC proliferating marker
+RP11-826N14.8,Lymphatic EC proliferating marker
+IDO2,Lymphatic EC proliferating marker
+OTC,Lymphatic EC proliferating marker
+B3GNT6,Lymphatic EC proliferating marker
+TRH,Lymphatic EC proliferating marker
+MPIG6B,Lymphatic EC proliferating marker
+SH2D6,Lymphatic EC proliferating marker
+LINC00636,Lymphatic EC proliferating marker
+SPIC,Lymphatic EC proliferating marker
+CDK15,Lymphatic EC proliferating marker
+GFI1B,Lymphatic EC proliferating marker
+TMSB15A,Lymphatic EC proliferating marker
+TPSAB1,Mast cells marker
+TPSB2,Mast cells marker
+NTRK1,Mast cells marker
+ADRA2C,Mast cells marker
+CRLF2,Mast cells marker
+RP11-322E11.5,Mast cells marker
+HDC,Mast cells marker
+CPA3,Mast cells marker
+CTD-2547H18.1,Mast cells marker
+CACNA1C-AS2,Mast cells marker
+AADACL2,Mast cells marker
+GATA5,Mast cells marker
+AMHR2,Mast cells marker
+CA3,Mast cells marker
+CD1B,Mast cells marker
+RP11-501J20.5,Mast cells marker
+PAEP,Mast cells marker
+ROCR,Mast cells marker
+BRINP3,Mast cells marker
+RAB3C,Mast cells marker
+ATP1A2,Mast cells marker
+NUGGC,Mast cells marker
+TPSG1,Mast cells marker
+SLC5A5,Mast cells marker
+SYT10,Mast cells marker
+XCR1,Mast cells marker
+ITPRID1,Mast cells marker
+TRH,Mast cells marker
+SOX10,Mast cells marker
+CST4,Mast cells marker
+ITLN1,Mesothelium marker
+CALB2,Mesothelium marker
+PRG4,Mesothelium marker
+GALNT9,Mesothelium marker
+FDCSP,Mesothelium marker
+TRGV2,Mesothelium marker
+CCL11,Mesothelium marker
+HSPB3,Mesothelium marker
+AADACL2,Mesothelium marker
+COMP,Mesothelium marker
+TPSG1,Mesothelium marker
+DPYS,Mesothelium marker
+LINC00636,Mesothelium marker
+CLEC4O,Mesothelium marker
+SOX10,Mesothelium marker
+LRCOL1,Mesothelium marker
+OTC,Mesothelium marker
+CD207,Mesothelium marker
+CTSG,Mesothelium marker
+SMPX,Mesothelium marker
+CACNA1C-AS2,Mesothelium marker
+RSPO1,Mesothelium marker
+AVPR1A,Mesothelium marker
+KLK14,Mesothelium marker
+SIGLEC6,Mesothelium marker
+AMHR2,Mesothelium marker
+PAEP,Mesothelium marker
+TEX41,Mesothelium marker
+VIPR2,Mesothelium marker
+CDH19,Mesothelium marker
+OTC,Migratory DCs marker
+NUGGC,Migratory DCs marker
+CRLF2,Migratory DCs marker
+SIGLEC6,Migratory DCs marker
+CCL19,Migratory DCs marker
+FDCSP,Migratory DCs marker
+CCL22,Migratory DCs marker
+AOC1,Migratory DCs marker
+TRGV2,Migratory DCs marker
+SMPX,Migratory DCs marker
+CDH19,Migratory DCs marker
+HPD,Migratory DCs marker
+STXBP5L,Migratory DCs marker
+TNFSF11,Migratory DCs marker
+AVPR1A,Migratory DCs marker
+EBF2,Migratory DCs marker
+RERGL,Migratory DCs marker
+KCNN2,Migratory DCs marker
+RUNDC3B,Migratory DCs marker
+BRINP3,Migratory DCs marker
+TFF2,Migratory DCs marker
+LINC01393,Migratory DCs marker
+LINC01705,Migratory DCs marker
+CTSG,Migratory DCs marker
+KCNK12,Migratory DCs marker
+MPIG6B,Migratory DCs marker
+CSDC2,Migratory DCs marker
+MYRFL,Migratory DCs marker
+CTAG2,Migratory DCs marker
+CALHM3,Migratory DCs marker
+VIM,Monocyte-derived Mph marker
+FTH1,Monocyte-derived Mph marker
+MTRNR2L8,Monocyte-derived Mph marker
+APOC1,Monocyte-derived Mph marker
+FOS,Monocyte-derived Mph marker
+MS4A1,Monocyte-derived Mph marker
+MT-ND1,Monocyte-derived Mph marker
+SFTPC,Monocyte-derived Mph marker
+ACP5,Monocyte-derived Mph marker
+RNASE1,Monocyte-derived Mph marker
+CD68,Monocyte-derived Mph marker
+RP11-501J20.5,Monocyte-derived Mph marker
+NEAT1,Monocyte-derived Mph marker
+CDH19,Monocyte-derived Mph marker
+SSUH2,Monocyte-derived Mph marker
+BRINP3,Monocyte-derived Mph marker
+TYROBP,Monocyte-derived Mph marker
+MT-ATP6,Monocyte-derived Mph marker
+MYOCD,Monocyte-derived Mph marker
+TRGV2,Monocyte-derived Mph marker
+EDNRB,Monocyte-derived Mph marker
+CSTB,Monocyte-derived Mph marker
+GPR182,Monocyte-derived Mph marker
+MTUS1,Monocyte-derived Mph marker
+C3,Monocyte-derived Mph marker
+HSD11B1,Monocyte-derived Mph marker
+KCNN2,Monocyte-derived Mph marker
+RP11-1143G9.4,Monocyte-derived Mph marker
+SCT,Monocyte-derived Mph marker
+LRCOL1,Monocyte-derived Mph marker
+PSCA,Multiciliated (nasal) marker
+CAPS,Multiciliated (nasal) marker
+CRIP1,Multiciliated (nasal) marker
+AQP3,Multiciliated (nasal) marker
+RP11-356K23.1,Multiciliated (nasal) marker
+KLK14,Multiciliated (nasal) marker
+TYRP1,Multiciliated (nasal) marker
+MSI1,Multiciliated (nasal) marker
+SCT,Multiciliated (nasal) marker
+HSPB3,Multiciliated (nasal) marker
+HPD,Multiciliated (nasal) marker
+SIGLEC6,Multiciliated (nasal) marker
+LINC01638,Multiciliated (nasal) marker
+CCL20,Multiciliated (nasal) marker
+OMG,Multiciliated (nasal) marker
+EBF2,Multiciliated (nasal) marker
+MYOC,Multiciliated (nasal) marker
+RP11-501J20.5,Multiciliated (nasal) marker
+ST6GALNAC5,Multiciliated (nasal) marker
+C15orf48,Multiciliated (nasal) marker
+HOXA9,Multiciliated (nasal) marker
+CXCR5,Multiciliated (nasal) marker
+SEZ6L,Multiciliated (nasal) marker
+CRHBP,Multiciliated (nasal) marker
+RP11-817J15.2,Multiciliated (nasal) marker
+LRRIQ1,Multiciliated (nasal) marker
+STXBP5L,Multiciliated (nasal) marker
+CTD-2531D15.4,Multiciliated (nasal) marker
+RP11-322E11.5,Multiciliated (nasal) marker
+MSMB,Multiciliated (nasal) marker
+C20orf85,Multiciliated (non-nasal) marker
+DNAAF1,Multiciliated (non-nasal) marker
+GSTP1,Multiciliated (non-nasal) marker
+FAM183A,Multiciliated (non-nasal) marker
+AGR3,Multiciliated (non-nasal) marker
+MUC16,Multiciliated (non-nasal) marker
+MS4A8,Multiciliated (non-nasal) marker
+PRDX5,Multiciliated (non-nasal) marker
+DYNLL1,Multiciliated (non-nasal) marker
+C9orf24,Multiciliated (non-nasal) marker
+MT-ND6,Multiciliated (non-nasal) marker
+C6,Multiciliated (non-nasal) marker
+SCGB1A1,Multiciliated (non-nasal) marker
+NEAT1,Multiciliated (non-nasal) marker
+SYNE1,Multiciliated (non-nasal) marker
+CAPS,Multiciliated (non-nasal) marker
+C1orf194,Multiciliated (non-nasal) marker
+MTRNR2L12,Multiciliated (non-nasal) marker
+AADACL2,Multiciliated (non-nasal) marker
+MT-ND5,Multiciliated (non-nasal) marker
+THORLNC,Multiciliated (non-nasal) marker
+TPPP3,Multiciliated (non-nasal) marker
+SLPI,Multiciliated (non-nasal) marker
+HSP90AA1,Multiciliated (non-nasal) marker
+HOATZ,Multiciliated (non-nasal) marker
+RSPH1,Multiciliated (non-nasal) marker
+NOVA1,Multiciliated (non-nasal) marker
+LRRIQ1,Multiciliated (non-nasal) marker
+OTC,Multiciliated (non-nasal) marker
+SPIC,Multiciliated (non-nasal) marker
+OTC,Myofibroblasts marker
+UPK3A,Myofibroblasts marker
+PI15,Myofibroblasts marker
+RP11-322E11.5,Myofibroblasts marker
+ASPN,Myofibroblasts marker
+ATP1A2,Myofibroblasts marker
+CLEC4O,Myofibroblasts marker
+LINC02812,Myofibroblasts marker
+TRGV2,Myofibroblasts marker
+CTAG2,Myofibroblasts marker
+PRELP,Myofibroblasts marker
+SCT,Myofibroblasts marker
+MPIG6B,Myofibroblasts marker
+DTX1,Myofibroblasts marker
+CD207,Myofibroblasts marker
+LINC01781,Myofibroblasts marker
+C1QTNF7,Myofibroblasts marker
+MSI1,Myofibroblasts marker
+COMP,Myofibroblasts marker
+HPD,Myofibroblasts marker
+SPIC,Myofibroblasts marker
+TMSB15A,Myofibroblasts marker
+RP11-817J15.2,Myofibroblasts marker
+B3GNT6,Myofibroblasts marker
+PAX5,Myofibroblasts marker
+CDH19,Myofibroblasts marker
+TYRP1,Myofibroblasts marker
+RELN,Myofibroblasts marker
+HEMGN,Myofibroblasts marker
+RP11-501J20.5,Myofibroblasts marker
+TYROBP,NK cells marker
+NKG7,NK cells marker
+FCER1G,NK cells marker
+GNLY,NK cells marker
+CCL3,NK cells marker
+GZMB,NK cells marker
+HOPX,NK cells marker
+TMSB4X,NK cells marker
+CD7,NK cells marker
+OTC,NK cells marker
+GPR182,NK cells marker
+CD207,NK cells marker
+FDCSP,NK cells marker
+CDH19,NK cells marker
+KCNN2,NK cells marker
+PRF1,NK cells marker
+AVPR1A,NK cells marker
+CEROX1,NK cells marker
+CD247,NK cells marker
+HSPB3,NK cells marker
+CCL11,NK cells marker
+TYRP1,NK cells marker
+PACSIN1,NK cells marker
+RP11-322E11.5,NK cells marker
+PTGDS,NK cells marker
+FCGR3A,NK cells marker
+SMPX,NK cells marker
+NTRK1,NK cells marker
+MSMP,NK cells marker
+MYOCD,NK cells marker
+CRLF2,Neuroendocrine marker
+KLHDC8A,Neuroendocrine marker
+CCL11,Neuroendocrine marker
+PI15,Neuroendocrine marker
+CDH19,Neuroendocrine marker
+GPR25,Neuroendocrine marker
+NPTX1,Neuroendocrine marker
+JPH2,Neuroendocrine marker
+GATA5,Neuroendocrine marker
+KRT1,Neuroendocrine marker
+HSPB3,Neuroendocrine marker
+PAX5,Neuroendocrine marker
+CD207,Neuroendocrine marker
+TRGV2,Neuroendocrine marker
+DLL3,Neuroendocrine marker
+FOXS1,Neuroendocrine marker
+UPK3A,Neuroendocrine marker
+EGFLAM,Neuroendocrine marker
+ADCYAP1,Neuroendocrine marker
+SCT,Neuroendocrine marker
+SMPX,Neuroendocrine marker
+RP11-322E11.5,Neuroendocrine marker
+CRABP1,Neuroendocrine marker
+ENOX1,Neuroendocrine marker
+TFF2,Neuroendocrine marker
+HPD,Neuroendocrine marker
+NFIA-AS2,Neuroendocrine marker
+SEZ6L,Neuroendocrine marker
+KCNK12,Neuroendocrine marker
+VGF,Neuroendocrine marker
+C1QA,Non-classical monocytes marker
+C1QB,Non-classical monocytes marker
+C1QC,Non-classical monocytes marker
+FABP4,Non-classical monocytes marker
+SAT1,Non-classical monocytes marker
+IFITM3,Non-classical monocytes marker
+AIF1,Non-classical monocytes marker
+CTSS,Non-classical monocytes marker
+FABP5,Non-classical monocytes marker
+SPIC,Non-classical monocytes marker
+FCGR3A,Non-classical monocytes marker
+IFITM2,Non-classical monocytes marker
+MT2A,Non-classical monocytes marker
+CD52,Non-classical monocytes marker
+KCNN2,Non-classical monocytes marker
+APLN,Non-classical monocytes marker
+FMO1,Non-classical monocytes marker
+FCER1G,Non-classical monocytes marker
+RP11-501J20.5,Non-classical monocytes marker
+HSPB3,Non-classical monocytes marker
+NFIA-AS2,Non-classical monocytes marker
+TFF2,Non-classical monocytes marker
+LST1,Non-classical monocytes marker
+COMP,Non-classical monocytes marker
+CLEC4O,Non-classical monocytes marker
+HOXD9,Non-classical monocytes marker
+IGLV3-1,Non-classical monocytes marker
+LINC01638,Non-classical monocytes marker
+GPR182,Non-classical monocytes marker
+RP11-84E17.1,Non-classical monocytes marker
+A2M,Peribronchial fibroblasts marker
+OTC,Peribronchial fibroblasts marker
+FBLN1,Peribronchial fibroblasts marker
+MGP,Peribronchial fibroblasts marker
+ADGRG3,Peribronchial fibroblasts marker
+IFNG-AS1,Peribronchial fibroblasts marker
+LUM,Peribronchial fibroblasts marker
+CALN1,Peribronchial fibroblasts marker
+CD1B,Peribronchial fibroblasts marker
+CRABP1,Peribronchial fibroblasts marker
+MSMP,Peribronchial fibroblasts marker
+BPIFB2,Peribronchial fibroblasts marker
+RP11-501J20.5,Peribronchial fibroblasts marker
+TPSG1,Peribronchial fibroblasts marker
+CTSG,Peribronchial fibroblasts marker
+PWWP3B,Peribronchial fibroblasts marker
+PACSIN1,Peribronchial fibroblasts marker
+ROCR,Peribronchial fibroblasts marker
+LINC01393,Peribronchial fibroblasts marker
+KLK14,Peribronchial fibroblasts marker
+AMHR2,Peribronchial fibroblasts marker
+APLN,Peribronchial fibroblasts marker
+SH2D6,Peribronchial fibroblasts marker
+LGALS12,Peribronchial fibroblasts marker
+CDK6-AS1,Peribronchial fibroblasts marker
+PAX5,Peribronchial fibroblasts marker
+AC104024.1,Peribronchial fibroblasts marker
+NTRK1,Peribronchial fibroblasts marker
+GPR182,Peribronchial fibroblasts marker
+TMSB15A,Peribronchial fibroblasts marker
+AADACL2,Pericytes marker
+COMP,Pericytes marker
+BRINP3,Pericytes marker
+GREM2,Pericytes marker
+TRGV2,Pericytes marker
+OTC,Pericytes marker
+SPIC,Pericytes marker
+PAEP,Pericytes marker
+LINC00636,Pericytes marker
+AMHR2,Pericytes marker
+SSUH2,Pericytes marker
+PTN,Pericytes marker
+MYOC,Pericytes marker
+TFF2,Pericytes marker
+GATA5,Pericytes marker
+CACNA1C-AS2,Pericytes marker
+PDGFRB,Pericytes marker
+B3GNT6,Pericytes marker
+KLK14,Pericytes marker
+LINC01638,Pericytes marker
+MPIG6B,Pericytes marker
+APLN,Pericytes marker
+CD207,Pericytes marker
+CCL11,Pericytes marker
+GPR25,Pericytes marker
+RP11-817J15.2,Pericytes marker
+TPSD1,Pericytes marker
+CTD-2547H18.1,Pericytes marker
+FDCSP,Pericytes marker
+SMPX,Pericytes marker
+JCHAIN,Plasma cells marker
+IGKC,Plasma cells marker
+IGHGP,Plasma cells marker
+IFNG-AS1,Plasma cells marker
+NUGGC,Plasma cells marker
+CDH19,Plasma cells marker
+MZB1,Plasma cells marker
+OTC,Plasma cells marker
+CD1B,Plasma cells marker
+IGKV1-12,Plasma cells marker
+IGKV4-1,Plasma cells marker
+GPR25,Plasma cells marker
+TRH,Plasma cells marker
+IGLL5,Plasma cells marker
+ZNF215,Plasma cells marker
+JPH2,Plasma cells marker
+FDCSP,Plasma cells marker
+RP11-501J20.5,Plasma cells marker
+TFF2,Plasma cells marker
+HSPB3,Plasma cells marker
+TRGV2,Plasma cells marker
+MYOC,Plasma cells marker
+AVPR1A,Plasma cells marker
+BPIFB2,Plasma cells marker
+LINC02362,Plasma cells marker
+AADACL2,Plasma cells marker
+CCL11,Plasma cells marker
+CDK15,Plasma cells marker
+CD207,Plasma cells marker
+MSI1,Plasma cells marker
+SCT,Plasmacytoid DCs marker
+SHD,Plasmacytoid DCs marker
+GZMB,Plasmacytoid DCs marker
+LAMP5,Plasmacytoid DCs marker
+CDK15,Plasmacytoid DCs marker
+RP11-501J20.5,Plasmacytoid DCs marker
+TFF2,Plasmacytoid DCs marker
+TPSG1,Plasmacytoid DCs marker
+OTC,Plasmacytoid DCs marker
+AADACL2,Plasmacytoid DCs marker
+KLK14,Plasmacytoid DCs marker
+NTRK1,Plasmacytoid DCs marker
+CALN1,Plasmacytoid DCs marker
+NFIA-AS2,Plasmacytoid DCs marker
+DGKB,Plasmacytoid DCs marker
+IFNG-AS1,Plasmacytoid DCs marker
+ADRA2C,Plasmacytoid DCs marker
+APLN,Plasmacytoid DCs marker
+SPIC,Plasmacytoid DCs marker
+B4GALNT1,Plasmacytoid DCs marker
+SH2D6,Plasmacytoid DCs marker
+CLEC4C,Plasmacytoid DCs marker
+GPC2,Plasmacytoid DCs marker
+CLEC4O,Plasmacytoid DCs marker
+LRCOL1,Plasmacytoid DCs marker
+RP11-826N14.8,Plasmacytoid DCs marker
+CCL11,Plasmacytoid DCs marker
+LRRN4,Plasmacytoid DCs marker
+SEZ6L,Plasmacytoid DCs marker
+CDH19,Plasmacytoid DCs marker
+TRGV2,SM activated stress response marker
+CRLF2,SM activated stress response marker
+TYRP1,SM activated stress response marker
+ATF3,SM activated stress response marker
+LINC01393,SM activated stress response marker
+STXBP5L,SM activated stress response marker
+RP11-501J20.5,SM activated stress response marker
+ADAMTS1,SM activated stress response marker
+OTC,SM activated stress response marker
+AMHR2,SM activated stress response marker
+B4GALNT1,SM activated stress response marker
+KRT1,SM activated stress response marker
+TPSG1,SM activated stress response marker
+SIGLEC6,SM activated stress response marker
+GPR25,SM activated stress response marker
+APLN,SM activated stress response marker
+SCT,SM activated stress response marker
+PAEP,SM activated stress response marker
+ROCR,SM activated stress response marker
+KCNK12,SM activated stress response marker
+CST4,SM activated stress response marker
+UPK3A,SM activated stress response marker
+ATP1B2,SM activated stress response marker
+PON1,SM activated stress response marker
+ITPRID1,SM activated stress response marker
+CCL11,SM activated stress response marker
+TCL1A,SM activated stress response marker
+PTCHD1,SM activated stress response marker
+BMP6,SM activated stress response marker
+CALHM3,SM activated stress response marker
+SCGB3A1,SMG duct marker
+CD207,SMG duct marker
+TCN1,SMG duct marker
+LCN2,SMG duct marker
+CLU,SMG duct marker
+OTC,SMG duct marker
+TRGV2,SMG duct marker
+FDCSP,SMG duct marker
+LINC01638,SMG duct marker
+CTSG,SMG duct marker
+SLPI,SMG duct marker
+BRINP3,SMG duct marker
+RP11-322E11.5,SMG duct marker
+CDK15,SMG duct marker
+GFI1B,SMG duct marker
+LRCOL1,SMG duct marker
+TPSG1,SMG duct marker
+KRT7,SMG duct marker
+KCNN2,SMG duct marker
+NTRK1,SMG duct marker
+AADACL2,SMG duct marker
+RAB3C,SMG duct marker
+LINC00636,SMG duct marker
+SIGLEC6,SMG duct marker
+RERGL,SMG duct marker
+GPR182,SMG duct marker
+APLN,SMG duct marker
+EPGN,SMG duct marker
+KRT1,SMG duct marker
+FOXN4,SMG duct marker
+BPIFB2,SMG mucous marker
+MUC5B,SMG mucous marker
+OTC,SMG mucous marker
+CCL11,SMG mucous marker
+RP11-501J20.5,SMG mucous marker
+CD207,SMG mucous marker
+KLK14,SMG mucous marker
+UPP2,SMG mucous marker
+FOXS1,SMG mucous marker
+TYRP1,SMG mucous marker
+SCT,SMG mucous marker
+CST4,SMG mucous marker
+KCNN2,SMG mucous marker
+SLC5A5,SMG mucous marker
+SIGLEC6,SMG mucous marker
+ITGA11,SMG mucous marker
+ADGRG3,SMG mucous marker
+MYBPC1,SMG mucous marker
+IGKV3-15,SMG mucous marker
+LAMC3,SMG mucous marker
+GREM2,SMG mucous marker
+CLEC4O,SMG mucous marker
+JPH2,SMG mucous marker
+TPSG1,SMG mucous marker
+CTD-2547H18.1,SMG mucous marker
+CD1B,SMG mucous marker
+HPD,SMG mucous marker
+NTRK1,SMG mucous marker
+LINC00636,SMG mucous marker
+ANKRD1,SMG mucous marker
+PRR4,SMG serous (bronchial) marker
+LYZ,SMG serous (bronchial) marker
+LTF,SMG serous (bronchial) marker
+OTC,SMG serous (bronchial) marker
+AZGP1,SMG serous (bronchial) marker
+SCGB3A1,SMG serous (bronchial) marker
+HSPB3,SMG serous (bronchial) marker
+RP11-501J20.5,SMG serous (bronchial) marker
+RP11-1143G9.4,SMG serous (bronchial) marker
+LINC01638,SMG serous (bronchial) marker
+CALN1,SMG serous (bronchial) marker
+NTRK1,SMG serous (bronchial) marker
+KCNN2,SMG serous (bronchial) marker
+GPR182,SMG serous (bronchial) marker
+GPC2,SMG serous (bronchial) marker
+APIP,SMG serous (bronchial) marker
+CDK15,SMG serous (bronchial) marker
+LINC00636,SMG serous (bronchial) marker
+TRGV2,SMG serous (bronchial) marker
+CTSG,SMG serous (bronchial) marker
+SIGLEC6,SMG serous (bronchial) marker
+CLCNKA,SMG serous (bronchial) marker
+TYRP1,SMG serous (bronchial) marker
+TNFSF11,SMG serous (bronchial) marker
+SH2D6,SMG serous (bronchial) marker
+CDH19,SMG serous (bronchial) marker
+S100B,SMG serous (bronchial) marker
+TRH,SMG serous (bronchial) marker
+FAM162B,SMG serous (bronchial) marker
+PON1,SMG serous (bronchial) marker
+STATH,SMG serous (nasal) marker
+BPIFA1,SMG serous (nasal) marker
+ZG16B,SMG serous (nasal) marker
+CDH19,SMG serous (nasal) marker
+CCL11,SMG serous (nasal) marker
+COMP,SMG serous (nasal) marker
+TPSG1,SMG serous (nasal) marker
+EPGN,SMG serous (nasal) marker
+TRH,SMG serous (nasal) marker
+KLK14,SMG serous (nasal) marker
+SNORC,SMG serous (nasal) marker
+OTC,SMG serous (nasal) marker
+TEX41,SMG serous (nasal) marker
+TRGV2,SMG serous (nasal) marker
+CLDN10,SMG serous (nasal) marker
+C4B,SMG serous (nasal) marker
+UPK3A,SMG serous (nasal) marker
+TYRP1,SMG serous (nasal) marker
+RAB3C,SMG serous (nasal) marker
+FGF12,SMG serous (nasal) marker
+SPINK14,SMG serous (nasal) marker
+CDK15,SMG serous (nasal) marker
+CRHBP,SMG serous (nasal) marker
+SIX3-AS1,SMG serous (nasal) marker
+PAX5,SMG serous (nasal) marker
+GPR25,SMG serous (nasal) marker
+BPIFB3,SMG serous (nasal) marker
+DAB1,SMG serous (nasal) marker
+AVPR1A,SMG serous (nasal) marker
+LRCOL1,SMG serous (nasal) marker
+TAGLN,Smooth muscle marker
+ACTA2,Smooth muscle marker
+CALD1,Smooth muscle marker
+GPR25,Smooth muscle marker
+PLAC9,Smooth muscle marker
+IGFBP7,Smooth muscle marker
+TFF2,Smooth muscle marker
+AADACL2,Smooth muscle marker
+SOX10,Smooth muscle marker
+RP11-501J20.5,Smooth muscle marker
+KRT1,Smooth muscle marker
+RGS5_ENSG00000143248,Smooth muscle marker
+AMHR2,Smooth muscle marker
+CCL19,Smooth muscle marker
+STXBP5L,Smooth muscle marker
+TRH,Smooth muscle marker
+TREML1,Smooth muscle marker
+TCL1A,Smooth muscle marker
+CDK15,Smooth muscle marker
+SPIC,Smooth muscle marker
+SIGLEC6,Smooth muscle marker
+COL14A1,Smooth muscle marker
+ARL9,Smooth muscle marker
+CD207,Smooth muscle marker
+CTD-2531D15.4,Smooth muscle marker
+OTC,Smooth muscle marker
+SH2D6,Smooth muscle marker
+PAEP,Smooth muscle marker
+CCL11,Smooth muscle marker
+CEROX1,Smooth muscle marker
+ACTG2,Smooth muscle FAM83D+ marker
+RP11-322E11.5,Smooth muscle FAM83D+ marker
+MYOC,Smooth muscle FAM83D+ marker
+TCL1A,Smooth muscle FAM83D+ marker
+TRGV2,Smooth muscle FAM83D+ marker
+DES,Smooth muscle FAM83D+ marker
+SH2D6,Smooth muscle FAM83D+ marker
+CTAG2,Smooth muscle FAM83D+ marker
+LINC01638,Smooth muscle FAM83D+ marker
+OTC,Smooth muscle FAM83D+ marker
+CRLF2,Smooth muscle FAM83D+ marker
+CD207,Smooth muscle FAM83D+ marker
+KLK14,Smooth muscle FAM83D+ marker
+NUGGC,Smooth muscle FAM83D+ marker
+CDH19,Smooth muscle FAM83D+ marker
+GPR182,Smooth muscle FAM83D+ marker
+SMPX,Smooth muscle FAM83D+ marker
+PGAM2,Smooth muscle FAM83D+ marker
+TFF2,Smooth muscle FAM83D+ marker
+BMP6,Smooth muscle FAM83D+ marker
+STXBP5L,Smooth muscle FAM83D+ marker
+TRH,Smooth muscle FAM83D+ marker
+TNFSF11,Smooth muscle FAM83D+ marker
+CLEC4O,Smooth muscle FAM83D+ marker
+GPR25,Smooth muscle FAM83D+ marker
+CTD-2531D15.4,Smooth muscle FAM83D+ marker
+WNT2,Smooth muscle FAM83D+ marker
+ALKAL1,Smooth muscle FAM83D+ marker
+CNN1,Smooth muscle FAM83D+ marker
+KRT1,Smooth muscle FAM83D+ marker
+PI15,Subpleural fibroblasts marker
+CD207,Subpleural fibroblasts marker
+TPSG1,Subpleural fibroblasts marker
+RBP5,Subpleural fibroblasts marker
+HPD,Subpleural fibroblasts marker
+RP11-501J20.5,Subpleural fibroblasts marker
+CSDC2,Subpleural fibroblasts marker
+SPIC,Subpleural fibroblasts marker
+TNFSF11,Subpleural fibroblasts marker
+HOXD9,Subpleural fibroblasts marker
+GPR25,Subpleural fibroblasts marker
+GPR182,Subpleural fibroblasts marker
+GPC2,Subpleural fibroblasts marker
+AMHR2,Subpleural fibroblasts marker
+IGLC7,Subpleural fibroblasts marker
+ITPRID1,Subpleural fibroblasts marker
+LINC01829,Subpleural fibroblasts marker
+KLK14,Subpleural fibroblasts marker
+MSI1,Subpleural fibroblasts marker
+LINC01393,Subpleural fibroblasts marker
+RP11-322E11.5,Subpleural fibroblasts marker
+CRLF2,Subpleural fibroblasts marker
+NGF,Subpleural fibroblasts marker
+KRT1,Subpleural fibroblasts marker
+MPIG6B,Subpleural fibroblasts marker
+SMPX,Subpleural fibroblasts marker
+HSPB3,Subpleural fibroblasts marker
+OTC,Subpleural fibroblasts marker
+ST6GAL2,Subpleural fibroblasts marker
+LAMC3,Subpleural fibroblasts marker
+KRT19,Suprabasal marker
+S100A2,Suprabasal marker
+SERPINB3,Suprabasal marker
+MT1X,Suprabasal marker
+SLPI,Suprabasal marker
+AQP3,Suprabasal marker
+RPS19,Suprabasal marker
+XIST,Suprabasal marker
+C1R,Suprabasal marker
+SAA1,Suprabasal marker
+C1S,Suprabasal marker
+TXN,Suprabasal marker
+CCL2,Suprabasal marker
+IGFBP3,Suprabasal marker
+SFTPC,Suprabasal marker
+GLUL,Suprabasal marker
+TSPAN1,Suprabasal marker
+MIA,Suprabasal marker
+OTC,Suprabasal marker
+KRT5,Suprabasal marker
+FOSB,Suprabasal marker
+RPLP0,Suprabasal marker
+LINC01705,Suprabasal marker
+ECRG4,Suprabasal marker
+MT-ATP6,Suprabasal marker
+RPS18,Suprabasal marker
+DHRS9,Suprabasal marker
+GSTP1,Suprabasal marker
+CLDN4,Suprabasal marker
+LYZ,Suprabasal marker
+LINC01638,T cells proliferating marker
+NFIA-AS2,T cells proliferating marker
+OTC,T cells proliferating marker
+SIGLEC6,T cells proliferating marker
+VEGFD,T cells proliferating marker
+KCNN2,T cells proliferating marker
+KRT1,T cells proliferating marker
+LRCOL1,T cells proliferating marker
+CD207,T cells proliferating marker
+GPR182,T cells proliferating marker
+BRINP3,T cells proliferating marker
+CTD-2531D15.4,T cells proliferating marker
+KCNK17,T cells proliferating marker
+AADACL2,T cells proliferating marker
+GPC2,T cells proliferating marker
+MPIG6B,T cells proliferating marker
+SH2D6,T cells proliferating marker
+PAEP,T cells proliferating marker
+COMP,T cells proliferating marker
+TPSG1,T cells proliferating marker
+GREM2,T cells proliferating marker
+ANKRD1,T cells proliferating marker
+SEZ6L,T cells proliferating marker
+CDK15,T cells proliferating marker
+ITLN2,T cells proliferating marker
+TFF2,T cells proliferating marker
+APLN,T cells proliferating marker
+TYRP1,T cells proliferating marker
+RP11-501J20.5,T cells proliferating marker
+TMEM200B,T cells proliferating marker
+TPSG1,Tuft marker
+CDK15,Tuft marker
+SPIC,Tuft marker
+GUCA1A,Tuft marker
+NFIA-AS2,Tuft marker
+PIMREG,Tuft marker
+SH2D6,Tuft marker
+MSI1,Tuft marker
+LINC01638,Tuft marker
+APLN,Tuft marker
+MYOC,Tuft marker
+RP11-322E11.5,Tuft marker
+TNFSF11,Tuft marker
+NTNG2,Tuft marker
+CCL11,Tuft marker
+SCT,Tuft marker
+BRINP3,Tuft marker
+CD207,Tuft marker
+RAB3C,Tuft marker
+RSPO1,Tuft marker
+TEX45,Tuft marker
+CRLF2,Tuft marker
+JPH2,Tuft marker
+TRGV2,Tuft marker
+EGFLAM,Tuft marker
+SMPX,Tuft marker
+COMP,Tuft marker
+LAMC3,Tuft marker
+TYRP1,Tuft marker
+CALHM3,Tuft marker
+SFTPB,pre-TB secretory marker
+SCGB3A2,pre-TB secretory marker
+SCGB1A1,pre-TB secretory marker
+SCGB3A1,pre-TB secretory marker
+RNASE1,pre-TB secretory marker
+SAA1,pre-TB secretory marker
+CYB5A,pre-TB secretory marker
+SSUH2,pre-TB secretory marker
+CLU,pre-TB secretory marker
+GPR182,pre-TB secretory marker
+MPIG6B,pre-TB secretory marker
+KLHDC8A,pre-TB secretory marker
+GPR25,pre-TB secretory marker
+CD1B,pre-TB secretory marker
+CDH19,pre-TB secretory marker
+HSPB3,pre-TB secretory marker
+CRLF2,pre-TB secretory marker
+TRGV2,pre-TB secretory marker
+AADACL2,pre-TB secretory marker
+CALN1,pre-TB secretory marker
+RPS4Y1,pre-TB secretory marker
+TYRP1,pre-TB secretory marker
+LINC01638,pre-TB secretory marker
+AMHR2,pre-TB secretory marker
+EBF2,pre-TB secretory marker
+MGP,pre-TB secretory marker
+TNFSF11,pre-TB secretory marker
+TFF2,pre-TB secretory marker
+TEX41,pre-TB secretory marker
+RSPO1,pre-TB secretory marker

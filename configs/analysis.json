@@ -102,7 +102,7 @@
         "usage": true,
         "params": {
           "adata": "adata",
-          "target_sum": 1e6,
+          "target_sum": 1e4,
           "inplace": true
         }
       },
@@ -202,7 +202,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -225,7 +225,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -306,16 +306,20 @@
           }
         }
       }
+<<<<<<< HEAD
+=======
     },
     "model": {
       "model_type": {
         "CondSCVI": {
           "train": false,
-          "usage": true,
+          "usage": false,
+          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 1250,
+            "max_epochs": 25,
+            "max_epochs": 25,
             "early_stopping": true
           }
         },
@@ -331,6 +335,7 @@
         }
       },
       "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
+>>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
     }
   },
   "ST": {
@@ -442,12 +447,12 @@
           "params": { "adata": "adata", "n_pcs": 30, "n_neighbors": 20 }
         },
         "umap": {
-          "usage": true,
+          "usage": false,
           "func_str": "sc.tl.umap",
           "params": { "adata": "adata" }
         },
         "tsne": {
-          "usage": true,
+          "usage": false,
           "func_str": "sc.tl.tsne",
           "params": { "adata": "adata", "n_pcs": 30 }
         },
@@ -480,7 +485,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -503,7 +508,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -585,30 +590,127 @@
         }
       }
     },
-    "model": {
-      "model_type": {
+    "DeconvolutionModels": {
+      "VariationalInference": {
+        "usage": false,
+        "CondSCVI": {
+          "train": false,
+          "adata_to_use": "preprocessed_adata",
+          "labels_key": "ann_level_3_transferred_label",
+          "layer": "raw_counts",
+          "params": {
+            "max_epochs": 1250,
+            "early_stopping": true
+          },
+          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
+        },
         "DestVI": {
           "train": false,
-          "usage": true,
+<<<<<<< HEAD
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
-            "max_epochs": 100,
+            "max_epochs": 75,
+=======
+          "usage": false,
+          "adata_to_use": "preprocessed_adata",
+          "layer": "raw_counts",
+          "params": {
+            "max_epochs": 2,
+>>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
             "early_stopping": true
-          }
+          },
+          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\stmodel"
+        }
+      },
+      "Stereoscope": {
+        "usage": false,
+        "RNAStereoscope": {
+          "train": false,
+          "adata_to_use": "preprocessed_adata",
+          "labels_key": "ann_level_3_transferred_label",
+          "layer": "raw_counts",
+          "params": {
+            "max_epochs": 1250,
+            "early_stopping": true
+          },
+          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
         },
         "SpatialStereoscope": {
           "train": false,
-          "usage": false,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
             "max_epochs": 750,
             "early_stopping": true
+<<<<<<< HEAD
+          },
+          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
+=======
           }
+        },
+        "Tangram": {
+          "train": true,
+          "usage": true,
+          "train": true,
+          "usage": true,
+          "adata_sc_to_use": "raw_adata",
+          "adata_st_to_use": "raw_adata",
+          "layer": null,
+          "image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\Visium_HD_Human_Lung_Cancer_tissue_image.tif",
+          "params": {
+            "max_epochs": 25,
+            "max_epochs": 25,
+            "early_stopping": true
+          }
+>>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
         }
       },
-      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\stmodel"
+      "Tangram": {
+        "train": true,
+        "usage": true,
+        "adata_sc_to_use": "raw_adata",
+        "adata_st_to_use": "raw_adata",
+        "layer": null,
+        "image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\Visium_HD_Human_Lung_Cancer_tissue_image.tif",
+        "params": {
+          "max_epochs": 25,
+          "early_stopping": true
+        },
+        "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
+      },
+      "CellTypist": {
+        "usage": false,
+        "Train": {
+          "train": true,
+          "cell_type_key": "ann_level_3_transferred_label",
+          "adata_to_use": "raw_adata",
+          "params": {
+            "X": "adata",
+            "epochs": 1500,
+            "labels": "ann_level_3_transferred_label",
+            "n_jobs": 10,
+            "feature_selection": true,
+            "use_SGD": false,
+            "mini_batch": false,
+            "batch_number": 100,
+            "batch_size": 1000,
+            "balance_cell_type": false
+          },
+          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
+        },
+        "Annotate": {
+          "adata_to_use": "raw_adata",
+          "params": {
+            "X": "adata",
+            "transpose_output": false,
+            "mode": "best match",
+            "p_thres": 0.5,
+            "majority_voting": true,
+            "min_prop": 0
+          }
+        }
+      }
     },
     "SpatialNeighbors": {
       "Squidpy_NHoodEnrichment": {
@@ -618,7 +720,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "NHoodEnrichment_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "sq.gr.nhood_enrichment",
         "data_type": "ST",
         "params": {
@@ -633,13 +735,16 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "co_occurrence_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "sq.gr.co_occurrence",
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "cluster_key": "leiden_clusters",
-          "interval": null
+          "cluster_key": "leiden_clusters"
+<<<<<<< HEAD
+          "cluster_key": "leiden_clusters"
+=======
+>>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
         }
       }
     },
@@ -651,7 +756,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "MoranI_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "sq.gr.spatial_autocorr",
         "data_type": "ST",
         "n_genes": 1000,
@@ -692,7 +797,7 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {

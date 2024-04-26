@@ -101,7 +101,6 @@ def run_plots(plotting_config, adata_dict: dict, directory: str):
                     if "cluster_palette" in config_name:
                         # We need to add umap to add the palette colors
                         clusters_names = filtered_params["color"]
-                        # TODO: try to fix when color is a list with multiple elements... B cell no longer showing up
                         sc.pl.umap(
                             filtered_params["adata"],
                             color=[clusters_names],
