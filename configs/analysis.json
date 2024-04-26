@@ -203,6 +203,7 @@
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
         "usage": false,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -225,6 +226,7 @@
         }
       },
       "rank_genes_groups_df": {
+        "usage": false,
         "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
@@ -448,10 +450,12 @@
         },
         "umap": {
           "usage": false,
+          "usage": false,
           "func_str": "sc.tl.umap",
           "params": { "adata": "adata" }
         },
         "tsne": {
+          "usage": false,
           "usage": false,
           "func_str": "sc.tl.tsne",
           "params": { "adata": "adata", "n_pcs": 30 }
@@ -486,6 +490,7 @@
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
         "usage": false,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -508,6 +513,7 @@
         }
       },
       "rank_genes_groups_df": {
+        "usage": false,
         "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {

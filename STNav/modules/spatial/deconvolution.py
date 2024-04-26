@@ -27,6 +27,8 @@ from GraphST import GraphST
 import torch
 import mudata
 from scvi.external import Tangram
+import mudata
+from scvi.external import Tangram
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
