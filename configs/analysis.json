@@ -564,9 +564,9 @@
     },
     "DeconvolutionModels": {
       "VariationalInference": {
-        "usage": false,
+        "usage": true,
         "CondSCVI": {
-          "train": false,
+          "train": true,
           "adata_to_use": "preprocessed_adata",
           "labels_key": "ann_level_3_transferred_label",
           "layer": "raw_counts",
@@ -577,7 +577,7 @@
           "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
         },
         "DestVI": {
-          "train": false,
+          "train": true,
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
@@ -612,8 +612,8 @@
         }
       },
       "Tangram": {
-        "train": true,
-        "usage": true,
+        "train": false,
+        "usage": false,
         "adata_sc_to_use": "raw_adata",
         "adata_st_to_use": "raw_adata",
         "layer": null,
