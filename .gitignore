@@ -143,3 +143,4 @@ STNav/models/scmodel/model.pt
 STNav/models/stmodel/model.pt
 .gitignore
 notebooks/experimental/squidpy_marker_mapping/mapping_approach_with_top_markers.xlsx
+notebooks/experimental/squidpy_marker_mapping/marker_mapping2.ipynb
