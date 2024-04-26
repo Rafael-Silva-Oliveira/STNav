@@ -203,7 +203,6 @@
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
         "usage": false,
-        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -226,7 +225,6 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": false,
         "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
@@ -308,36 +306,6 @@
           }
         }
       }
-<<<<<<< HEAD
-=======
-    },
-    "model": {
-      "model_type": {
-        "CondSCVI": {
-          "train": false,
-          "usage": false,
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 25,
-            "max_epochs": 25,
-            "early_stopping": true
-          }
-        },
-        "RNAStereoscope": {
-          "train": false,
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 1250,
-            "early_stopping": true
-          }
-        }
-      },
-      "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
->>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
     }
   },
   "ST": {
@@ -490,7 +458,6 @@
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
         "usage": false,
-        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -513,7 +480,6 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": false,
         "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
@@ -612,18 +578,10 @@
         },
         "DestVI": {
           "train": false,
-<<<<<<< HEAD
           "adata_to_use": "preprocessed_adata",
           "layer": "raw_counts",
           "params": {
             "max_epochs": 75,
-=======
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 2,
->>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
             "early_stopping": true
           },
           "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\stmodel"
@@ -649,27 +607,8 @@
           "params": {
             "max_epochs": 750,
             "early_stopping": true
-<<<<<<< HEAD
           },
           "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
-=======
-          }
-        },
-        "Tangram": {
-          "train": true,
-          "usage": true,
-          "train": true,
-          "usage": true,
-          "adata_sc_to_use": "raw_adata",
-          "adata_st_to_use": "raw_adata",
-          "layer": null,
-          "image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\Visium_HD_Human_Lung_Cancer_tissue_image.tif",
-          "params": {
-            "max_epochs": 25,
-            "max_epochs": 25,
-            "early_stopping": true
-          }
->>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
         }
       },
       "Tangram": {
@@ -747,10 +686,6 @@
         "params": {
           "adata": "adata",
           "cluster_key": "leiden_clusters"
-<<<<<<< HEAD
-          "cluster_key": "leiden_clusters"
-=======
->>>>>>> 3c36d22860a0b92032ebfea82a4eb8e93f26ea15
         }
       }
     },
