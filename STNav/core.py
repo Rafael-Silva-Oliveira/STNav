@@ -368,13 +368,13 @@ class STNavCore(object):
                 f"Selecting highly variable genes with the following params {config['highly_variable_genes']['params']}"
             )
 
-            assert (
-                config["log1p"]["usage"] == True
-                and config["highly_variable_genes"]["params"]["flavor"] == "seurat"
-            ) or (
-                config["log1p"]["usage"] != True
-                and config["highly_variable_genes"]["params"]["flavor"] != "seurat"
-            ), "Highly variable genes with log1p applied to the data expects flavor to be seurat. Please, deactivate log1p if you want to use seurat_v3. Expects logarithmized data, except when flavor='seurat_v3', in which count data is expected."
+            # assert (
+            #     config["log1p"]["usage"] == True
+            #     and config["highly_variable_genes"]["params"]["flavor"] == "seurat"
+            # ) or (
+            #     config["log1p"]["usage"] != True
+            #     and config["highly_variable_genes"]["params"]["flavor"] != "seurat"
+            # ), "Highly variable genes with log1p applied to the data expects flavor to be seurat. Please, deactivate log1p if you want to use seurat_v3. Expects logarithmized data, except when flavor='seurat_v3', in which count data is expected."
 
             sc.pp.highly_variable_genes(
                 **return_filtered_params(

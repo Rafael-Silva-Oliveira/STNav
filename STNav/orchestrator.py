@@ -27,6 +27,7 @@ from STNav.modules.st import (
     SpatiallyVariableGenes,
     SpatialNeighbors,
     Deconvolution,
+    SpatialMarkersMapping,
 )
 from STNav.utils.helpers import (
     return_filtered_params,
@@ -153,8 +154,15 @@ class Orchestrator(object):
         STNavCorePipeline.DEG()
         self.apply_subset_and_log(STNavCorePipeline)
 
-        DECONV = Deconvolution(STNavCorePipeline)
-        DECONV.run_deconvolution()
+        if STNavCorePipeline.config[self.ST]["SpatialMarkersMapping"]["usage"]:
+            mapping_config = STNavCorePipeline.config[self.ST]["SpatialMarkersMapping"]
+            MAPPING = SpatialMarkersMapping(STNavCorePipeline)
+            MAPPING.run_mapping(mapping_config=mapping_config)
+
+        elif STNavCorePipeline.config[self.ST]["DeconvolutionModels"]["usage"]:
+            DECONV = Deconvolution(STNavCorePipeline)
+            DECONV.run_deconvolution()
+
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)
