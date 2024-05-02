@@ -417,7 +417,7 @@
           "params": { "adata": "adata", "n_pcs": 30, "n_neighbors": 20 }
         },
         "umap": {
-          "usage": false,
+          "usage": true,
           "func_str": "sc.tl.umap",
           "params": { "adata": "adata" }
         },
@@ -670,8 +670,8 @@
         "from_models": {
           "usage": true,
           "SCVI": {
-            "usage": true,
-            "train": true,
+            "usage": false,
+            "train": false,
             "labels_key": "ann_level_3_transferred_label",
             "layer": "raw_counts",
             "top_genes": 25,
@@ -683,7 +683,7 @@
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           },
           "CellTypist": {
-            "usage": false,
+            "usage": true,
             "train": true,
             "top_genes": 25,
             "markers_column_name": "Markers",
@@ -697,7 +697,7 @@
             "batch_number": 100,
             "batch_size": 1000,
             "balance_cell_type": false,
-            "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\celltypist_markers_model",
+            "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel",
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           }
         }

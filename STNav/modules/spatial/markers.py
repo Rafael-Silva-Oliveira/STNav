@@ -29,6 +29,7 @@ import mudata
 from scvi.external import Tangram
 import mudata
 from scvi.external import Tangram
+from tqdm import tqdm
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -61,10 +62,10 @@ import json
 
 def CellTypist_mapper(sc_adata, config, STNavCorePipeline):
 
-    sc.pp.normalize_total(sc_adata, target_sum=1e4)
-    sc.pp.log1p(sc_adata)
-    sc.pp.scale(sc_adata, max_value=10)
-
+    # sc.pp.normalize_total(sc_adata, target_sum=1e4)
+    # sc.pp.log1p(sc_adata)
+    # sc.pp.scale(sc_adata, max_value=10)
+    # TODO: check if the adata used is already normalized
     if config["train"]:
         model = celltypist.train(
             sc_adata,
@@ -77,9 +78,10 @@ def CellTypist_mapper(sc_adata, config, STNavCorePipeline):
             batch_size=config["batch_size"],
             balance_cell_type=config["balance_cell_type"],
         )
+        model.write(f"{config['pre_trained_model_path']}\\celltypist_model.pkl")
     else:
         model = models.Model.load(
-            model=config["pre_trained_model_path"],
+            model=f"{config['pre_trained_model_path']}/celltypist_model.pkl",
         )
     num_list = []
     markers = []
@@ -95,15 +97,15 @@ def CellTypist_mapper(sc_adata, config, STNavCorePipeline):
             config["cell_type_column_name"]: num_list,
         }
     )
+
     cell_type_markers = (
         cell_markers_df.groupby(f"{config['cell_type_column_name']}")
-        .apply(lambda x: x.index.tolist())
+        .apply(
+            lambda x: [
+                marker.upper() for marker in x[config["markers_column_name"]].tolist()
+            ]
+        )
         .to_dict()
-    )
-
-    cell_markers_df.to_csv(
-        f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\{STNavCorePipeline.data_type}_CellTypist_Markers_{date}.csv",
-        index=False,
     )
 
     return cell_type_markers
@@ -208,11 +210,15 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline):
         )
         plt.close()
 
-        cell_type_markers = (
-            df.groupby(f"{config['cell_type_column_name']}")
-            .apply(lambda x: x[config["markers_column_name"]].tolist())
-            .to_dict()
+    cell_type_markers = (
+        df.groupby(f"{config['cell_type_column_name']}")
+        .apply(
+            lambda x: [
+                marker.upper() for marker in x[config["markers_column_name"]].tolist()
+            ]
         )
+        .to_dict()
+    )
 
     return cell_type_markers
 
@@ -224,6 +230,9 @@ class SpatialMarkersMapping:
 
     def _get_cell_type_markers(self, mapping_config, sc_adata, st_adata):
         config = mapping_config["get_cell_type_markers"]
+        logger.info(
+            "Extracting top cell type markers from scRNA reference annotated data."
+        )
 
         load_types = [
             marker_loading_type
@@ -262,10 +271,13 @@ class SpatialMarkersMapping:
                 cell_type_markers = CellTypist_mapper(
                     sc_adata, config[load_type]["CellTypist"], self.STNavCorePipeline
                 )
+            # TODO: integrate both SCVI and CellTypist markers
+
+        # Make all genes from ST upper case to avoid issues with the intersection
         st_adata.var.index = st_adata.var.index.str.upper()
         st_adata.var_names = st_adata.var_names.str.upper()
 
-        # Return only the markers that are present in the spatial data
+        # Return only the markers that are present in the spatial data (intersection)
         marker_genes_in_data = dict()
         for ct, markers in cell_type_markers.items():
             markers_found = list()
@@ -277,6 +289,7 @@ class SpatialMarkersMapping:
         return marker_genes_in_data
 
     def _map_markers_to_spatial_cell_type(self, mapping_config, st_adata, cell_markers):
+        logger.info("Mapping markers to spatial cell types.")
         config = mapping_config["map_markers_to_spatial_cell_type"]
         df_list = []
         # Create a Bin x Top cell marker gene log normalized
@@ -294,19 +307,67 @@ class SpatialMarkersMapping:
             df_list.append(df_gene_subset)
 
         # Add this information to the adata_sp.obs and plot results
-        for cell_type, gene_names in cell_markers.items():
+        for cell_type, gene_names in tqdm(cell_markers.items()):
             for df in df_list:
                 if cell_type + "_Mean_LogNorm" in df.columns:
                     st_adata.obs[cell_type + "_Mean_LogNorm"] = df[
                         cell_type + "_Mean_LogNorm"
                     ]
+                    col = cell_type + "_Mean_LogNorm"
+                    print(col)
+                    save_path = (
+                        self.STNavCorePipeline.saving_path
+                        + "\\Plots\\"
+                        + cell_type
+                        + "_mean_lognorm"
+                        + ".png"
+                    )
+                    with plt.rc_context():  # Use this to set figure params like size and dpi
+                        plot_func = sc.pl.spatial(
+                            st_adata,
+                            cmap="magma",
+                            color=[col],
+                            img_key="hires",
+                            size=1.75,
+                            alpha_img=0.5,
+                            show=False,
+                        )
+                        plt.savefig(save_path, bbox_inches="tight")
+                        plt.close()
+
+        logger.info(
+            "Saving the spatial plot using the max of the mean lognorms cell type markers."
+        )
+        cell_lognorms = [col for col in st_adata.obs.columns if "Mean_LogNorm" in col]
+        st_adata.obs["cell_type"] = st_adata.obs[cell_lognorms].idxmax(axis=1)
+
+        save_path = (
+            self.STNavCorePipeline.saving_path
+            + "\\Plots\\"
+            + "all_cell_types"
+            + "_mean_max"
+            + ".png"
+        )
+        with plt.rc_context():  # Use this to set figure params like size and dpi
+            plot_func = sc.pl.spatial(
+                st_adata,
+                cmap="magma",
+                color="cell_type",
+                img_key="hires",
+                size=1.75,
+                alpha_img=0.5,
+                show=False,
+            )
+            plt.savefig(save_path, bbox_inches="tight")
+            plt.close()
 
         return st_adata
 
     def _map_to_clusters(self, mapping_config, st_adata, cell_markers):
+        logger.info("Mapping cell types to clusters.")
         config = mapping_config["map_to_clusters"]
 
-        for cell_type in cell_markers.keys():
+        for cell_type in tqdm(cell_markers.keys()):
             # Calculate the 80th percentile
             percentile = st_adata.obs[cell_type + "_Mean_LogNorm"].quantile(
                 config["percentile_threshold"]
@@ -317,7 +378,6 @@ class SpatialMarkersMapping:
                 st_adata.obs[cell_type + "_Mean_LogNorm"] > percentile
             ).astype(int)
 
-        for cell_type in cell_markers.keys():
             # Create a new column that combines the cell type and the cluster
             st_adata.obs[cell_type + "_cell_type_cluster"] = st_adata.obs.apply(
                 lambda row: (
@@ -327,6 +387,34 @@ class SpatialMarkersMapping:
                 ),
                 axis=1,
             )
+            # Set the color of the legend text to black
+            plt.rcParams["text.color"] = "black"
+
+            # Set the background color to white
+            plt.rcParams["figure.facecolor"] = "white"
+            plt.rcParams["axes.facecolor"] = "white"
+            col = cell_type + "_cell_type_cluster"
+            print(col)
+
+            save_path = (
+                self.STNavCorePipeline.saving_path
+                + "\\Plots\\"
+                + cell_type
+                + "_cluster"
+                + ".png"
+            )
+            with plt.rc_context():  # Use this to set figure params like size and dpi
+                plot_func = sc.pl.spatial(
+                    st_adata,
+                    cmap="magma",
+                    color=[col],
+                    img_key="hires",
+                    size=1.75,
+                    alpha_img=0.5,
+                    show=False,
+                )
+                plt.savefig(save_path, bbox_inches="tight")
+                plt.close()
 
         return st_adata
 
@@ -357,9 +445,9 @@ class SpatialMarkersMapping:
         spatial_cell_type_and_clusters_adata = self._map_to_clusters(
             mapping_config, spatial_cell_type_adata, cell_markers_dict
         )
-
+        # TODO: add a final step that would log the name of the cell types to do the plotting
         save_processed_adata(
             STNavCorePipeline=self.STNavCorePipeline,
-            name="mapped_adata",
+            name="deconvoluted_adata",
             adata=spatial_cell_type_and_clusters_adata,
         )
