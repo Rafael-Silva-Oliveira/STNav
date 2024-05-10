@@ -485,6 +485,16 @@ class STNavCore(object):
                 + str(config["plotting_prep"]["hclust"]["params"]["n_clusters"])
             ] = cluster.fit_predict(X_pca).astype(str)
 
+        if config["plotting_prep"]["dendogram"]["usage"]:
+            logger.info(
+                f"	Applying dendogram with the following params {config['plotting_prep']['dendogram']['params']}"
+            )
+            sc.tl.dendrogram(
+                adata=adata,
+                **return_filtered_params(
+                    config=config["plotting_prep"]["dendogram"],
+                ),
+            )
         # save the counts to a separate object for later, we need the normalized counts in raw for DEG dete.Save raw data before preprocessing values and further filtering
         adata.layers["preprocessed_counts"] = adata.X.copy()
 

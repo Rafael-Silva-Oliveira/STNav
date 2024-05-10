@@ -41,7 +41,9 @@ sc.set_figure_params(facecolor="white", figsize=(8, 8))
 sc.settings.verbosity = 3
 
 
-def run_plots(plotting_config, adata_dict: dict, directory: str):
+def run_plots(
+    plotting_config, adata_dict: dict, directory: str, cell_markers_dict: dict
+):
 
     logger.info("Running plots.")
     # Plotting section
@@ -135,6 +137,10 @@ def run_plots(plotting_config, adata_dict: dict, directory: str):
                     if "embedding" in plot_type:
                         ct_list = adata.obsm["deconvolution"].columns
                         filtered_params.setdefault("color", ct_list)
+
+                    if plot_type == "sc_heatmap":
+                        # Add the marker genes
+                        filtered_params.setdefault("var_names", cell_markers_dict)
 
                     logger.info(
                         f"The following parameters were validated and will be used for the {plot_type = }: {filtered_params} "

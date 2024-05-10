@@ -195,6 +195,13 @@
             "affinity": "euclidean",
             "linkage": "ward"
           }
+        },
+        "dendogram": {
+          "usage": true,
+          "func_str": "sc.tl.dendrogram",
+          "params": {
+            "groupby": "ann_level_3_transferred_label"
+          }
         }
       }
     },
@@ -202,7 +209,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -225,7 +232,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -236,7 +243,7 @@
         }
       },
       "GSEA": {
-        "usage": false,
+        "usage": true,
         "stratify_by_group": false,
         "gene_sets": {
           "api_sets": {
@@ -310,10 +317,10 @@
   },
   "ST": {
     "usage": true,
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um",
+    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um\\spatial",
+    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
     "quality_control": {
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
@@ -385,7 +392,7 @@
       },
       "filter_cells": {
         "func_str": "sc.pp.filter_cells",
-        "usage": false,
+        "usage": true,
         "params": {
           "data": "adata",
           "min_genes": 200
@@ -448,6 +455,13 @@
             "affinity": "euclidean",
             "linkage": "ward"
           }
+        },
+        "dendogram": {
+          "usage": true,
+          "func_str": "sc.tl.dendrogram",
+          "params": {
+            "groupby": "leiden_clusters"
+          }
         }
       }
     },
@@ -455,7 +469,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -478,7 +492,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -489,7 +503,7 @@
         }
       },
       "GSEA": {
-        "usage": false,
+        "usage": true,
         "stratify_by_group": true,
         "gene_sets": {
           "api_sets": {
@@ -669,14 +683,14 @@
         },
         "from_models": {
           "usage": true,
+          "markers_column_name": "Markers",
+          "cell_type_column_name": "CellType",
           "SCVI": {
-            "usage": false,
+            "usage": true,
             "train": false,
             "labels_key": "ann_level_3_transferred_label",
             "layer": "raw_counts",
             "top_genes": 25,
-            "markers_column_name": "Markers",
-            "cell_type_column_name": "CellType",
             "max_epochs": 1250,
             "early_stopping": true,
             "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scvi_markers_model",
@@ -686,8 +700,6 @@
             "usage": true,
             "train": true,
             "top_genes": 25,
-            "markers_column_name": "Markers",
-            "cell_type_column_name": "CellType",
             "epochs": 1500,
             "labels": "ann_level_3_transferred_label",
             "n_jobs": 10,
@@ -721,7 +733,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "NHoodEnrichment_adata",
-        "usage": false,
+        "usage": true,
         "func_str": "sq.gr.nhood_enrichment",
         "data_type": "ST",
         "params": {
@@ -736,7 +748,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "co_occurrence_adata",
-        "usage": false,
+        "usage": true,
         "func_str": "sq.gr.co_occurrence",
         "data_type": "ST",
         "params": {
@@ -753,7 +765,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "MoranI_adata",
-        "usage": false,
+        "usage": true,
         "func_str": "sq.gr.spatial_autocorr",
         "data_type": "ST",
         "n_genes": 1000,
@@ -794,7 +806,7 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci_adata",
-        "usage": false,
+        "usage": true,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {

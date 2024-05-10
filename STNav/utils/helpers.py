@@ -455,12 +455,14 @@ def stLearn_wrapper(
 
     adata.X = adata.layers["norm"]
     # TODO: check if adata is just norm and not log norm
-    use_label = "dominant_spot_cell_type"
+    use_label = "cell_type"
 
     adata = st.convert_scanpy(adata)
-    adata.obs[f"{use_label}"] = (
-        adata.obs[adata.obsm["deconvolution"].columns].idxmax(axis=1).astype("category")
-    )
+
+    # NOTE: following commented code deprecated as we're no longer using deconvolution approaches. Simpler gene marker approach is now being used instead.
+    # adata.obs[f"{use_label}"] = (
+    #     adata.obs[adata.obsm["deconvolution"].columns].idxmax(axis=1).astype("category")
+    # )
     logger.info(
         f"Running Receptor Ligand Analysis with connectomeDB2020_lit ligand-receptor pairs."
     )

@@ -240,6 +240,33 @@
         }
       }
     },
+    "sc_correlation_matrix": {
+      "scRNA_corr_matrix.png": {
+        "usage": true,
+        "func_str": "sc.pl.correlation_matrix",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "scRNA",
+        "params": {
+          "adata": "adata",
+          "groupby": "ann_level_3_transferred_label",
+          "show": false
+        }
+      }
+    },
+    "sc_heatmap": {
+      "scRNA_heatmap_by_cluster.png": {
+        "usage": true,
+        "func_str": "sc.pl.heatmap",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "scRNA",
+        "params": {
+          "adata": "adata",
+          "groupby": "leiden_clusters",
+          "cmap": "bwr",
+          "show": false
+        }
+      }
+    },
     "sc_rank_genes_groups_heatmap_plot": {
       "scRNA_rank_genes_groups_heatmap.png": {
         "usage": true,
@@ -327,6 +354,20 @@
           "n_genes": 5,
           "key": "wilcoxon",
           "groupby": "leiden_clusters",
+          "show": false
+        }
+      }
+    },
+    "sc_rank_genes_groups_tracksplot": {
+      "scRNA_rank_genes_tracksplot.png": {
+        "usage": true,
+        "func_str": "sc.pl.rank_genes_groups_tracksplot",
+        "adata_to_use": "preprocessed_DEG_adata",
+        "data_type": "scRNA",
+        "params": {
+          "adata": "adata",
+          "key": "wilcoxon",
+          "n_genes": 5,
           "show": false
         }
       }
@@ -770,7 +811,7 @@
           "outer_size_prop": 0.5,
           "outer_mode": "binary",
           "pt_scale": 150,
-          "use_label": "dominant_spot_cell_type",
+          "use_label": "cell_type",
           "show_image": true,
           "sig_spots": true,
           "show": false
@@ -790,7 +831,7 @@
           "outer_size_prop": 1,
           "outer_mode": null,
           "pt_scale": 15,
-          "use_label": "dominant_spot_cell_type",
+          "use_label": "cell_type",
           "show_arrows": true,
           "show_image": true,
           "sig_spots": false,
@@ -812,7 +853,7 @@
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "use_label": "dominant_spot_cell_type",
+          "use_label": "cell_type",
           "show": false
         }
       }
@@ -827,7 +868,7 @@
           "adata": "adata",
           "lr": "FN1_PLAUR",
           "min_counts": 2,
-          "use_label": "dominant_spot_cell_type",
+          "use_label": "cell_type",
           "show": false
         }
       }
@@ -842,7 +883,7 @@
           "adata": "adata",
           "lrs": null,
           "min_total": 100,
-          "use_label": "dominant_spot_cell_type",
+          "use_label": "cell_type",
           "show": false
         }
       }
@@ -856,7 +897,7 @@
         "params": {
           "adata": "adata",
           "lr": "FN1_PLAUR",
-          "use_label": "dominant_spot_cell_type",
+          "use_label": "cell_type",
           "show": false
         }
       }

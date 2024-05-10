@@ -60,7 +60,7 @@ from celltypist import models
 import json
 
 
-def CellTypist_mapper(sc_adata, config, STNavCorePipeline):
+def CellTypist_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
     # sc.pp.normalize_total(sc_adata, target_sum=1e4)
     # sc.pp.log1p(sc_adata)
@@ -93,25 +93,21 @@ def CellTypist_mapper(sc_adata, config, STNavCorePipeline):
     # Create DataFrame
     cell_markers_df = pd.DataFrame(
         {
-            config["markers_column_name"]: markers,
-            config["cell_type_column_name"]: num_list,
+            gene_col: markers,
+            celltype_col: num_list,
         }
     )
 
     cell_type_markers = (
-        cell_markers_df.groupby(f"{config['cell_type_column_name']}")
-        .apply(
-            lambda x: [
-                marker.upper() for marker in x[config["markers_column_name"]].tolist()
-            ]
-        )
+        cell_markers_df.groupby(f"{celltype_col}")
+        .apply(lambda x: [marker.upper() for marker in x[gene_col].tolist()])
         .to_dict()
     )
 
     return cell_type_markers
 
 
-def SCVI_mapper(sc_adata, config, STNavCorePipeline):
+def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
     # sc.pp.filter_genes(sc_adata, min_counts=50)
     # sc_adata.layers["counts"] = sc_adata.X.copy()  # preserve counts
@@ -128,6 +124,7 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline):
     #     flavor="seurat_v3",
     # )
 
+    # scVI uses non normalized data so we keep the original data in a separate AnnData object, then the normalization steps are performed (layer = raw_counts)
     if config["train"]:
         SCVI.setup_anndata(
             sc_adata,
@@ -181,14 +178,7 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline):
     ]
 
     # Create a DataFrame
-    df = pd.DataFrame(
-        data, columns=[config["markers_column_name"], config["cell_type_column_name"]]
-    )
-
-    df.to_csv(
-        f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\{STNavCorePipeline.data_type}_scVI_markers_{date}.csv",
-        index=False,
-    )
+    df = pd.DataFrame(data, columns=[gene_col, celltype_col])
 
     sc.tl.dendrogram(sc_adata, groupby=config["labels_key"], use_rep="X_scVI")
     with plt.rc_context():  # Use this to set figure params like size and dpi
@@ -211,12 +201,8 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline):
         plt.close()
 
     cell_type_markers = (
-        df.groupby(f"{config['cell_type_column_name']}")
-        .apply(
-            lambda x: [
-                marker.upper() for marker in x[config["markers_column_name"]].tolist()
-            ]
-        )
+        df.groupby(f"{celltype_col}")
+        .apply(lambda x: [marker.upper() for marker in x[gene_col].tolist()])
         .to_dict()
     )
 
@@ -263,15 +249,62 @@ class SpatialMarkersMapping:
             )
 
         elif load_type == "from_models":
+            cell_type_markers_SCVI = None
+            cell_type_markers_CellTypist = None
+            gene_markers_col_name = config["from_models"]["markers_column_name"]
+            celltype_col_name = config["from_models"]["cell_type_column_name"]
+
             if config[load_type]["SCVI"]["usage"]:
-                cell_type_markers = SCVI_mapper(
-                    sc_adata, config[load_type]["SCVI"], self.STNavCorePipeline
+                cell_type_markers_SCVI = SCVI_mapper(
+                    sc_adata,
+                    config[load_type]["SCVI"],
+                    self.STNavCorePipeline,
+                    gene_markers_col_name,
+                    celltype_col_name,
                 )
+
             if config[load_type]["CellTypist"]["usage"]:
-                cell_type_markers = CellTypist_mapper(
-                    sc_adata, config[load_type]["CellTypist"], self.STNavCorePipeline
+                cell_type_markers_CellTypist = CellTypist_mapper(
+                    sc_adata,
+                    config[load_type]["CellTypist"],
+                    self.STNavCorePipeline,
+                    gene_markers_col_name,
+                    celltype_col_name,
                 )
-            # TODO: integrate both SCVI and CellTypist markers
+
+            if (
+                cell_type_markers_SCVI is not None
+                and cell_type_markers_CellTypist is not None
+            ):
+                # Merge both markers
+                cell_type_markers = pd.merge(
+                    cell_type_markers_SCVI,
+                    cell_type_markers_CellTypist,
+                    on=[
+                        gene_markers_col_name,
+                        celltype_col_name,
+                    ],
+                    how="outer",
+                )
+                cell_type_markers.to_csv(
+                    f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_merged_markers_{date}.csv",
+                    index=False,
+                )
+
+            elif cell_type_markers_SCVI is not None:
+                cell_type_markers = cell_type_markers_SCVI
+                cell_type_markers.to_csv(
+                    f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_SCVI_markers_{date}.csv",
+                    index=False,
+                )
+
+            elif cell_type_markers_CellTypist is not None:
+                cell_type_markers = cell_type_markers_CellTypist
+
+                cell_type_markers.to_csv(
+                    f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_CellTypist_markers_{date}.csv",
+                    index=False,
+                )
 
         # Make all genes from ST upper case to avoid issues with the intersection
         st_adata.var.index = st_adata.var.index.str.upper()
@@ -291,49 +324,45 @@ class SpatialMarkersMapping:
     def _map_markers_to_spatial_cell_type(self, mapping_config, st_adata, cell_markers):
         logger.info("Mapping markers to spatial cell types.")
         config = mapping_config["map_markers_to_spatial_cell_type"]
-        df_list = []
+        df = pd.DataFrame.sparse.from_spmatrix(
+            st_adata.X,
+            index=st_adata.obs.index,
+            columns=st_adata.var_names.str.upper(),
+        )
         # Create a Bin x Top cell marker gene log normalized
         for cell_type, gene_names in cell_markers.items():
-            df = pd.DataFrame(
-                index=st_adata.obs.index,
-                columns=st_adata.var_names.str.upper(),
-                data=st_adata.X.toarray(),
-            )
+            # Get the common genes
             common_genes = list(set(df.columns) & set(gene_names))
+
+            # Get the subset of df that includes the common genes
             df_gene_subset = df[common_genes]
 
-            # TODO: add the combination method
-            df_gene_subset[cell_type + "_Mean_LogNorm"] = df_gene_subset.mean(axis=1)
-            df_list.append(df_gene_subset)
+            # Calculate the mean of df_gene_subset along axis=1 and add it to adata_sp.obs
+            st_adata.obs[cell_type + "_Mean_LogNorm"] = df_gene_subset.mean(
+                axis=1
+            ).astype(float)
 
-        # Add this information to the adata_sp.obs and plot results
-        for cell_type, gene_names in tqdm(cell_markers.items()):
-            for df in df_list:
-                if cell_type + "_Mean_LogNorm" in df.columns:
-                    st_adata.obs[cell_type + "_Mean_LogNorm"] = df[
-                        cell_type + "_Mean_LogNorm"
-                    ]
-                    col = cell_type + "_Mean_LogNorm"
-                    print(col)
-                    save_path = (
-                        self.STNavCorePipeline.saving_path
-                        + "\\Plots\\"
-                        + cell_type
-                        + "_mean_lognorm"
-                        + ".png"
-                    )
-                    with plt.rc_context():  # Use this to set figure params like size and dpi
-                        plot_func = sc.pl.spatial(
-                            st_adata,
-                            cmap="magma",
-                            color=[col],
-                            img_key="hires",
-                            size=1.75,
-                            alpha_img=0.5,
-                            show=False,
-                        )
-                        plt.savefig(save_path, bbox_inches="tight")
-                        plt.close()
+            col = cell_type + "_Mean_LogNorm"
+            print(col)
+            save_path = (
+                self.STNavCorePipeline.saving_path
+                + "\\Plots\\"
+                + cell_type
+                + "_mean_lognorm"
+                + ".png"
+            )
+            with plt.rc_context():  # Use this to set figure params like size and dpi
+                plot_func = sc.pl.spatial(
+                    st_adata,
+                    cmap="magma",
+                    color=[col],
+                    img_key="hires",
+                    size=1.75,
+                    alpha_img=0.5,
+                    show=False,
+                )
+                plt.savefig(save_path, bbox_inches="tight")
+                plt.close()
 
         logger.info(
             "Saving the spatial plot using the max of the mean lognorms cell type markers."
@@ -451,3 +480,5 @@ class SpatialMarkersMapping:
             name="deconvoluted_adata",
             adata=spatial_cell_type_and_clusters_adata,
         )
+
+        return cell_markers_dict

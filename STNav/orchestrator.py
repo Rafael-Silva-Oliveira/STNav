@@ -43,6 +43,7 @@ class Orchestrator(object):
     STNavCore_cls = STNavCore
     SCRNA = "scRNA"
     ST = "ST"
+    cell_markers_dict = None
 
     def __init__(self, analysis_config, plotting_config) -> None:
         self.analysis_config = self._update_config(analysis_config)
@@ -157,7 +158,7 @@ class Orchestrator(object):
         if STNavCorePipeline.config[self.ST]["SpatialMarkersMapping"]["usage"]:
             mapping_config = STNavCorePipeline.config[self.ST]["SpatialMarkersMapping"]
             MAPPING = SpatialMarkersMapping(STNavCorePipeline)
-            MAPPING.run_mapping(mapping_config=mapping_config)
+            self.cell_markers_dict = MAPPING.run_mapping(mapping_config=mapping_config)
 
         elif STNavCorePipeline.config[self.ST]["DeconvolutionModels"]["usage"]:
             DECONV = Deconvolution(STNavCorePipeline)
@@ -237,4 +238,5 @@ class Orchestrator(object):
             plotting_config=self.plotting_config["plots"],
             adata_dict=adata_dict,
             directory=saving_dir,
+            cell_markers_dict=self.cell_markers_dict,
         )
