@@ -60,6 +60,18 @@ from celltypist import models
 import json
 
 
+def convert_form_anndata(adata, cell_annotation_col):
+
+    adata.var_names_make_unique()
+    exp_data = pd.DataFrame(
+        data=adata.X.todense(), columns=adata.var_names, index=adata.obs.index
+    ).to_numpy()
+    labels = adata.obs[cell_annotation_col].to_numpy()
+    gene_names = adata.var_names.to_numpy()
+
+    return exp_data, labels, gene_names
+
+
 def CellTypist_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
     # sc.pp.normalize_total(sc_adata, target_sum=1e4)
@@ -86,7 +98,7 @@ def CellTypist_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_co
     num_list = []
     markers = []
     for cell in model.cell_types:
-        top_markers = model.extract_top_markers(cell, 4)
+        top_markers = model.extract_top_markers(cell, config["top_genes"])
         num_list += [cell] * len(top_markers)
         markers += list(top_markers)
 
@@ -97,14 +109,17 @@ def CellTypist_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_co
             celltype_col: num_list,
         }
     )
-
-    cell_type_markers = (
+    cell_markers_df.to_csv(
+        f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\{STNavCorePipeline.data_type}_CellTypist_markers_{date}.csv",
+        index=False,
+    )
+    cell_type_markers_dict = (
         cell_markers_df.groupby(f"{celltype_col}")
         .apply(lambda x: [marker.upper() for marker in x[gene_col].tolist()])
         .to_dict()
     )
 
-    return cell_type_markers
+    return cell_type_markers_dict
 
 
 def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
@@ -171,11 +186,7 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
         markers[c] = cell_type_df.index.tolist()[: config["top_genes"]]
 
     # Flatten the dictionary
-    data = [
-        (val.upper(), key + " marker")
-        for key, values in markers.items()
-        for val in values
-    ]
+    data = [(val.upper(), key) for key, values in markers.items() for val in values]
 
     # Create a DataFrame
     df = pd.DataFrame(data, columns=[gene_col, celltype_col])
@@ -200,13 +211,34 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
         )
         plt.close()
 
-    cell_type_markers = (
+    cell_type_markers_dict = (
         df.groupby(f"{celltype_col}")
         .apply(lambda x: [marker.upper() for marker in x[gene_col].tolist()])
         .to_dict()
     )
 
-    return cell_type_markers
+    return cell_type_markers_dict
+
+
+def scMAGS_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
+    import scmags as sm
+
+    exp_data, labels, gene_names = convert_form_anndata(
+        sc_adata, "ann_level_3_transferred_label"
+    )
+    mags = sm.ScMags(data=exp_data, labels=labels, gene_ann=gene_names)
+    mags.filter_genes(nof_sel=config["nof_sel"])
+    mags.sel_clust_marker(nof_markers=config["nof_markers"])
+    df = mags.get_markers()
+    cell_type_markers_dict = {
+        index.replace("C_", ""): [val.upper() for val in row.tolist()]
+        for index, row in df.iterrows()
+    }
+    df.to_csv(
+        f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\{STNavCorePipeline.data_type}_scMAGS_markers_{date}.csv",
+        index=False,
+    )
+    return cell_type_markers_dict
 
 
 class SpatialMarkersMapping:
@@ -242,66 +274,118 @@ class SpatialMarkersMapping:
             # Get all top genes for each function (into dictionary form)
             cell_markers_df = pd.read_csv(f"{config[load_type]['path']}", index_col=0)
 
-            cell_type_markers = (
+            cell_type_markers_dict = (
                 cell_markers_df.groupby(f"{config['cell_type_column_name']}")
                 .apply(lambda x: x[config["markers_column_name"]].tolist())
                 .to_dict()
             )
 
         elif load_type == "from_models":
-            cell_type_markers_SCVI = None
-            cell_type_markers_CellTypist = None
+            cell_type_markers_SCVI_dict = None
+            cell_type_markers_CellTypist_dict = None
             gene_markers_col_name = config["from_models"]["markers_column_name"]
             celltype_col_name = config["from_models"]["cell_type_column_name"]
 
             if config[load_type]["SCVI"]["usage"]:
-                cell_type_markers_SCVI = SCVI_mapper(
+                cell_type_markers_SCVI_dict = SCVI_mapper(
                     sc_adata,
                     config[load_type]["SCVI"],
                     self.STNavCorePipeline,
                     gene_markers_col_name,
                     celltype_col_name,
                 )
+                # Convert dictionary to DataFrame
+                df = pd.DataFrame(cell_type_markers_SCVI_dict)
+
+                # Melt DataFrame to long format
+                cell_type_markers_SCVI_df = df.melt(
+                    var_name=celltype_col_name,
+                    value_name=gene_markers_col_name,
+                )
 
             if config[load_type]["CellTypist"]["usage"]:
-                cell_type_markers_CellTypist = CellTypist_mapper(
+                cell_type_markers_CellTypist_dict = CellTypist_mapper(
                     sc_adata,
                     config[load_type]["CellTypist"],
                     self.STNavCorePipeline,
                     gene_markers_col_name,
                     celltype_col_name,
                 )
+                # Convert dictionary to DataFrame
+                df = pd.DataFrame(cell_type_markers_CellTypist_dict)
 
-            if (
-                cell_type_markers_SCVI is not None
-                and cell_type_markers_CellTypist is not None
-            ):
-                # Merge both markers
-                cell_type_markers = pd.merge(
-                    cell_type_markers_SCVI,
-                    cell_type_markers_CellTypist,
-                    on=[
-                        gene_markers_col_name,
-                        celltype_col_name,
-                    ],
-                    how="outer",
+                # Melt DataFrame to long format
+                cell_type_markers_CellTypist_df = df.melt(
+                    var_name=celltype_col_name,
+                    value_name=gene_markers_col_name,
                 )
-                cell_type_markers.to_csv(
+            if config[load_type]["scMAGS"]["usage"]:
+                cell_type_markers_CellTypist_dict = scMAGS_mapper(
+                    sc_adata,
+                    config[load_type]["scMAGS"],
+                    self.STNavCorePipeline,
+                    gene_markers_col_name,
+                    celltype_col_name,
+                )
+                # Convert dictionary to DataFrame
+                df = pd.DataFrame(cell_type_markers_CellTypist_dict)
+
+                # Melt DataFrame to long format
+                cell_type_markers_CellTypist_df = df.melt(
+                    var_name=celltype_col_name,
+                    value_name=gene_markers_col_name,
+                )
+            if (
+                cell_type_markers_SCVI_df is not None
+                and cell_type_markers_CellTypist_df is not None
+            ):
+                # Create a new dictionary to hold the merged results
+                cell_type_markers_dict = {}
+
+                for key, value in cell_type_markers_SCVI_dict.items():
+                    # Copy the values from the first dictionary to the new dictionary
+                    cell_type_markers_dict[key] = value[:]
+
+                for key, value in cell_type_markers_CellTypist_dict.items():
+                    if key in cell_type_markers_dict:
+                        # If key exists in the new dictionary, append the values
+                        cell_type_markers_dict[key] += value
+                    else:
+                        # If key doesn't exist in the new dictionary, create it
+                        cell_type_markers_dict[key] = value
+
+                # Remove duplicates
+                for key, value in cell_type_markers_dict.items():
+                    cell_type_markers_dict[key] = list(set(value))
+
+                # Convert dictionary to DataFrame
+                df = pd.DataFrame.from_dict(
+                    cell_type_markers_dict, orient="index"
+                ).transpose()
+
+                # Melt DataFrame to long format
+                cell_type_markers_df = df.melt(
+                    var_name=celltype_col_name,
+                    value_name=gene_markers_col_name,
+                )
+
+                cell_type_markers_df.dropna(inplace=True)
+                cell_type_markers_df.drop_duplicates(inplace=True)
+                cell_type_markers_df.to_csv(
                     f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_merged_markers_{date}.csv",
                     index=False,
                 )
 
-            elif cell_type_markers_SCVI is not None:
-                cell_type_markers = cell_type_markers_SCVI
-                cell_type_markers.to_csv(
+            elif cell_type_markers_SCVI_df is not None:
+                cell_type_markers_dict = cell_type_markers_SCVI_dict
+                cell_type_markers_SCVI_df.to_csv(
                     f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_SCVI_markers_{date}.csv",
                     index=False,
                 )
 
-            elif cell_type_markers_CellTypist is not None:
-                cell_type_markers = cell_type_markers_CellTypist
-
-                cell_type_markers.to_csv(
+            elif cell_type_markers_CellTypist_df is not None:
+                cell_type_markers_dict = cell_type_markers_CellTypist_dict
+                cell_type_markers_CellTypist_df.to_csv(
                     f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_CellTypist_markers_{date}.csv",
                     index=False,
                 )
@@ -312,7 +396,7 @@ class SpatialMarkersMapping:
 
         # Return only the markers that are present in the spatial data (intersection)
         marker_genes_in_data = dict()
-        for ct, markers in cell_type_markers.items():
+        for ct, markers in cell_type_markers_dict.items():
             markers_found = list()
             for marker in markers:
                 if marker in st_adata.var.index:
@@ -324,6 +408,21 @@ class SpatialMarkersMapping:
     def _map_markers_to_spatial_cell_type(self, mapping_config, st_adata, cell_markers):
         logger.info("Mapping markers to spatial cell types.")
         config = mapping_config["map_markers_to_spatial_cell_type"]
+        cell_type_col_name = "cell_type"
+        decomposition_type = "_Mean_LogNorm_Conn_Adj"
+
+        # Add spatial connectivities
+        sq.gr.spatial_neighbors(st_adata)  # TODO: change this
+        # sq.gr.centrality_scores(st_adata, "cell_type")
+        # sq.pl.centrality_scores(st_adata, "cell_type")
+        from scipy.sparse import csr_matrix
+
+        # Add the new columns ()
+        st_adata.obsp["spatial_connectivities"] = csr_matrix(
+            st_adata.obsp["spatial_connectivities"]
+        )
+        st_adata.X = csr_matrix(st_adata.X)
+
         df = pd.DataFrame.sparse.from_spmatrix(
             st_adata.X,
             index=st_adata.obs.index,
@@ -338,17 +437,17 @@ class SpatialMarkersMapping:
             df_gene_subset = df[common_genes]
 
             # Calculate the mean of df_gene_subset along axis=1 and add it to adata_sp.obs
-            st_adata.obs[cell_type + "_Mean_LogNorm"] = df_gene_subset.mean(
+            st_adata.obs[cell_type + decomposition_type] = df_gene_subset.mean(
                 axis=1
             ).astype(float)
 
-            col = cell_type + "_Mean_LogNorm"
+            col = cell_type + decomposition_type
             print(col)
             save_path = (
                 self.STNavCorePipeline.saving_path
                 + "\\Plots\\"
                 + cell_type
-                + "_mean_lognorm"
+                + decomposition_type
                 + ".png"
             )
             with plt.rc_context():  # Use this to set figure params like size and dpi
@@ -367,21 +466,38 @@ class SpatialMarkersMapping:
         logger.info(
             "Saving the spatial plot using the max of the mean lognorms cell type markers."
         )
-        cell_lognorms = [col for col in st_adata.obs.columns if "Mean_LogNorm" in col]
-        st_adata.obs["cell_type"] = st_adata.obs[cell_lognorms].idxmax(axis=1)
+        # cell_lognorms = [col for col in st_adata.obs.columns if "Mean_LogNorm" in col]
+        # st_adata.obs[cell_type_col_name] = st_adata.obs[cell_lognorms].idxmax(axis=1)
 
+        # # Calculate centralities
+        # sq.gr.spatial_neighbors(st_adata)
+        # sq.gr.centrality_scores(st_adata, cell_type_col_name)
+        # sq.pl.centrality_scores(st_adata, cell_type_col_name)
+        # from scipy.sparse import csr_matrix
+
+        # # Add the new columns ()
+        # st_adata.obsp["spatial_connectivities"] = csr_matrix(
+        #     st_adata.obsp["spatial_connectivities"]
+        # )
+        # st_adata.X = csr_matrix(st_adata.X)
+        # # Perform the dot product operation on the sparse matrices
+        # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
+
+        # Add the final cell type predictions
+        cell_lognorms = [col for col in st_adata.obs.columns if "Conn" in col]
+        st_adata.obs[cell_type_col_name] = st_adata.obs[cell_lognorms].idxmax(axis=1)
         save_path = (
             self.STNavCorePipeline.saving_path
             + "\\Plots\\"
             + "all_cell_types"
-            + "_mean_max"
+            + "_mean_max_conn_adj"
             + ".png"
         )
         with plt.rc_context():  # Use this to set figure params like size and dpi
             plot_func = sc.pl.spatial(
                 st_adata,
                 cmap="magma",
-                color="cell_type",
+                color=cell_type_col_name,
                 img_key="hires",
                 size=1.75,
                 alpha_img=0.5,
@@ -395,16 +511,17 @@ class SpatialMarkersMapping:
     def _map_to_clusters(self, mapping_config, st_adata, cell_markers):
         logger.info("Mapping cell types to clusters.")
         config = mapping_config["map_to_clusters"]
+        decomposition_type = "_Mean_LogNorm_Conn_Adj"
 
         for cell_type in tqdm(cell_markers.keys()):
             # Calculate the 80th percentile
-            percentile = st_adata.obs[cell_type + "_Mean_LogNorm"].quantile(
+            percentile = st_adata.obs[cell_type + decomposition_type].quantile(
                 config["percentile_threshold"]
             )
 
             # Create a new binary column
             st_adata.obs[cell_type + "_flag"] = (
-                st_adata.obs[cell_type + "_Mean_LogNorm"] > percentile
+                st_adata.obs[cell_type + decomposition_type] > percentile
             ).astype(int)
 
             # Create a new column that combines the cell type and the cluster
@@ -465,7 +582,7 @@ class SpatialMarkersMapping:
             mapping_config=mapping_config, sc_adata=sc_adata, st_adata=st_adata
         )
 
-        # Map the cell type markers to the spatial data (intersect the top markers that were found with the genes present in the spatial data). Apply combination method to get the spatial cell types. TODO: see a way so that this combination method is based on spatial information (e.g. spatially variable genes, etc).
+        # Map the cell type markers to the spatial data (intersect the top markers that were found with the genes present in the spatial data). Apply combination method to get the spatial cell types.
         spatial_cell_type_adata = self._map_markers_to_spatial_cell_type(
             mapping_config, st_adata, cell_markers_dict
         )

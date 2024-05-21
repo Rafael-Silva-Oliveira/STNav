@@ -386,7 +386,7 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_counts": 50,
+          "min_counts": 25,
           "min_cells": null
         }
       },
@@ -395,7 +395,7 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_genes": 200
+          "min_genes": 100
         }
       },
       "highly_variable_genes": {
@@ -711,6 +711,13 @@
             "balance_cell_type": false,
             "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel",
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
+          },
+          "scMAGS": {
+            "usage": true,
+            "nof_sel": 150,
+            "nof_markers": 5,
+            "labels": "ann_level_3_transferred_label",
+            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           }
         }
       },
@@ -728,8 +735,8 @@
     "SpatialNeighbors": {
       "Squidpy_NHoodEnrichment": {
         "checkpoint": {
-          "usage": false,
-          "pipeline_run": "PipelineRun_Checkpoint"
+          "usage": true,
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "NHoodEnrichment_adata",
@@ -743,8 +750,8 @@
       },
       "Squidpy_Co_Ocurrence": {
         "checkpoint": {
-          "usage": false,
-          "pipeline_run": "PipelineRun_Checkpoint"
+          "usage": true,
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "co_occurrence_adata",
@@ -760,8 +767,8 @@
     "SpatiallyVariableGenes": {
       "Squidpy_MoranI": {
         "checkpoint": {
-          "usage": false,
-          "pipeline_run": "PipelineRun_Checkpoint"
+          "usage": true,
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "MoranI_adata",
@@ -806,7 +813,7 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {

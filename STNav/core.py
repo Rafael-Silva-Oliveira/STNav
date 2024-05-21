@@ -755,8 +755,9 @@ class STNavCore(object):
                     gsea_dataframes["enrichr"]["set_name"] == "manual_sets"
                 ][["Genes", "Term", "group"]]
 
-                # TODO: check if AR can be present if we run GARD with all the data instead of the preprocessed adata
-                df2 = self.adata_dict[self.data_type]["DEG_adata"].obs
+                # NOTE: check if AR can be present if we run GARD with all the data instead of the preprocessed adata (The more genes included, the better for gard)
+                adata_path = self.adata_dict[self.data_type]["DEG_adata"]
+                df2 = sc.read_h5ad(adata_path).obs
 
                 # First, merge the dataframes on the 'group' column
                 merged_df = pd.merge(
@@ -777,8 +778,10 @@ class STNavCore(object):
                 result_df.drop(result_df.columns[0], axis=1, inplace=True)
 
                 final_df = pd.merge(df2, result_df, left_index=True, right_index=True)
-                final_df.fillna(0, inplace=True)
+                for col in final_df.select_dtypes(include=["category"]).columns:
+                    final_df[col] = final_df[col].cat.add_categories([0])
 
+                final_df.fillna(0, inplace=True)
                 GARD_final_df = GARD(
                     final_df, config_gsea["gene_sets"]["manual_sets"]["sets"]
                 )

@@ -313,7 +313,7 @@ def return_gene_intersect_subsets(adata_dict):
     logger.info("Creating gene subsets.")
 
     sc_adata = adata_dict["scRNA"]["preprocessed_data"]
-    sc_adata = adata_dict["ST"]["preprocessed_data"]
+    st_adata = adata_dict["ST"]["preprocessed_data"]
 
     intersect = np.intersect1d(sc_adata.var_names, st_adata.var_names)
     st_adata_subset = st_adata[:, intersect].copy()
