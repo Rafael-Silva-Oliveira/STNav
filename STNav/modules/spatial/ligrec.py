@@ -100,7 +100,7 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     adata=res,
                     name=f"{method_name}_dictionary",
                 )
-
+                del adata
             elif method_name == "stLearn_cci":
 
                 adata_cci = stLearn_wrapper(
@@ -113,3 +113,4 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                     name=f"{config_params['save_as']}",
                     fix_write=True,
                 )
+                del adata_cci

@@ -45,6 +45,8 @@ def run_plots(
     plotting_config, adata_dict: dict, directory: str, cell_markers_dict: dict
 ):
 
+    # https://scanpy-tutorials.readthedocs.io/en/latest/plotting/core.html
+
     logger.info("Running plots.")
     # Plotting section
     for plot_type, configs in plotting_config.items():

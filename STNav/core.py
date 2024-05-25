@@ -91,7 +91,7 @@ class STNavCore(object):
             adata=adata,
         )
 
-        return adata
+        del adata
 
     def read_visium(self):
         config = self.config[self.data_type]
@@ -124,7 +124,7 @@ class STNavCore(object):
             name="raw_adata",
             adata=adata,
         )
-        return adata
+        del adata
 
     def QC(self):
         step = "quality_control"
@@ -252,7 +252,7 @@ class STNavCore(object):
         save_processed_adata(
             STNavCorePipeline=self, name=config["save_as"], adata=adata
         )
-        return adata
+        del adata
 
     def preprocessing(self) -> an.AnnData:
         step = "preprocessing"
@@ -516,7 +516,7 @@ class STNavCore(object):
         save_processed_adata(
             STNavCorePipeline=self, name=config["save_as"], adata=adata
         )
-        return adata
+        del adata
 
     def DEG(self):
 
@@ -802,5 +802,5 @@ class STNavCore(object):
             ) as writer:
                 for sheet_name, gsea_df in gsea_dataframes.items():
                     gsea_df.to_excel(writer, sheet_name=sheet_name, index=False)
-
-        return adata
+        del adata_for_DEG
+        del adata

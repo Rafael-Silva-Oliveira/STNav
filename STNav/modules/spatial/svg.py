@@ -66,17 +66,69 @@ def SpatiallyVariableGenes(STNavCorePipeline):
             )
             data_type = config_params["data_type"]
 
-            if method_name == "Squidpy_MoranI":
+            if method_name == "Squidpy":
+
                 genes = adata[:, adata.var.highly_variable].var_names.values[
                     : config_params["n_genes"]
                 ]
                 sq.gr.spatial_neighbors(adata)
 
-                config_params["params"].setdefault("genes", genes)
+                # Calculate spatially variable genes with Moran I statistic
+                config_params["Squidpy_MoranI"]["params"].setdefault("genes", genes)
                 # Run spatial autocorrelation morans I
                 sq.gr.spatial_autocorr(
-                    **return_filtered_params(config=config_params, adata=adata)
+                    **return_filtered_params(
+                        config=config_params["Squidpy_MoranI"], adata=adata
+                    )
                 )
+
+                num_view = 12
+
+                save_path_top = (
+                    STNavCorePipeline.saving_path + "\\Plots\\" + "moran_I_top" + ".png"
+                )
+                top_autocorr = (
+                    adata.uns["moranI"]["I"]
+                    .sort_values(ascending=False)
+                    .head(num_view)
+                    .index.tolist()
+                )
+                with plt.rc_context():  # Use this to set figure params like size and dpi
+                    plot_func = sq.pl.spatial_scatter(
+                        adata,
+                        color=top_autocorr,
+                        size=20,
+                        cmap="Reds",
+                        img=False,
+                        figsize=(5, 5),
+                    )
+                    plt.savefig(save_path_top, bbox_inches="tight")
+                    plt.close()
+
+                save_path_bot = (
+                    STNavCorePipeline.saving_path
+                    + "\\Plots\\"
+                    + "moran_I_bottom"
+                    + ".png"
+                )
+                bot_autocorr = (
+                    adata.uns["moranI"]["I"]
+                    .sort_values(ascending=True)
+                    .head(num_view)
+                    .index.tolist()
+                )
+                with plt.rc_context():  # Use this to set figure params like size and dpi
+                    plot_func = sq.pl.spatial_scatter(
+                        adata,
+                        color=bot_autocorr,
+                        size=20,
+                        cmap="Reds",
+                        img=False,
+                        figsize=(5, 5),
+                    )
+                    plt.savefig(save_path_bot, bbox_inches="tight")
+                    plt.close()
+
                 logger.info(f"{adata.uns['moranI'].head(10)}")
 
                 # Save to excel file
@@ -89,8 +141,31 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                         index=True,
                     )
 
+                # Calculate SVG Sepal score
+                config_params["Squidpy_Sepal"]["params"].setdefault("genes", genes)
+                sq.gr.sepal(
+                    **return_filtered_params(
+                        config=config_params["Squidpy_Sepal"], adata=adata
+                    )
+                )
+                logger.info(f"{adata.uns['sepal_score'].head(10)}")
+
+                # Save to excel file
+                with pd.ExcelWriter(
+                    f"{STNavCorePipeline.saving_path}\\{data_type}\\Files\\{data_type}_Squidpy_Sepal_{date}.xlsx"
+                ) as writer:
+                    adata.uns["sepal_score"].to_excel(
+                        writer,
+                        sheet_name="Squidpy_sepal",
+                        index=True,
+                    )
+
                 save_processed_adata(
                     STNavCorePipeline,
                     adata=adata,
                     name=f"{config_params['save_as']}",
                 )
+                del adata
+
+            if method_name == "scBSP":
+                ...

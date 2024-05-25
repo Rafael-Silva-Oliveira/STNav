@@ -58,24 +58,42 @@ def SpatialNeighbors(STNavCorePipeline):
                 f"Running {method_name} method configuration \n Configuration parameters: {config_params} \n using the following adata {config_params['adata_to_use']}"
             )
 
-            if method_name == "Squidpy_NHoodEnrichment":
+            if method_name == "Squidpy":
                 sq.gr.spatial_neighbors(adata, coord_type="generic")
                 sq.gr.nhood_enrichment(
-                    **return_filtered_params(config=config_params, adata=adata)
+                    **return_filtered_params(
+                        config=config_params["Squidpy_NHoodEnrichment"], adata=adata
+                    )
                 )
+
+                sq.gr.co_occurrence(
+                    **return_filtered_params(
+                        config=config_params["Squidpy_Co_Ocurrence"], adata=adata
+                    )
+                )
+
+                sq.gr.centrality_scores(
+                    **return_filtered_params(
+                        config=config_params["Squidpy_Centrality"], adata=adata
+                    )
+                )
+
+                save_path = (
+                    STNavCorePipeline.saving_path + "\\Plots\\" + "centrality" + ".png"
+                )
+
+                with plt.rc_context():  # Use this to set figure params like size and dpi
+                    plot_func = sq.pl.centrality_scores(
+                        adata,
+                        config_params["Squidpy_Centrality"]["params"]["cluster_key"],
+                    )
+                    plt.savefig(save_path, bbox_inches="tight")
+                    plt.close()
 
                 save_processed_adata(
                     STNavCorePipeline=STNavCorePipeline,
                     adata=adata,
                     name=f"{config_params['save_as']}",
                 )
-            if method_name == "Squidpy_Co_Ocurrence":
-                # TODO: try to save the file with the matrix of co-occurrence probabilities within each spot. Apply this mask over the predictions from deconvolution to adjust based on co-ocurrence (clusters that have high value of co-occurrence will probably have similar cell proportions within each spot)
-                sq.gr.co_occurrence(
-                    **return_filtered_params(config=config_params, adata=adata)
-                )
-                save_processed_adata(
-                    STNavCorePipeline=STNavCorePipeline,
-                    adata=adata,
-                    name=f"{config_params['save_as']}",
-                )
+
+                del adata

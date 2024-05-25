@@ -26,7 +26,6 @@ from STNav.modules.st import (
     ReceptorLigandAnalysis,
     SpatiallyVariableGenes,
     SpatialNeighbors,
-    Deconvolution,
     SpatialMarkersMapping,
 )
 from STNav.utils.helpers import (
@@ -45,19 +44,14 @@ class Orchestrator(object):
     ST = "ST"
     cell_markers_dict = None
 
-    def __init__(self, analysis_config, plotting_config) -> None:
-        self.analysis_config = self._update_config(analysis_config)
-        self.plotting_config = self._update_config(plotting_config)
-
-    def _update_config(self, config):
-        config["saving_path"] = username + config.get("saving_path", "")
-        return config
+    def __init__(self, analysis_config, saving_path, plotting_config) -> None:
+        self.analysis_config = analysis_config
+        self.saving_path = saving_path
+        self.plotting_config = plotting_config
 
     def run_analysis(self, saving_dir: str) -> an.AnnData:
         adata_dict = self.initialize_adata_dict()
         for data_type, data_type_dict in self.analysis_config.items():
-            if data_type == "saving_path":
-                continue
             self.run_pipeline_for_data_type(
                 data_type, data_type_dict, adata_dict, saving_dir
             )
@@ -71,7 +65,7 @@ class Orchestrator(object):
                 adata_name = params["save_as"]
 
                 checkpoint_path = (
-                    f"{self.analysis_config['saving_path']}"
+                    f"{self.saving_path}"
                     + "\\"
                     + pipeline_run
                     + "\\"
@@ -92,21 +86,20 @@ class Orchestrator(object):
 
         adata_dict = {}
         for data_type, steps in self.analysis_config.items():
-            if data_type != "saving_path":
-                adata_dict.setdefault(data_type, {})
-                for step, params in steps.items():
-                    try:
-                        if step in [
-                            "SpatialNeighbors",
-                            "SpatiallyVariableGenes",
-                            "ReceptorLigandAnalysis",
-                        ]:
-                            for method_name, config_params in params.items():
-                                process_checkpoint(config_params, data_type)
-                        process_checkpoint(params, data_type)
-                    except Exception as e:
-                        logger.error(f"Error on {step}: {e}")
-                        continue
+            adata_dict.setdefault(data_type, {})
+            for step, params in steps.items():
+                try:
+                    if step in [
+                        "SpatialNeighbors",
+                        "SpatiallyVariableGenes",
+                        "ReceptorLigandAnalysis",
+                    ]:
+                        for method_name, config_params in params.items():
+                            process_checkpoint(config_params, data_type)
+                    process_checkpoint(params, data_type)
+                except Exception as e:
+                    logger.error(f"Error on {step}: {e}")
+                    continue
 
         return adata_dict
 
@@ -153,77 +146,15 @@ class Orchestrator(object):
         STNavCorePipeline.QC()
         STNavCorePipeline.preprocessing()
         STNavCorePipeline.DEG()
-        self.apply_subset_and_log(STNavCorePipeline)
 
         if STNavCorePipeline.config[self.ST]["SpatialMarkersMapping"]["usage"]:
             mapping_config = STNavCorePipeline.config[self.ST]["SpatialMarkersMapping"]
             MAPPING = SpatialMarkersMapping(STNavCorePipeline)
             self.cell_markers_dict = MAPPING.run_mapping(mapping_config=mapping_config)
 
-        elif STNavCorePipeline.config[self.ST]["DeconvolutionModels"]["usage"]:
-            DECONV = Deconvolution(STNavCorePipeline)
-            DECONV.run_deconvolution()
-
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)
-
-    def apply_subset_and_log(self, STNavCorePipeline):
-        logger.warning(
-            "Subset is now being applied to common genes between Spatial data and single cell data. Plots might not show the exact raw data because of this."
-        )
-        intersect = self.get_intersect(STNavCorePipeline)
-        self.apply_subset(STNavCorePipeline, intersect)
-        self.log_subset_info(STNavCorePipeline)
-
-    def get_intersect(self, STNavCorePipeline):
-
-        sc_adata = sc.read_h5ad(
-            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"]
-        )
-        st_adata = sc.read_h5ad(
-            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"]
-        )
-
-        return np.intersect1d(
-            sc_adata.var_names,
-            st_adata.var_names,
-        )
-
-    def apply_subset(self, STNavCorePipeline, intersect):
-        st_adata_intersect = sc.read_h5ad(
-            STNavCorePipeline.adata_dict[self.ST]["preprocessed_adata"]
-        )[:, intersect]
-
-        sc_adata_intersect = sc.read_h5ad(
-            STNavCorePipeline.adata_dict[self.SCRNA]["preprocessed_adata"]
-        )[:, intersect]
-
-        save_processed_adata(
-            STNavCorePipeline,
-            name="subset_preprocessed_adata",
-            adata=sc_adata_intersect,
-            data_type=self.SCRNA,
-        )
-        save_processed_adata(
-            STNavCorePipeline,
-            name="subset_preprocessed_adata",
-            adata=st_adata_intersect,
-            data_type=self.ST,
-        )
-
-    def log_subset_info(self, STNavCorePipeline):
-
-        st_adata = sc.read_h5ad(
-            STNavCorePipeline.adata_dict[self.ST]["subset_preprocessed_adata"]
-        )
-        sc_adata = sc.read_h5ad(
-            STNavCorePipeline.adata_dict[self.SCRNA]["subset_preprocessed_adata"]
-        )
-
-        logger.info(
-            f"N_obs x N_var for ST and scRNA after intersection: \n{st_adata.n_obs} x {st_adata.n_vars} \n {sc_adata.n_obs} x {sc_adata.n_vars}"
-        )
 
     def run_plots(
         self,

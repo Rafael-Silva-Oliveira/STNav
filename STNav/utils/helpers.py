@@ -104,6 +104,7 @@ def save_processed_adata(
     data_type=None,
     checkpoint_step: str = None,
 ):  # noqa: F811
+    # Function that saves the adata file being passed as well as adding the path to the adata_dict for later use
 
     if data_type is not None:
         STNavCorePipeline.data_type = data_type

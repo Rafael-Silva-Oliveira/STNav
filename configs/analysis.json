@@ -1,5 +1,4 @@
 {
-  "saving_path": "\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed",
   "scRNA": {
     "usage": true,
     "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\Keep\\PipelineRun_2024_02_23-09_22_35_AM\\scRNA\\Files\\scRNA_raw_adata.h5ad",
@@ -209,7 +208,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -232,7 +231,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -243,7 +242,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": false,
         "gene_sets": {
           "api_sets": {
@@ -317,10 +316,11 @@
   },
   "ST": {
     "usage": true,
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
+    "scRNA_folder_path": { "usage": true, "path": "" },
+    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
+    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um\\spatial",
     "quality_control": {
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
@@ -386,7 +386,7 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_counts": 25,
+          "min_counts": 15,
           "min_cells": null
         }
       },
@@ -395,7 +395,7 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_genes": 100
+          "min_genes": 50
         }
       },
       "highly_variable_genes": {
@@ -469,7 +469,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -492,7 +492,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -503,7 +503,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": true,
         "gene_sets": {
           "api_sets": {
@@ -574,102 +574,6 @@
         }
       }
     },
-    "DeconvolutionModels": {
-      "usage": false,
-      "VariationalInference": {
-        "usage": false,
-        "CondSCVI": {
-          "train": true,
-          "adata_to_use": "preprocessed_adata",
-          "labels_key": "ann_level_3_transferred_label",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 1250,
-            "early_stopping": true
-          },
-          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
-        },
-        "DestVI": {
-          "train": true,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 75,
-            "early_stopping": true
-          },
-          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\stmodel"
-        }
-      },
-      "Stereoscope": {
-        "usage": false,
-        "RNAStereoscope": {
-          "train": false,
-          "adata_to_use": "preprocessed_adata",
-          "labels_key": "ann_level_3_transferred_label",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 1250,
-            "early_stopping": true
-          },
-          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
-        },
-        "SpatialStereoscope": {
-          "train": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 750,
-            "early_stopping": true
-          },
-          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
-        }
-      },
-      "Tangram": {
-        "train": false,
-        "usage": false,
-        "adata_sc_to_use": "raw_adata",
-        "adata_st_to_use": "raw_adata",
-        "layer": null,
-        "image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\Visium_HD_Human_Lung_Cancer_tissue_image.tif",
-        "params": {
-          "max_epochs": 25,
-          "early_stopping": true
-        },
-        "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
-      },
-      "CellTypist": {
-        "usage": false,
-        "Train": {
-          "train": true,
-          "cell_type_key": "ann_level_3_transferred_label",
-          "adata_to_use": "raw_adata",
-          "params": {
-            "X": "adata",
-            "epochs": 1500,
-            "labels": "ann_level_3_transferred_label",
-            "n_jobs": 10,
-            "feature_selection": true,
-            "use_SGD": false,
-            "mini_batch": false,
-            "batch_number": 100,
-            "batch_size": 1000,
-            "balance_cell_type": false
-          },
-          "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel"
-        },
-        "Annotate": {
-          "adata_to_use": "raw_adata",
-          "params": {
-            "X": "adata",
-            "transpose_output": false,
-            "mode": "best match",
-            "p_thres": 0.5,
-            "majority_voting": true,
-            "min_prop": 0
-          }
-        }
-      }
-    },
     "SpatialMarkersMapping": {
       "usage": true,
       "spatial_adata_to_use": "preprocessed_adata",
@@ -677,29 +581,29 @@
       "get_cell_type_markers": {
         "from_csv": {
           "usage": false,
-          "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\notebooks\\experimental\\squidpy_marker_mapping\\markers_scvi_1.csv",
-          "markers_column_name": "Gene name",
-          "cell_type_column_name": "Function"
+          "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\PipelineRun_2024_05_21-06_48_25_PM\\ST\\Files\\ST_scMAGS_markers.csv",
+          "markers_column_name": "Markers",
+          "cell_type_column_name": "CellType"
         },
         "from_models": {
           "usage": true,
           "markers_column_name": "Markers",
           "cell_type_column_name": "CellType",
           "SCVI": {
-            "usage": true,
+            "usage": false,
             "train": false,
             "labels_key": "ann_level_3_transferred_label",
             "layer": "raw_counts",
-            "top_genes": 25,
+            "top_genes": 6,
             "max_epochs": 1250,
             "early_stopping": true,
             "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scvi_markers_model",
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           },
           "CellTypist": {
-            "usage": true,
-            "train": true,
-            "top_genes": 25,
+            "usage": false,
+            "train": false,
+            "top_genes": 6,
             "epochs": 1500,
             "labels": "ann_level_3_transferred_label",
             "n_jobs": 10,
@@ -714,8 +618,8 @@
           },
           "scMAGS": {
             "usage": true,
-            "nof_sel": 150,
-            "nof_markers": 5,
+            "nof_sel": 250,
+            "nof_markers": 7,
             "labels": "ann_level_3_transferred_label",
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           }
@@ -723,8 +627,7 @@
       },
       "map_markers_to_spatial_cell_type": {
         "top_markers_combination_method": {
-          "mean": true,
-          "sum": true
+          "mean": true
         }
       },
       "map_to_clusters": {
@@ -733,55 +636,77 @@
       }
     },
     "SpatialNeighbors": {
-      "Squidpy_NHoodEnrichment": {
+      "Squidpy": {
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "sq_neighborhood_adata",
         "checkpoint": {
-          "usage": true,
+          "usage": false,
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
-        "adata_to_use": "preprocessed_adata",
-        "save_as": "NHoodEnrichment_adata",
-        "usage": true,
-        "func_str": "sq.gr.nhood_enrichment",
         "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "cluster_key": "leiden_clusters"
-        }
-      },
-      "Squidpy_Co_Ocurrence": {
-        "checkpoint": {
-          "usage": true,
-          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+        "usage": true,
+        "Squidpy_NHoodEnrichment": {
+          "func_str": "sq.gr.nhood_enrichment",
+          "params": {
+            "adata": "adata",
+            "cluster_key": "leiden_clusters"
+          }
         },
-        "adata_to_use": "preprocessed_adata",
-        "save_as": "co_occurrence_adata",
-        "usage": true,
-        "func_str": "sq.gr.co_occurrence",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "cluster_key": "leiden_clusters"
+        "Squidpy_Co_Ocurrence": {
+          "func_str": "sq.gr.co_occurrence",
+          "params": {
+            "adata": "adata",
+            "cluster_key": "leiden_clusters"
+          }
+        },
+        "Squidpy_Centrality": {
+          "func_str": "sq.gr.centrality_scores",
+          "params": {
+            "adata": "adata",
+            "cluster_key": "leiden_clusters",
+            "show_progress_bar": true
+          }
         }
       }
     },
     "SpatiallyVariableGenes": {
-      "Squidpy_MoranI": {
+      "Squidpy": {
+        "usage": true,
         "checkpoint": {
-          "usage": true,
+          "usage": false,
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
+        "save_as": "Squidpy_SVG",
         "adata_to_use": "preprocessed_adata",
-        "save_as": "MoranI_adata",
-        "usage": true,
-        "func_str": "sq.gr.spatial_autocorr",
         "data_type": "ST",
         "n_genes": 1000,
-        "params": {
-          "adata": "adata",
-          "mode": "moran",
-          "n_perms": 1000,
-          "n_jobs": 1
+        "Squidpy_MoranI": {
+          "func_str": "sq.gr.spatial_autocorr",
+          "params": {
+            "adata": "adata",
+            "mode": "moran",
+            "n_perms": 25,
+            "n_jobs": 1
+          }
+        },
+        "Squidpy_Sepal": {
+          "func_str": "sq.gr.sepal",
+          "params": {
+            "adata": "adata",
+            "max_neighs": 4,
+            "n_jobs": 1
+          }
         }
+      },
+      "scBSP": {
+        "usage": false,
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": ""
+        },
+        "save_as": "scBSP_SVG",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST"
       }
     },
     "ReceptorLigandAnalysis": {
@@ -813,19 +738,19 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci_adata",
-        "usage": false,
+        "usage": true,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {
           "adata": "adata",
           "min_spots": 20,
           "distance": null,
-          "n_pairs": 10000,
+          "n_pairs": 5000,
           "spot_mixtures": false,
           "sig_spots": true,
           "cell_prop_cutoff": 0.2,
           "p_cutoff": 0.05,
-          "n_perms": 1000,
+          "n_perms": 25,
           "n_cpus": null,
           "verbose": true
         }
