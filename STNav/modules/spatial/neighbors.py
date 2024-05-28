@@ -36,6 +36,9 @@ import squidpy as sq
 
 @pass_STNavCore_params
 def SpatialNeighbors(STNavCorePipeline):
+
+    # https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_vizgen_mouse_liver.html#assign-cell-types
+
     step = "SpatialNeighbors"
     config = STNavCorePipeline.config[STNavCorePipeline.data_type][step]
     logger.info("Calcualting Spatial Neighbors scores.")

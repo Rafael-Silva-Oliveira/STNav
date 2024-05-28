@@ -590,11 +590,11 @@
           "markers_column_name": "Markers",
           "cell_type_column_name": "CellType",
           "SCVI": {
-            "usage": false,
-            "train": false,
+            "usage": true,
+            "train": true,
             "labels_key": "ann_level_3_transferred_label",
             "layer": "raw_counts",
-            "top_genes": 6,
+            "top_genes": 7,
             "max_epochs": 1250,
             "early_stopping": true,
             "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scvi_markers_model",
@@ -617,8 +617,8 @@
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           },
           "scMAGS": {
-            "usage": true,
-            "nof_sel": 250,
+            "usage": false,
+            "nof_sel": 500,
             "nof_markers": 7,
             "labels": "ann_level_3_transferred_label",
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
@@ -734,7 +734,7 @@
       "stLearn_cci": {
         "checkpoint": {
           "usage": false,
-          "pipeline_run": "PipelineRun_Checkpoint"
+          "pipeline_run": "PipelineRun_2024_05_26-09_08_58_AM"
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci_adata",

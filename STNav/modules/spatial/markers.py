@@ -58,6 +58,8 @@ import scanpy as sc
 import celltypist
 from celltypist import models
 import json
+from scipy.sparse import csr_matrix
+import scmags as sm
 
 
 def convert_form_anndata(adata, cell_annotation_col):
@@ -135,7 +137,7 @@ def CellTypist_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_co
 
 
 def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
-
+    # https://docs.scvi-tools.org/en/1.0.0/tutorials/notebooks/api_overview.html
     # sc.pp.filter_genes(sc_adata, min_counts=50)
     # sc_adata.layers["counts"] = sc_adata.X.copy()  # preserve counts
 
@@ -152,14 +154,15 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
     # )
 
     # scVI uses non normalized data so we keep the original data in a separate AnnData object, then the normalization steps are performed (layer = raw_counts)
+    sc_adata_cp = sc_adata.copy()
     if config["train"]:
         SCVI.setup_anndata(
-            sc_adata,
+            sc_adata_cp,
             layer=config["layer"],
             labels_key=config["labels_key"],
         )
 
-        sc_model = SCVI(sc_adata)
+        sc_model = SCVI(sc_adata_cp)
         # sc_model = model(adata_sc)
         sc_model.view_anndata_setup()
         sc_model.train(max_epochs=config["max_epochs"])
@@ -167,7 +170,7 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
     else:
         sc_model = SCVI.load(
             config["pre_trained_model_path"],
-            sc_adata,
+            sc_adata_cp,
         )
     latent = sc_model.get_latent_representation()
     sc_adata.obsm["X_scVI"] = latent
@@ -245,7 +248,6 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
 
 def scMAGS_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
-    import scmags as sm
 
     exp_data, labels, gene_names = convert_form_anndata(
         sc_adata, "ann_level_3_transferred_label"
@@ -282,6 +284,12 @@ class SpatialMarkersMapping:
 
     def _get_intersect(self, sc_adata, st_adata):
 
+        st_adata.var.index = st_adata.var.index.str.upper()
+        st_adata.var_names = st_adata.var_names.str.upper()
+
+        sc_adata.var.index = sc_adata.var.index.str.upper()
+        sc_adata.var_names = sc_adata.var_names.str.upper()
+
         intersect = np.intersect1d(
             sc_adata.var_names,
             st_adata.var_names,
@@ -297,9 +305,9 @@ class SpatialMarkersMapping:
             f"N_obs x N_var for ST and scRNA after intersection: \n{st_adata.n_obs} x {st_adata.n_vars} \n {sc_adata.n_obs} x {sc_adata.n_vars}"
         )
 
-        return st_adata_intersect, sc_adata_intersect
+        return st_adata_intersect, sc_adata_intersect, intersect
 
-    def _get_cell_type_markers(self, mapping_config, sc_adata, st_adata):
+    def _get_cell_type_markers(self, mapping_config, sc_adata):
         config = mapping_config["get_cell_type_markers"]
         logger.info(
             "Extracting top cell type markers from scRNA reference annotated data."
@@ -434,37 +442,26 @@ class SpatialMarkersMapping:
             elif cell_type_markers_scMAGS_dict is not None:
                 cell_type_markers_dict = cell_type_markers_scMAGS_dict
 
-        # Make all genes from ST upper case to avoid issues with the intersection
-        st_adata.var.index = st_adata.var.index.str.upper()
-        st_adata.var_names = st_adata.var_names.str.upper()
+        return cell_type_markers_dict
 
-        # Return only the markers that are present in the spatial data (intersection)
-        marker_genes_in_data = dict()
-        for ct, markers in cell_type_markers_dict.items():
-            markers_found = list()
-            for marker in markers:
-                if marker in st_adata.var.index:
-                    markers_found.append(marker)
-            marker_genes_in_data[ct] = markers_found
-
-        return marker_genes_in_data
-
-    def _map_markers_to_spatial_cell_type(self, mapping_config, st_adata, cell_markers):
+    def _map_markers_to_spatial_cell_type(
+        self, mapping_config, st_adata, cell_markers, intersection
+    ):
         logger.info("Mapping markers to spatial cell types.")
         config = mapping_config["map_markers_to_spatial_cell_type"]
         cell_type_col_name = "cell_type"
         decomposition_type = "_Mean_LogNorm_Conn_Adj"
 
         # Add spatial connectivities
-        sq.gr.spatial_neighbors(st_adata)  # TODO: change this
-        # sq.gr.centrality_scores(st_adata, "cell_type")
-        # sq.pl.centrality_scores(st_adata, "cell_type")
-        from scipy.sparse import csr_matrix
+        sq.gr.spatial_neighbors(st_adata)
 
         # Add the new columns ()
         st_adata.obsp["spatial_connectivities"] = csr_matrix(
             st_adata.obsp["spatial_connectivities"]
         )
+
+        st_adata = st_adata[:, intersection]
+        st_adata.X = st_adata.layers["lognorm"]
         st_adata.X = csr_matrix(st_adata.X)
 
         df = pd.DataFrame.sparse.from_spmatrix(
@@ -599,7 +596,7 @@ class SpatialMarkersMapping:
                     cmap="magma",
                     color=[col],
                     img_key="hires",
-                    size=1.75,
+                    size=1,
                     alpha_img=0.5,
                     show=False,
                 )
@@ -621,7 +618,7 @@ class SpatialMarkersMapping:
         sc_path = self.STNavCorePipeline.adata_dict["scRNA"][sc_adata_to_use]
         sc_adata = sc.read_h5ad(sc_path)
 
-        raw_st_adata_subset, raw_sc_adata_subset = self._get_intersect(
+        raw_st_adata_subset, raw_sc_adata_subset, intersection = self._get_intersect(
             sc_adata, st_adata
         )
 
@@ -629,12 +626,11 @@ class SpatialMarkersMapping:
         cell_markers_dict = self._get_cell_type_markers(
             mapping_config=mapping_config,
             sc_adata=raw_sc_adata_subset,
-            st_adata=raw_st_adata_subset,
         )
 
         # Map the cell type markers to the spatial data (intersect the top markers that were found with the genes present in the spatial data). Apply combination method to get the spatial cell types.
         spatial_cell_type_adata = self._map_markers_to_spatial_cell_type(
-            mapping_config, st_adata, cell_markers_dict
+            mapping_config, st_adata, cell_markers_dict, intersection
         )
 
         # Map the spatial cell types to the clusters based on top percentile of the combination score

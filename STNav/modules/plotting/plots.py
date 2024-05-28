@@ -136,10 +136,6 @@ def run_plots(
                         ]
                         filtered_params.setdefault("palette", palette_lst)
 
-                    if "embedding" in plot_type:
-                        ct_list = adata.obsm["deconvolution"].columns
-                        filtered_params.setdefault("color", ct_list)
-
                     if plot_type == "sc_heatmap":
                         # Add the marker genes
                         filtered_params.setdefault("var_names", cell_markers_dict)

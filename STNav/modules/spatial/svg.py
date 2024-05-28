@@ -97,10 +97,10 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                     plot_func = sq.pl.spatial_scatter(
                         adata,
                         color=top_autocorr,
-                        size=20,
                         cmap="Reds",
                         img=False,
                         figsize=(5, 5),
+                        size=2.5,
                     )
                     plt.savefig(save_path_top, bbox_inches="tight")
                     plt.close()
@@ -121,10 +121,10 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                     plot_func = sq.pl.spatial_scatter(
                         adata,
                         color=bot_autocorr,
-                        size=20,
                         cmap="Reds",
                         img=False,
                         figsize=(5, 5),
+                        size=2.5,
                     )
                     plt.savefig(save_path_bot, bbox_inches="tight")
                     plt.close()
