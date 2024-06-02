@@ -76,11 +76,11 @@ def convert_form_anndata(adata, cell_annotation_col):
 
 def CellTypist_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
-    # sc.pp.normalize_total(sc_adata, target_sum=1e4)
-    # sc.pp.log1p(sc_adata)
     # sc.pp.scale(sc_adata, max_value=10)
-    # TODO: check if the adata used is already normalized
     if config["train"]:
+        sc.pp.normalize_total(sc_adata, target_sum=1e4)
+        sc.pp.log1p(sc_adata)
+
         model = celltypist.train(
             sc_adata,
             labels=config["labels"],
@@ -345,9 +345,7 @@ class SpatialMarkersMapping:
             )
 
         elif load_type == "from_models":
-            cell_type_markers_SCVI_dict = None
-            cell_type_markers_CellTypist_dict = None
-            cell_type_markers_scMAGS_dict = None
+            cell_type_markers_dict = {}
 
             gene_markers_col_name = config["from_models"]["markers_column_name"]
             celltype_col_name = config["from_models"]["cell_type_column_name"]
@@ -360,6 +358,7 @@ class SpatialMarkersMapping:
                     gene_markers_col_name,
                     celltype_col_name,
                 )
+                cell_type_markers_dict["SCVI"] = cell_type_markers_SCVI_dict
 
             if config[load_type]["CellTypist"]["usage"]:
                 cell_type_markers_CellTypist_dict, cell_type_markers_CellTypist_df = (
@@ -371,6 +370,7 @@ class SpatialMarkersMapping:
                         celltype_col_name,
                     )
                 )
+                cell_type_markers_dict["CellTypist"] = cell_type_markers_CellTypist_dict
 
             if config[load_type]["scMAGS"]["usage"]:
                 cell_type_markers_scMAGS_dict, cell_type_markers_scMAGS_df = (
@@ -382,65 +382,7 @@ class SpatialMarkersMapping:
                         celltype_col_name,
                     )
                 )
-
-            if (
-                cell_type_markers_SCVI_dict is not None
-                and cell_type_markers_CellTypist_dict is not None
-                and cell_type_markers_scMAGS_dict is not None
-            ):
-                # Create a new dictionary to hold the merged results
-                cell_type_markers_dict = {}
-
-                for key, value in cell_type_markers_SCVI_dict.items():
-                    # Copy the values from the first dictionary to the new dictionary
-                    cell_type_markers_dict[key] = value[:]
-
-                for key, value in cell_type_markers_CellTypist_dict.items():
-                    if key in cell_type_markers_dict:
-                        # If key exists in the new dictionary, append the values
-                        cell_type_markers_dict[key] += value
-                    else:
-                        # If key doesn't exist in the new dictionary, create it
-                        cell_type_markers_dict[key] = value
-
-                for key, value in cell_type_markers_scMAGS_dict.items():
-                    if key in cell_type_markers_dict:
-                        # If key exists in the new dictionary, append the values
-                        cell_type_markers_dict[key] += value
-                    else:
-                        # If key doesn't exist in the new dictionary, create it
-                        cell_type_markers_dict[key] = value
-
-                # Remove duplicates
-                for key, value in cell_type_markers_dict.items():
-                    cell_type_markers_dict[key] = list(set(value))
-
-                # Convert dictionary to DataFrame
-                df = pd.DataFrame.from_dict(
-                    cell_type_markers_dict, orient="index"
-                ).transpose()
-
-                # Melt DataFrame to long format
-                cell_type_markers_df = df.melt(
-                    var_name=celltype_col_name,
-                    value_name=gene_markers_col_name,
-                )
-
-                cell_type_markers_df.dropna(inplace=True)
-                cell_type_markers_df.drop_duplicates(inplace=True)
-                cell_type_markers_df.to_csv(
-                    f"{self.STNavCorePipeline.saving_path}\\{self.STNavCorePipeline.data_type}\\Files\\{self.STNavCorePipeline.data_type}_merged_markers_{date}.csv",
-                    index=False,
-                )
-
-            elif cell_type_markers_SCVI_dict is not None:
-                cell_type_markers_dict = cell_type_markers_SCVI_dict
-
-            elif cell_type_markers_CellTypist_dict is not None:
-                cell_type_markers_dict = cell_type_markers_CellTypist_dict
-
-            elif cell_type_markers_scMAGS_dict is not None:
-                cell_type_markers_dict = cell_type_markers_scMAGS_dict
+                cell_type_markers_dict["scMAGS"] = cell_type_markers_scMAGS_dict
 
         return cell_type_markers_dict
 
@@ -450,45 +392,87 @@ class SpatialMarkersMapping:
         logger.info("Mapping markers to spatial cell types.")
         config = mapping_config["map_markers_to_spatial_cell_type"]
         cell_type_col_name = "cell_type"
-        decomposition_type = "_Mean_LogNorm_Conn_Adj"
+        decomposition_type = "Mean_LogNorm_Conn_Adj"
 
         # Add spatial connectivities
         sq.gr.spatial_neighbors(st_adata)
 
-        # Add the new columns ()
         st_adata.obsp["spatial_connectivities"] = csr_matrix(
             st_adata.obsp["spatial_connectivities"]
         )
 
+        # Subset st_adata with the genes that are present in the scRNA data
         st_adata = st_adata[:, intersection]
+        # Replace the raw counts with the log normalized counts
         st_adata.X = st_adata.layers["lognorm"]
+        # Adjust the lognorm counts with the spatial connectivities
+        # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
+        # Transform matrix to csr to deal with sparse calculations
         st_adata.X = csr_matrix(st_adata.X)
 
+        # Create dataframe with X bins and Y genes with the connectivity adjusted lognorm count values
         df = pd.DataFrame.sparse.from_spmatrix(
             st_adata.X,
             index=st_adata.obs.index,
             columns=st_adata.var_names.str.upper(),
         )
-        # Create a Bin x Top cell marker gene log normalized
-        for cell_type, gene_names in cell_markers.items():
-            # Get the common genes
-            common_genes = list(set(df.columns) & set(gene_names))
+        for method, markers in cell_markers.items():
+            # Create a Bin x Top cell marker gene log normalized
+            for cell_type, gene_names in markers.items():
+                # Get the common genes
+                common_genes = list(set(df.columns) & set(gene_names))
 
-            # Get the subset of df that includes the common genes
-            df_gene_subset = df[common_genes]
+                # Get the subset of df that includes the common genes
+                df_gene_subset = df[common_genes]
 
-            # Calculate the mean of df_gene_subset along axis=1 and add it to adata_sp.obs
-            st_adata.obs[cell_type + decomposition_type] = df_gene_subset.mean(
-                axis=1
-            ).astype(float)
+                # Calculate the mean of df_gene_subset along axis=1
+                mean_value = df_gene_subset.mean(axis=1).astype(float)
 
-            col = cell_type + decomposition_type
+                # Add the mean value to adata_sp.obs
+                st_adata.obs[cell_type + decomposition_type + "_" + method] = mean_value
+
+                col = cell_type + decomposition_type + "_" + method
+                print(col)
+                save_path = (
+                    self.STNavCorePipeline.saving_path
+                    + "\\Plots\\"
+                    + method
+                    + "_"
+                    + cell_type
+                    + "_"
+                    + decomposition_type
+                    + ".png"
+                )
+
+                with plt.rc_context():  # Use this to set figure params like size and dpi
+                    plot_func = sc.pl.spatial(
+                        st_adata,
+                        cmap="magma",
+                        color=[col],
+                        img_key="hires",
+                        size=1.1,
+                        alpha_img=0.5,
+                        show=False,
+                    )
+                    plt.savefig(save_path, bbox_inches="tight")
+                    plt.close()
+
+        # Calculate the average of the averages for each cell type
+        for cell_type in markers.keys():
+            st_adata.obs[cell_type + "_avg"] = st_adata.obs[
+                [
+                    cell_type + decomposition_type + "_" + method
+                    for method in cell_markers.keys()
+                ]
+            ].mean(axis=1)
+
+            col = cell_type + "_avg"
             print(col)
             save_path = (
                 self.STNavCorePipeline.saving_path
                 + "\\Plots\\"
                 + cell_type
-                + decomposition_type
+                + "_avg"
                 + ".png"
             )
             with plt.rc_context():  # Use this to set figure params like size and dpi
@@ -497,7 +481,7 @@ class SpatialMarkersMapping:
                     cmap="magma",
                     color=[col],
                     img_key="hires",
-                    size=1.75,
+                    size=1.1,
                     alpha_img=0.5,
                     show=False,
                 )
@@ -525,7 +509,7 @@ class SpatialMarkersMapping:
         # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
 
         # Add the final cell type predictions
-        cell_lognorms = [col for col in st_adata.obs.columns if "Conn" in col]
+        cell_lognorms = [col for col in st_adata.obs.columns if "_avg" in col]
         st_adata.obs[cell_type_col_name] = st_adata.obs[cell_lognorms].idxmax(axis=1)
         save_path = (
             self.STNavCorePipeline.saving_path
@@ -540,7 +524,7 @@ class SpatialMarkersMapping:
                 cmap="magma",
                 color=cell_type_col_name,
                 img_key="hires",
-                size=1.75,
+                size=1,
                 alpha_img=0.5,
                 show=False,
             )

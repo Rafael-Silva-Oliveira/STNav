@@ -591,7 +591,7 @@
           "cell_type_column_name": "CellType",
           "SCVI": {
             "usage": true,
-            "train": true,
+            "train": false,
             "labels_key": "ann_level_3_transferred_label",
             "layer": "raw_counts",
             "top_genes": 7,
@@ -601,9 +601,9 @@
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           },
           "CellTypist": {
-            "usage": false,
-            "train": false,
-            "top_genes": 6,
+            "usage": true,
+            "train": true,
+            "top_genes": 7,
             "epochs": 1500,
             "labels": "ann_level_3_transferred_label",
             "n_jobs": 10,
@@ -617,7 +617,7 @@
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           },
           "scMAGS": {
-            "usage": false,
+            "usage": true,
             "nof_sel": 500,
             "nof_markers": 7,
             "labels": "ann_level_3_transferred_label",
