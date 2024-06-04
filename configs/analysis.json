@@ -317,10 +317,10 @@
   "ST": {
     "usage": true,
     "scRNA_folder_path": { "usage": true, "path": "" },
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um",
+    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_016um\\spatial",
+    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
     "quality_control": {
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
@@ -334,7 +334,7 @@
           "log1p": false,
           "inplace": true
         },
-        "pct_counts_Mt": 25,
+        "pct_counts_Mt": 20,
         "n_genes_by_counts": {
           "quantile": {
             "usage": true,
@@ -395,7 +395,7 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_genes": 50
+          "min_genes": 25
         }
       },
       "highly_variable_genes": {
@@ -590,7 +590,7 @@
           "markers_column_name": "Markers",
           "cell_type_column_name": "CellType",
           "SCVI": {
-            "usage": true,
+            "usage": false,
             "train": false,
             "labels_key": "ann_level_3_transferred_label",
             "layer": "raw_counts",
@@ -601,8 +601,8 @@
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           },
           "CellTypist": {
-            "usage": true,
-            "train": true,
+            "usage": false,
+            "train": false,
             "top_genes": 7,
             "epochs": 1500,
             "labels": "ann_level_3_transferred_label",
@@ -618,8 +618,8 @@
           },
           "scMAGS": {
             "usage": true,
-            "nof_sel": 500,
-            "nof_markers": 7,
+            "nof_sel": 1000,
+            "nof_markers": 8,
             "labels": "ann_level_3_transferred_label",
             "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           }
@@ -631,7 +631,7 @@
         }
       },
       "map_to_clusters": {
-        "percentile_threshold": 0.9,
+        "percentile_threshold": 0.8,
         "cluster_column_name": "leiden_clusters"
       }
     },

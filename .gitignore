@@ -683,3 +683,28 @@ notebooks/experimental/gene_marker/markers_preds/T cell lineage_16_results.xlsx
 notebooks/experimental/gene_marker/markers_preds/T cell lineage_17_results.xlsx
 notebooks/experimental/gene_marker/markers_preds/T cell lineage_18_results.xlsx
 STNav/models/scvi_markers_model/model.pt
+notebooks/experimental/SpatialLGBM/cv_results.xlsx
+notebooks/experimental/SpatialLGBM/predicted_adata.h5ad
+notebooks/experimental/SpatialLGBM/results.xlsx
+test3.png
+output.png
+notebooks/experimental/SpatialLGBM/test_results.xlsx
+notebooks/experimental/SpatialLGBM/training_results.xlsx
+notebooks/experimental/SpatialLGBM/TrainingCurve_LGBM.png
+notebooks/experimental/SpatialLGBM/figures/2_Smooth muscle_scatter.png
+notebooks/experimental/SpatialLGBM/figures/AT1_scatter.png
+notebooks/experimental/SpatialLGBM/figures/AT2_scatter.png
+notebooks/experimental/SpatialLGBM/figures/B cell lineage_scatter.png
+notebooks/experimental/SpatialLGBM/figures/EC arterial_scatter.png
+notebooks/experimental/SpatialLGBM/figures/EC capillary_scatter.png
+notebooks/experimental/SpatialLGBM/figures/EC venous_scatter.png
+notebooks/experimental/SpatialLGBM/figures/Fibroblasts_scatter.png
+notebooks/experimental/SpatialLGBM/figures/Innate lymphoid cell NK_scatter.png
+notebooks/experimental/SpatialLGBM/figures/Lymphatic EC differentiating_scatter.png
+notebooks/experimental/SpatialLGBM/figures/Lymphatic EC mature_scatter.png
+notebooks/experimental/SpatialLGBM/figures/Macrophages_scatter.png
+notebooks/experimental/SpatialLGBM/figures/Mast cells_scatter.png
+notebooks/experimental/SpatialLGBM/figures/T cell lineage_scatter.png
+STNav/models/scvi_markers_model/model.pt
+notebooks/experimental/SpatialLGBM/spat_lgbm.ipynb
+STNav/models/scvi_markers_model/model.pt

@@ -361,6 +361,9 @@ class STNavCore(object):
             )
 
         adata.layers["lognorm"] = adata.X
+        logger.info(
+            f"Examples from saved 'lognorm' layer: {adata.layers['lognorm'][0,10:80].toarray()}"
+        )
         adata.raw = adata
 
         if config["highly_variable_genes"]["usage"]:

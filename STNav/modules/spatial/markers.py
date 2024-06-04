@@ -402,15 +402,13 @@ class SpatialMarkersMapping:
         )
 
         # Subset st_adata with the genes that are present in the scRNA data
-        st_adata = st_adata[:, intersection]
+        st_adata = st_adata[:, intersection].copy()
         # Replace the raw counts with the log normalized counts
-        st_adata.X = st_adata.layers["lognorm"]
-        # Adjust the lognorm counts with the spatial connectivities
-        # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
-        # Transform matrix to csr to deal with sparse calculations
-        st_adata.X = csr_matrix(st_adata.X)
+        st_adata.X = csr_matrix(st_adata.layers["lognorm"])
 
-        # Create dataframe with X bins and Y genes with the connectivity adjusted lognorm count values
+        # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
+
+        # st_adata.X = csr_matrix(st_adata.layers["lognorm"])
         df = pd.DataFrame.sparse.from_spmatrix(
             st_adata.X,
             index=st_adata.obs.index,
@@ -427,11 +425,11 @@ class SpatialMarkersMapping:
 
                 # Calculate the mean of df_gene_subset along axis=1
                 mean_value = df_gene_subset.mean(axis=1).astype(float)
+                col = cell_type + "_" + decomposition_type + "_" + method
 
                 # Add the mean value to adata_sp.obs
-                st_adata.obs[cell_type + decomposition_type + "_" + method] = mean_value
+                st_adata.obs[col] = mean_value
 
-                col = cell_type + decomposition_type + "_" + method
                 print(col)
                 save_path = (
                     self.STNavCorePipeline.saving_path
@@ -458,35 +456,32 @@ class SpatialMarkersMapping:
                     plt.close()
 
         # Calculate the average of the averages for each cell type
-        for cell_type in markers.keys():
-            st_adata.obs[cell_type + "_avg"] = st_adata.obs[
-                [
-                    cell_type + decomposition_type + "_" + method
-                    for method in cell_markers.keys()
-                ]
-            ].mean(axis=1)
+        # for cell_type in markers.keys():
+        #     st_adata.obs[cell_type + "_avg"] = st_adata.obs[
+        #         [col for method in cell_markers.keys()]
+        #     ].mean(axis=1)
 
-            col = cell_type + "_avg"
-            print(col)
-            save_path = (
-                self.STNavCorePipeline.saving_path
-                + "\\Plots\\"
-                + cell_type
-                + "_avg"
-                + ".png"
-            )
-            with plt.rc_context():  # Use this to set figure params like size and dpi
-                plot_func = sc.pl.spatial(
-                    st_adata,
-                    cmap="magma",
-                    color=[col],
-                    img_key="hires",
-                    size=1.1,
-                    alpha_img=0.5,
-                    show=False,
-                )
-                plt.savefig(save_path, bbox_inches="tight")
-                plt.close()
+        #     col_avg = cell_type + "_avg"
+        #     print(col)
+        #     save_path = (
+        #         self.STNavCorePipeline.saving_path
+        #         + "\\Plots\\"
+        #         + cell_type
+        #         + "_avg"
+        #         + ".png"
+        #     )
+        #     with plt.rc_context():  # Use this to set figure params like size and dpi
+        #         plot_func = sc.pl.spatial(
+        #             st_adata,
+        #             cmap="magma",
+        #             color=[col_avg],
+        #             img_key="hires",
+        #             size=1.1,
+        #             alpha_img=0.5,
+        #             show=False,
+        #         )
+        #         plt.savefig(save_path, bbox_inches="tight")
+        #         plt.close()
 
         logger.info(
             "Saving the spatial plot using the max of the mean lognorms cell type markers."
@@ -509,7 +504,7 @@ class SpatialMarkersMapping:
         # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
 
         # Add the final cell type predictions
-        cell_lognorms = [col for col in st_adata.obs.columns if "_avg" in col]
+        cell_lognorms = [col for col in st_adata.obs.columns if "Conn" in col]
         st_adata.obs[cell_type_col_name] = st_adata.obs[cell_lognorms].idxmax(axis=1)
         save_path = (
             self.STNavCorePipeline.saving_path
@@ -536,56 +531,56 @@ class SpatialMarkersMapping:
     def _map_to_clusters(self, mapping_config, st_adata, cell_markers):
         logger.info("Mapping cell types to clusters.")
         config = mapping_config["map_to_clusters"]
-        decomposition_type = "_Mean_LogNorm_Conn_Adj"
 
-        for cell_type in tqdm(cell_markers.keys()):
-            # Calculate the 80th percentile
-            percentile = st_adata.obs[cell_type + decomposition_type].quantile(
-                config["percentile_threshold"]
-            )
+        for method, cell_type_dict in cell_markers.items():
+            for cell_type in tqdm(cell_type_dict.keys()):
+                col = cell_type + "_" + "Mean_LogNorm_Conn_Adj" + "_" + method
 
-            # Create a new binary column
-            st_adata.obs[cell_type + "_flag"] = (
-                st_adata.obs[cell_type + decomposition_type] > percentile
-            ).astype(int)
+                # Calculate the 80th percentile
+                percentile = st_adata.obs[col].quantile(config["percentile_threshold"])
 
-            # Create a new column that combines the cell type and the cluster
-            st_adata.obs[cell_type + "_cell_type_cluster"] = st_adata.obs.apply(
-                lambda row: (
-                    cell_type + "_" + str(row[config["cluster_column_name"]])
-                    if row[cell_type + "_flag"] == 1
-                    else ""
-                ),
-                axis=1,
-            )
-            # Set the color of the legend text to black
-            plt.rcParams["text.color"] = "black"
+                # Create a new binary column
+                st_adata.obs[cell_type + "_flag"] = (
+                    st_adata.obs[col] > percentile
+                ).astype(int)
 
-            # Set the background color to white
-            plt.rcParams["figure.facecolor"] = "white"
-            plt.rcParams["axes.facecolor"] = "white"
-            col = cell_type + "_cell_type_cluster"
-            print(col)
-
-            save_path = (
-                self.STNavCorePipeline.saving_path
-                + "\\Plots\\"
-                + cell_type
-                + "_cluster"
-                + ".png"
-            )
-            with plt.rc_context():  # Use this to set figure params like size and dpi
-                plot_func = sc.pl.spatial(
-                    st_adata,
-                    cmap="magma",
-                    color=[col],
-                    img_key="hires",
-                    size=1,
-                    alpha_img=0.5,
-                    show=False,
+                # Create a new column that combines the cell type and the cluster
+                st_adata.obs[cell_type + "_cell_type_cluster"] = st_adata.obs.apply(
+                    lambda row: (
+                        cell_type + "_" + str(row[config["cluster_column_name"]])
+                        if row[cell_type + "_flag"] == 1
+                        else ""
+                    ),
+                    axis=1,
                 )
-                plt.savefig(save_path, bbox_inches="tight")
-                plt.close()
+                # Set the color of the legend text to black
+                plt.rcParams["text.color"] = "black"
+
+                # Set the background color to white
+                plt.rcParams["figure.facecolor"] = "white"
+                plt.rcParams["axes.facecolor"] = "white"
+                col = cell_type + "_cell_type_cluster"
+                print(col)
+
+                save_path = (
+                    self.STNavCorePipeline.saving_path
+                    + "\\Plots\\"
+                    + cell_type
+                    + "_cluster"
+                    + ".png"
+                )
+                with plt.rc_context():  # Use this to set figure params like size and dpi
+                    plot_func = sc.pl.spatial(
+                        st_adata,
+                        cmap="magma",
+                        color=[col],
+                        img_key="hires",
+                        size=1,
+                        alpha_img=0.5,
+                        show=False,
+                    )
+                    plt.savefig(save_path, bbox_inches="tight")
+                    plt.close()
 
         return st_adata
 
