@@ -5,11 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import SpatialDE
-import NaiveDE
 import squidpy as sq
-import json
-import torch
 from loguru import logger
 from GraphST.utils import project_cell_to_spot
 from STNav.utils.decorators import pass_STNavCore_params
@@ -22,12 +18,8 @@ from STNav.utils.helpers import (
 import scvi
 from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
 from scvi.model import CondSCVI, DestVI
-import inspect
 from GraphST import GraphST
 import torch
-import mudata
-from scvi.external import Tangram
-import mudata
 from scvi.external import Tangram
 from tqdm import tqdm
 

@@ -265,9 +265,6 @@ class STNavCore(object):
             f"Running preprocessing for {self.data_type} with '{config['adata_to_use']}' adata file."
         )
 
-        # Save original X data - adata.X would be the raw counts
-        adata.layers["raw_counts"] = adata.X.copy()
-
         # adata.X[0,:] -> this would give all the values/genes for 1 individual cell
         # adata.X[cells, genes]
         # adata.X[0,:].sum() would give the sum of UMI counts for a given cell
@@ -321,6 +318,9 @@ class STNavCore(object):
             )
             adata.layers["unnormalized_counts"] = adata_unnormalized.X.copy()
 
+        # Save original X data - adata.X would be the raw counts
+        adata.layers["raw_counts"] = adata.X.copy()
+
         # Normalized total to CPM (1e6)
         if config["normalize"]["usage"]:
             logger.info(
@@ -337,8 +337,7 @@ class STNavCore(object):
             logger.info(
                 f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X after normalizing: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
             )
-
-        adata.layers["norm"] = adata.X
+            adata.layers["norm"] = adata.X
 
         if config["log1p"]["usage"]:
             # It requires a positional argument and not just keyword arguments
@@ -359,8 +358,8 @@ class STNavCore(object):
             logger.info(
                 f"\n Applying the log changed the counts from UMI counts to log counts. The sum of log counts from the 3 first examples (cells for scRNA or spots for ST) from adata.X after applying log: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
             )
+            adata.layers["lognorm"] = adata.X
 
-        adata.layers["lognorm"] = adata.X
         logger.info(
             f"Examples from saved 'lognorm' layer: {adata.layers['lognorm'][0,10:80].toarray()}"
         )
