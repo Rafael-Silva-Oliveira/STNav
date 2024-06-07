@@ -1,11 +1,11 @@
 {
   "scRNA": {
     "usage": true,
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\Keep\\PipelineRun_2024_02_23-09_22_35_AM\\scRNA\\Files\\scRNA_raw_adata.h5ad",
+    "path": "/home/rafaed/workbench/work/RO_src/data/processed",
     "cell_annotation": {
       "scArches_surgery": {
         "usage": false,
-        "path_backbone": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external\\HCLA",
+        "path_backbone": "/home/rafaed/workbench/work/RO_src/data/external/HCLA",
         "path_query_data": "HLCA_query.h5ad",
         "adata_query_batch": "Delorey_batch_1",
         "path_reference": "HLCA_emb_and_metadata.h5ad",
@@ -23,7 +23,9 @@
           "early_stopping_monitor": "elbo_train",
           "early_stopping_patience": 10,
           "early_stopping_min_delta": 0.001,
-          "plan_kwargs": { "weight_decay": 0.0 }
+          "plan_kwargs": {
+            "weight_decay": 0.0
+          }
         },
         "label_transfer": {
           "uncertainty_threshold": 0.2
@@ -31,7 +33,7 @@
       },
       "celltypist_surgery": {
         "usage": false,
-        "path_backbone": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\DAIgnostics\\dAIgnostics\\data\\external\\HCLA\\",
+        "path_backbone": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/DAIgnostics/dAIgnostics/data/external/HCLA/",
         "surgery_type": {
           "transfer_from_reference": {
             "usage": false,
@@ -45,11 +47,17 @@
               "early_stopping_monitor": "elbo_train",
               "early_stopping_patience": 10,
               "early_stopping_min_delta": 0.001,
-              "plan_kwargs": { "weight_decay": 0.0 }
+              "plan_kwargs": {
+                "weight_decay": 0.0
+              }
             }
           },
-          "single_label": { "usage": false },
-          "multi_label": { "usage": true }
+          "single_label": {
+            "usage": false
+          },
+          "multi_label": {
+            "usage": true
+          }
         },
         "ensembleID_to_GeneSym_mapping": {
           "usage": false,
@@ -68,7 +76,11 @@
         "usage": true,
         "params": {
           "adata": "adata",
-          "qc_vars": ["Mt", "Ribo", "Hb"],
+          "qc_vars": [
+            "Mt",
+            "Ribo",
+            "Hb"
+          ],
           "percent_top": null,
           "log1p": false,
           "inplace": true
@@ -155,22 +167,34 @@
         "pca": {
           "usage": true,
           "func_str": "sc.tl.pca",
-          "params": { "data": "adata", "svd_solver": "arpack" }
+          "params": {
+            "data": "adata",
+            "svd_solver": "arpack"
+          }
         },
         "neighbors": {
           "usage": true,
           "func_str": "sc.pp.neighbors",
-          "params": { "adata": "adata", "n_pcs": 30, "n_neighbors": 20 }
+          "params": {
+            "adata": "adata",
+            "n_pcs": 30,
+            "n_neighbors": 20
+          }
         },
         "umap": {
           "usage": true,
           "func_str": "sc.tl.umap",
-          "params": { "adata": "adata" }
+          "params": {
+            "adata": "adata"
+          }
         },
         "tsne": {
           "usage": true,
           "func_str": "sc.tl.tsne",
-          "params": { "adata": "adata", "n_pcs": 30 }
+          "params": {
+            "adata": "adata",
+            "n_pcs": 30
+          }
         },
         "leiden": {
           "usage": true,
@@ -184,7 +208,10 @@
         "louvain": {
           "usage": false,
           "func_str": "sc.tl.louvain",
-          "params": { "adata": "adata", "key_added": "louvain_clusters" }
+          "params": {
+            "adata": "adata",
+            "key_added": "louvain_clusters"
+          }
         },
         "hclust": {
           "usage": true,
@@ -257,18 +284,38 @@
             "usage": false,
             "sets": {
               "Negative Radiation Sensitivity": {
-                "AR": { "rank": 10 },
-                "PRKCB": { "rank": 7 },
-                "RELA": { "rank": 6 },
-                "SUMO1": { "rank": 4 },
-                "PAK2": { "rank": 3 },
-                "IRF1": { "rank": 1 },
-                "HDAC1": { "rank": 2 }
+                "AR": {
+                  "rank": 10
+                },
+                "PRKCB": {
+                  "rank": 7
+                },
+                "RELA": {
+                  "rank": 6
+                },
+                "SUMO1": {
+                  "rank": 4
+                },
+                "PAK2": {
+                  "rank": 3
+                },
+                "IRF1": {
+                  "rank": 1
+                },
+                "HDAC1": {
+                  "rank": 2
+                }
               },
               "Positive Radiation Sensitivity": {
-                "JUN": { "rank": 9 },
-                "STAT1": { "rank": 8 },
-                "ABL1": { "rank": 5 }
+                "JUN": {
+                  "rank": 9
+                },
+                "STAT1": {
+                  "rank": 8
+                },
+                "ABL1": {
+                  "rank": 5
+                }
               }
             }
           }
@@ -316,11 +363,14 @@
   },
   "ST": {
     "usage": true,
-    "scRNA_folder_path": { "usage": true, "path": "" },
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
+    "scRNA_folder_path": {
+      "usage": true,
+      "path": ""
+    },
+    "path": "/home/rafaed/workbench/work/RO_src/data/processed",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
+    "source_image_path": "/home/rafaed/workbench/work/RO_src/data/raw/VisiumHD/square_008um/spatial",
     "quality_control": {
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
@@ -329,7 +379,11 @@
         "usage": true,
         "params": {
           "adata": "adata",
-          "qc_vars": ["Mt", "Ribo", "Hb"],
+          "qc_vars": [
+            "Mt",
+            "Ribo",
+            "Hb"
+          ],
           "percent_top": null,
           "log1p": false,
           "inplace": true
@@ -416,22 +470,34 @@
         "pca": {
           "usage": true,
           "func_str": "sc.tl.pca",
-          "params": { "data": "adata", "svd_solver": "arpack" }
+          "params": {
+            "data": "adata",
+            "svd_solver": "arpack"
+          }
         },
         "neighbors": {
           "usage": true,
           "func_str": "sc.pp.neighbors",
-          "params": { "adata": "adata", "n_pcs": 30, "n_neighbors": 20 }
+          "params": {
+            "adata": "adata",
+            "n_pcs": 30,
+            "n_neighbors": 20
+          }
         },
         "umap": {
           "usage": true,
           "func_str": "sc.tl.umap",
-          "params": { "adata": "adata" }
+          "params": {
+            "adata": "adata"
+          }
         },
         "tsne": {
           "usage": false,
           "func_str": "sc.tl.tsne",
-          "params": { "adata": "adata", "n_pcs": 30 }
+          "params": {
+            "adata": "adata",
+            "n_pcs": 30
+          }
         },
         "leiden": {
           "usage": true,
@@ -445,7 +511,10 @@
         "louvain": {
           "usage": false,
           "func_str": "sc.tl.louvain",
-          "params": { "adata": "adata", "key_added": "louvain_clusters" }
+          "params": {
+            "adata": "adata",
+            "key_added": "louvain_clusters"
+          }
         },
         "hclust": {
           "usage": false,
@@ -518,18 +587,38 @@
             "usage": true,
             "sets": {
               "Negative Radiation Sensitivity (RS)": {
-                "AR": { "rank": 10 },
-                "PRKCB": { "rank": 7 },
-                "RELA": { "rank": 6 },
-                "SUMO1": { "rank": 4 },
-                "PAK2": { "rank": 3 },
-                "IRF1": { "rank": 1 },
-                "HDAC1": { "rank": 2 }
+                "AR": {
+                  "rank": 10
+                },
+                "PRKCB": {
+                  "rank": 7
+                },
+                "RELA": {
+                  "rank": 6
+                },
+                "SUMO1": {
+                  "rank": 4
+                },
+                "PAK2": {
+                  "rank": 3
+                },
+                "IRF1": {
+                  "rank": 1
+                },
+                "HDAC1": {
+                  "rank": 2
+                }
               },
               "Positive Radiation Sensitivity (RR)": {
-                "JUN": { "rank": 9 },
-                "STAT1": { "rank": 8 },
-                "ABL1": { "rank": 5 }
+                "JUN": {
+                  "rank": 9
+                },
+                "STAT1": {
+                  "rank": 8
+                },
+                "ABL1": {
+                  "rank": 5
+                }
               }
             }
           }
@@ -581,7 +670,7 @@
       "get_cell_type_markers": {
         "from_csv": {
           "usage": false,
-          "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\PipelineRun_2024_05_21-06_48_25_PM\\ST\\Files\\ST_scMAGS_markers.csv",
+          "path": "",
           "markers_column_name": "Markers",
           "cell_type_column_name": "CellType"
         },
@@ -597,8 +686,8 @@
             "top_genes": 7,
             "max_epochs": 1250,
             "early_stopping": true,
-            "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scvi_markers_model",
-            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
+            "pre_trained_model_path": "/home/rafaed/workbench/work/RO_src/Pipelines/STNav/STNav/models/scmodel",
+            "markers_save_path": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/STNav/data/processed"
           },
           "CellTypist": {
             "usage": false,
@@ -613,15 +702,15 @@
             "batch_number": 100,
             "batch_size": 1000,
             "balance_cell_type": false,
-            "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel",
-            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
+            "pre_trained_model_path": "/home/rafaed/workbench/work/RO_src/Pipelines/STNav/STNav/models/scmodel",
+            "markers_save_path": "/home/rafaed/workbench/work/RO_src/data/processed"
           },
           "scMAGS": {
             "usage": true,
             "nof_sel": 1000,
             "nof_markers": 8,
             "labels": "ann_level_3_transferred_label",
-            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
+            "markers_save_path": "/home/rafaed/workbench/work/RO_src/data/processed"
           }
         }
       },
@@ -726,8 +815,12 @@
           "cluster_key": "leiden_clusters",
           "copy": true,
           "use_raw": false,
-          "transmitter_params": { "categories": "ligand" },
-          "receiver_params": { "categories": "receptor" },
+          "transmitter_params": {
+            "categories": "ligand"
+          },
+          "receiver_params": {
+            "categories": "receptor"
+          },
           "key_added": "ligrec"
         }
       },

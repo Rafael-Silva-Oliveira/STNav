@@ -1,6 +1,5 @@
 {
-  "saving_path": "\\OneDrive - NTNU\\Documents\\Projects\\DAIgnostics\\dAIgnostics\\data\\processed",
-
+  "saving_path": "",
   "plots": {
     "sc_highly_variable_genes": {
       "scRNA_highly_variable_genes_config_1.png": {
@@ -59,7 +58,9 @@
         "params": {
           "adata": "adata",
           "ncols": 2,
-          "color": ["leiden_clusters"],
+          "color": [
+            "leiden_clusters"
+          ],
           "show": false,
           "annotate_var_explained": true
         }
@@ -72,7 +73,9 @@
         "params": {
           "adata": "adata",
           "ncols": 2,
-          "color": ["leiden_clusters"],
+          "color": [
+            "leiden_clusters"
+          ],
           "show": false,
           "annotate_var_explained": true
         }
@@ -134,7 +137,9 @@
         "data_type": "scRNA",
         "params": {
           "adata": "adata",
-          "color": ["leiden_clusters"],
+          "color": [
+            "leiden_clusters"
+          ],
           "edges": true,
           "show": false
         }
@@ -146,7 +151,9 @@
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "color": ["leiden_clusters"],
+          "color": [
+            "leiden_clusters"
+          ],
           "edges": true,
           "show": false
         }
@@ -158,7 +165,9 @@
         "data_type": "scRNA",
         "params": {
           "adata": "adata",
-          "color": ["hclust_7"],
+          "color": [
+            "hclust_7"
+          ],
           "show": false
         }
       },
@@ -169,7 +178,9 @@
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "color": ["hclust_7"],
+          "color": [
+            "hclust_7"
+          ],
           "show": false
         }
       }
@@ -182,7 +193,9 @@
         "data_type": "scRNA",
         "params": {
           "adata": "adata",
-          "color": ["leiden_clusters"],
+          "color": [
+            "leiden_clusters"
+          ],
           "show": false
         }
       },
@@ -193,7 +206,9 @@
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "color": ["leiden_clusters"],
+          "color": [
+            "leiden_clusters"
+          ],
           "show": false
         }
       }
@@ -364,7 +379,9 @@
         "data_type": "scRNA",
         "params": {
           "adata": "adata",
-          "groupby": ["ann_level_3_transferred_label"],
+          "groupby": [
+            "ann_level_3_transferred_label"
+          ],
           "key": "wilcoxon",
           "n_genes": 5,
           "dendogram": true,
@@ -444,7 +461,18 @@
         "params": {
           "adata": "adata",
           "cluster_key": "leiden_clusters",
-          "clusters": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
+          "clusters": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
         }
       }
     },
@@ -527,7 +555,11 @@
         "adata_to_use": "preprocessed_adata",
         "params": {
           "adata": "adata",
-          "var_names": ["Samd11", "Perm1", "Hes4"],
+          "var_names": [
+            "Samd11",
+            "Perm1",
+            "Hes4"
+          ],
           "groupby": "leiden_clusters",
           "show": false
         }
@@ -541,7 +573,11 @@
         "adata_to_use": "preprocessed_adata",
         "params": {
           "adata": "adata",
-          "var_names": ["Samd11", "Perm1", "Hes4"],
+          "var_names": [
+            "Samd11",
+            "Perm1",
+            "Hes4"
+          ],
           "groupby": "leiden_clusters",
           "show": false
         }
@@ -569,7 +605,11 @@
         "params": {
           "adata": "adata",
           "size": 1.5,
-          "color": ["Igkc", "Scg2", "Rgs5"],
+          "color": [
+            "Igkc",
+            "Scg2",
+            "Rgs5"
+          ],
           "show": false
         }
       }
