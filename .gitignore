@@ -729,3 +729,9 @@ notebooks/experimental/SpatialLGBM/Macrophages_scatter.png
 notebooks/experimental/SpatialLGBM/Mast cells_scatter.png
 notebooks/experimental/SpatialLGBM/T cell lineage_scatter.png
 notebooks/experimental/SpatialLGBM/figures/predicted_cell_type_non_conformal.png
+AT1_scatter.png
+calibrated_model.pkl
+EC capillary_scatter.png
+Fibroblasts_scatter.png
+optimized_model.pkl
+notebooks/experimental/DestVI with Spatial Conn/figures/Cell_Type.png

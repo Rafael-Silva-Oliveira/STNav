@@ -21,9 +21,10 @@ import squidpy as sq
 from mapie.metrics import (
     classification_coverage_score,
     classification_mean_width_score,
-)
+)<
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.calibration import calibration_curve
+import pickle
 
 
 def convert_form_anndata(adata, cell_annotation_col):
@@ -250,6 +251,14 @@ class SpatialPredictor:
         #     predictions_conformal
         # )
 
+        # Save the optimized model
+        with open("optimized_model.pkl", "wb") as f:
+            pickle.dump(optimized_model, f)
+
+        # Save the calibrated model
+        with open("calibrated_model.pkl", "wb") as f:
+            pickle.dump(calibrated, f)
+
         return (
             optimized_model,
             le,
@@ -394,14 +403,13 @@ evaluator = SpatialPredictor(sc_adata, st_adata)
 ) = evaluator.train_model(
     test_size=0.1,
     metric="balanced_accuracy",
-    n_splits=3,
-    n_trials=150,
+    n_splits=7,
+    n_trials=750,
     annotation="y_true",
     shuffle=True,
 )
 st_adata_pred.write_h5ad("predicted_adata_deconv.h5ad")
 
-st_adata_pred
 # TOOD: plot the scMAGS average reults, with the model results for each cell type and all cell types side by side as comparision
 # if "__main__" == __name__:
 #     main()
@@ -410,13 +418,44 @@ st_adata_pred.write_h5ad(
     r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\notebooks\experimental\SpatialLGBM\predicted_adata_deconv.h5ad",
 )
 st_adata_pred.obs.columns
-sq.pl.spatial_scatter(
-    st_adata_pred,
-    shape="square",
-    color="predicted_cell_type_non_conformal",
-    size=0.9,
-    library_id="Visium_HD_Human_Lung_Cancer",
-    figsize=(10, 10),
-    dpi=1000,
-    save="./predicted_cell_type_non_conformal.png",
-)
+import matplotlib.pyplot as plt
+import scanpy as sc
+
+unique_cell_types = st_adata_pred.obs["predicted_cell_type_non_conformal"].unique()
+
+for cell_type in unique_cell_types:
+    # Create a subset of the data for the current cell type
+    subset = st_adata_pred[
+        st_adata_pred.obs["predicted_cell_type_non_conformal"] == cell_type
+    ].copy()
+
+    # Create a new figure with two subplots
+    fig, axs = plt.subplots(1, 2, figsize=(20, 10))  # Adjust the size as needed
+
+    # Create the plot for the current cell type from the subset
+    sc.pl.spatial(
+        subset,
+        color="predicted_cell_type_non_conformal",  # use the column from the subset
+        size=0.9,
+        alpha_img=0.5,
+        library_id="Visium_HD_Human_Lung_Cancer",
+        title=f"Spatial scatter for {cell_type} (subset)",
+        ax=axs[0],  # plot on the first subplot
+        show=False,  # do not show the plot yet
+    )
+
+    # Create the plot for the current cell type from the whole dataframe
+    sc.pl.spatial(
+        st_adata_pred,
+        color=f"{cell_type}_Mean_LogNorm_Conn_Adj_scMAGS",  # use the column from the whole dataframe
+        size=1.5,
+        alpha_img=0.5,
+        library_id="Visium_HD_Human_Lung_Cancer",
+        title=f"Spatial scatter for {cell_type} (whole)",
+        ax=axs[1],  # plot on the second subplot
+        show=False,  # do not show the plot yet
+    )
+
+    # Save the figure
+    plt.savefig(f"{cell_type}_scatter.png", dpi=1000)  # save the plot as a PNG file
+    plt.show()
