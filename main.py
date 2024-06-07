@@ -24,20 +24,27 @@ username = os.path.expanduser("~")
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
 
+
 def main(
-	ANALYSIS_CONFIG: str,
-	PLOTTING_CONFIG: str,
-	SAVING_PATH: str,
+	ANALYSIS_CONFIG: dict,
+	PLOTTING_CONFIG: dict,
+	SAVING_PATH: dict,
 ):
-	analysis_json = json.load(open(ANALYSIS_CONFIG))
-	plotting_json = json.load(open(PLOTTING_CONFIG))
+	
+	assert not (SAVING_PATH["cloud"]["usage"] and SAVING_PATH["local"]["usage"]), "Only one of 'cloud' or 'local' should be set to True"
+	
+	run_loc = "cloud" if SAVING_PATH["cloud"]["usage"] else "local"
+	
+	analysis_json = json.load(open(ANALYSIS_CONFIG[run_loc]))
+	plotting_json = json.load(open(PLOTTING_CONFIG[run_loc]))
+	saving_path = SAVING_PATH[run_loc]["path"]
 
 	ORCHESTRATOR = Orchestrator(
 		analysis_config=analysis_json,
-		saving_path=SAVING_PATH,
+		saving_path=saving_path,
 		plotting_config=plotting_json,
 	)
-	directory = SAVING_PATH + "\\" + f"PipelineRun_{date}"
+	directory = saving_path + "\\" + f"PipelineRun_{date}"
 
 	subdirs = {
 		Orchestrator.SCRNA: ["Files"],

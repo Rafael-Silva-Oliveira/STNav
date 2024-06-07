@@ -1,10 +1,10 @@
 {
   "scRNA": {
     "usage": true,
-    "path": "/home/rafaed/workbench/work/RO_src/data/processed",
+    "path": "/home/rafaed/workbench/work/workbench/rafaed/work/RO_src/data/processed/Keep/PipelineRun_2024_02_23-09_22_35_AM/scRNA/Files/scRNA_raw_adata.h5ad",
     "cell_annotation": {
       "scArches_surgery": {
-        "usage": true,
+        "usage": false,
         "path_backbone": "/home/rafaed/workbench/work/RO_src/data/external/HCLA",
         "path_query_data": "HLCA_query.h5ad",
         "adata_query_batch": "Delorey_batch_1",
