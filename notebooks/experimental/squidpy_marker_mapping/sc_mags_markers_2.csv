@@ -1,0 +1,185 @@
+Markers,CellType
+MYH11,2_Smooth muscle marker
+TAGLN,2_Smooth muscle marker
+SYNPO2,2_Smooth muscle marker
+IGFBP6,2_Smooth muscle marker
+ACTA2,2_Smooth muscle marker
+EZR,2_Smooth muscle marker
+TINAGL1,2_Smooth muscle marker
+PPP1R14A,2_Smooth muscle marker
+MYL9,2_Smooth muscle marker
+ADIRF,2_Smooth muscle marker
+TPM1,2_Smooth muscle marker
+TPM2,2_Smooth muscle marker
+THBS1,2_Smooth muscle marker
+SOD3,2_Smooth muscle marker
+SH3BGRL,2_Smooth muscle marker
+NTM,AT1 marker
+TACSTD2,AT1 marker
+LIMD1,AT1 marker
+EFNA1,AT1 marker
+SDC4,AT1 marker
+ICAM1,AT1 marker
+EMP2,AT1 marker
+TMSB10,AT1 marker
+ANXA2,AT1 marker
+TRAM1,AT1 marker
+S100A10,AT1 marker
+FTL,AT1 marker
+TXNIP,AT1 marker
+DDX17,AT1 marker
+ITM2B,AT1 marker
+KIAA0232,AT2 marker
+LPCAT1,AT2 marker
+TMEM63B,AT2 marker
+LRRK2,AT2 marker
+NEMF,AT2 marker
+MAP3K20,AT2 marker
+B2M,AT2 marker
+BEX3,AT2 marker
+TMSB4X,AT2 marker
+PPDPF,AT2 marker
+PARP14,AT2 marker
+FTH1,AT2 marker
+APLP2,AT2 marker
+NOP53,AT2 marker
+JCHAIN,B cell lineage marker
+IGHM,B cell lineage marker
+XBP1,B cell lineage marker
+HSPA6,B cell lineage marker
+SELENOS,B cell lineage marker
+ZNF706,B cell lineage marker
+PPP2R5C,B cell lineage marker
+HERPUD1,B cell lineage marker
+HDLBP,B cell lineage marker
+ATF4,B cell lineage marker
+SPCS3,B cell lineage marker
+H1FX,B cell lineage marker
+OGT,B cell lineage marker
+SMAD6,EC arterial marker
+ADCY4,EC arterial marker
+ADGRL4,EC arterial marker
+PTPRB,EC arterial marker
+LIMS2,EC arterial marker
+DOCK6,EC arterial marker
+ACVRL1,EC arterial marker
+SHANK3,EC arterial marker
+S1PR1,EC arterial marker
+SLCO2A1,EC arterial marker
+TMEM100,EC arterial marker
+HYAL2,EC arterial marker
+ARHGAP29,EC arterial marker
+JUNB,EC arterial marker
+TNFSF10,EC arterial marker
+ADGRF5,EC capillary marker
+AQP1,EC capillary marker
+FCN3,EC capillary marker
+TCIM,EC capillary marker
+TM4SF1,EC capillary marker
+SEC14L1,EC capillary marker
+PECAM1,EC capillary marker
+WARS,EC capillary marker
+IFI27,EC capillary marker
+EGFL7,EC capillary marker
+IFI44L,EC capillary marker
+XAF1,EC capillary marker
+SYNE2,EC capillary marker
+ACKR1,EC venous marker
+SELP,EC venous marker
+ADGRG6,EC venous marker
+IL33,EC venous marker
+MMRN1,EC venous marker
+PRSS23,EC venous marker
+SRPX,EC venous marker
+SRGN,EC venous marker
+LYST,EC venous marker
+VWF,EC venous marker
+IL4R,EC venous marker
+DCN,Fibroblasts marker
+LUM,Fibroblasts marker
+MMP2,Fibroblasts marker
+FBLN1,Fibroblasts marker
+NBL1,Fibroblasts marker
+PTGDS,Fibroblasts marker
+FN1,Fibroblasts marker
+MFAP4,Fibroblasts marker
+SLC40A1,Fibroblasts marker
+SELENOP,Fibroblasts marker
+A2M,Fibroblasts marker
+PLXDC2,Fibroblasts marker
+MXRA8,Fibroblasts marker
+APOE,Fibroblasts marker
+ABCA6,Fibroblasts marker
+NKG7,Innate lymphoid cell NK marker
+KLRD1,Innate lymphoid cell NK marker
+FAM49B,Innate lymphoid cell NK marker
+ZCCHC9,Innate lymphoid cell NK marker
+BCL2,Innate lymphoid cell NK marker
+PTPRC,Innate lymphoid cell NK marker
+EFHD2,Innate lymphoid cell NK marker
+ADGRE5,Innate lymphoid cell NK marker
+FAM50A,Innate lymphoid cell NK marker
+ARF6,Innate lymphoid cell NK marker
+NT5C,Innate lymphoid cell NK marker
+SNU13,Innate lymphoid cell NK marker
+MLLT6,Innate lymphoid cell NK marker
+SH3BGRL3,Innate lymphoid cell NK marker
+SPON2,Innate lymphoid cell NK marker
+PROX1,Lymphatic EC differentiating marker
+SLC38A1,Lymphatic EC differentiating marker
+TBX1,Lymphatic EC differentiating marker
+TFF3,Lymphatic EC differentiating marker
+SEMA3A,Lymphatic EC differentiating marker
+DOCK5,Lymphatic EC differentiating marker
+LYVE1,Lymphatic EC differentiating marker
+FABP5,Lymphatic EC differentiating marker
+FLT4,Lymphatic EC differentiating marker
+ARL4A,Lymphatic EC differentiating marker
+SH3TC1,Lymphatic EC differentiating marker
+TIE1,Lymphatic EC differentiating marker
+BACE2,Lymphatic EC differentiating marker
+KDR,Lymphatic EC differentiating marker
+TMEM255B,Lymphatic EC mature marker
+ERICH1,Lymphatic EC mature marker
+ECSCR,Lymphatic EC mature marker
+NRP2,Lymphatic EC mature marker
+MARCKSL1,Lymphatic EC mature marker
+LHFPL6,Lymphatic EC mature marker
+FXYD5,Lymphatic EC mature marker
+UGP2,Lymphatic EC mature marker
+SLCO2B1,Macrophages marker
+MRC1,Macrophages marker
+LAPTM5,Macrophages marker
+KLHDC8B,Macrophages marker
+ACP5,Macrophages marker
+SDC3,Macrophages marker
+APOC1,Macrophages marker
+TNFAIP2,Macrophages marker
+ADPGK,Macrophages marker
+H2AFY,Macrophages marker
+MFSD1,Macrophages marker
+LGMN,Macrophages marker
+MGAT1,Macrophages marker
+TNFRSF14,Macrophages marker
+TYMP,Macrophages marker
+IL1RL1,Mast cells marker
+PLIN2,Mast cells marker
+S100A4,Mast cells marker
+SLC2A3,Mast cells marker
+ZFP36,Mast cells marker
+HNRNPD,Mast cells marker
+HSPD1,Mast cells marker
+YBX1,Mast cells marker
+PJA2,Mast cells marker
+LAMTOR4,Mast cells marker
+TRMT112,Mast cells marker
+DUSP2,T cell lineage marker
+STK4,T cell lineage marker
+IL7R,T cell lineage marker
+HSPH1,T cell lineage marker
+DNAJB4,T cell lineage marker
+PPP1R15A,T cell lineage marker
+DDIT4,T cell lineage marker
+HSPE1,T cell lineage marker
+TRA2B,T cell lineage marker
+DNAJB1,T cell lineage marker

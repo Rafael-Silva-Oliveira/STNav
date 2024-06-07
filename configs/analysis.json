@@ -1,5 +1,4 @@
 {
-  "saving_path": "\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed",
   "scRNA": {
     "usage": true,
     "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\Keep\\PipelineRun_2024_02_23-09_22_35_AM\\scRNA\\Files\\scRNA_raw_adata.h5ad",
@@ -62,6 +61,8 @@
       }
     },
     "quality_control": {
+      "adata_to_use": "raw_adata",
+      "save_as": "QCed_adata",
       "calculate_qc_metrics": {
         "func_str": "sc.pp.calculate_qc_metrics",
         "usage": true,
@@ -90,6 +91,7 @@
     },
     "preprocessing": {
       "adata_to_use": "QCed_adata",
+      "save_as": "preprocessed_adata",
       "unnormalize": {
         "usage": false,
         "col_name": "n_counts"
@@ -99,7 +101,7 @@
         "usage": true,
         "params": {
           "adata": "adata",
-          "target_sum": 1e6,
+          "target_sum": 1e4,
           "inplace": true
         }
       },
@@ -123,7 +125,7 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_counts": 25,
+          "min_counts": 50,
           "inplace": true
         }
       },
@@ -141,11 +143,11 @@
         "params": {
           "adata": "adata",
           "subset": true,
-          "n_top_genes": 5000,
+          "n_top_genes": 10000,
           "min_mean": 0.0125,
           "max_mean": 2,
           "min_disp": 0.25,
-          "flavor": "seurat",
+          "flavor": "seurat_v3",
           "inplace": true
         }
       },
@@ -192,21 +194,31 @@
             "affinity": "euclidean",
             "linkage": "ward"
           }
+        },
+        "dendogram": {
+          "usage": true,
+          "func_str": "sc.tl.dendrogram",
+          "params": {
+            "groupby": "ann_level_3_transferred_label"
+          }
         }
       }
     },
     "DEG": {
       "adata_to_use": "preprocessed_adata",
+      "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
           "groupby": "ann_level_3_transferred_label",
+          "groups": "all",
           "reference": "rest",
           "method": "wilcoxon",
           "key_added": "wilcoxon",
-          "n_genes": 5000,
+          "layer": null,
+          "n_genes": 10000,
           "use_raw": false
         }
       },
@@ -219,7 +231,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -230,7 +242,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": false,
         "gene_sets": {
           "api_sets": {
@@ -289,50 +301,29 @@
         "gsea": {
           "func_str": "gp.gsea",
           "usage": false,
+          "adata_cls_col_name": null,
           "params": {
             "data": "adata",
             "permutation_type": "phenotype",
             "permutation_num": 1000,
-            "method": "signal_to_noise",
+            "method": "s2n",
             "seed": 123,
             "threads": 4
           }
         }
       }
-    },
-    "model": {
-      "model_type": {
-        "CondSCVI": {
-          "train": false,
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 500,
-            "early_stopping": true
-          }
-        },
-        "RNAStereoscope": {
-          "train": false,
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 500,
-            "early_stopping": true
-          }
-        }
-      },
-      "pre_trained_model_path": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/DAIgnostics/scmodel"
     }
   },
   "ST": {
     "usage": true,
-    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external",
-    "count_file": "CytAssist_FFPE_Human_Lung_Squamous_Cell_Carcinoma_filtered_feature_bc_matrix.h5",
+    "scRNA_folder_path": { "usage": true, "path": "" },
+    "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um",
+    "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\external\\spatial",
+    "source_image_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\raw\\VisiumHD\\square_008um\\spatial",
     "quality_control": {
+      "adata_to_use": "raw_adata",
+      "save_as": "QCed_adata",
       "calculate_qc_metrics": {
         "func_str": "sc.pp.calculate_qc_metrics",
         "usage": true,
@@ -343,7 +334,7 @@
           "log1p": false,
           "inplace": true
         },
-        "pct_counts_Mt": 25,
+        "pct_counts_Mt": 20,
         "n_genes_by_counts": {
           "quantile": {
             "usage": true,
@@ -361,6 +352,7 @@
     },
     "preprocessing": {
       "adata_to_use": "QCed_adata",
+      "save_as": "preprocessed_adata",
       "unnormalize": {
         "usage": false,
         "col_name": "total_counts"
@@ -394,16 +386,16 @@
         "usage": true,
         "params": {
           "data": "adata",
-          "min_counts": 25,
+          "min_counts": 15,
           "min_cells": null
         }
       },
       "filter_cells": {
         "func_str": "sc.pp.filter_cells",
-        "usage": false,
+        "usage": true,
         "params": {
           "data": "adata",
-          "min_genes": 200
+          "min_genes": 25
         }
       },
       "highly_variable_genes": {
@@ -412,7 +404,7 @@
         "params": {
           "adata": "adata",
           "subset": true,
-          "n_top_genes": 5000,
+          "n_top_genes": 10000,
           "min_mean": 0.0125,
           "max_mean": 3,
           "min_disp": 0.5,
@@ -437,7 +429,7 @@
           "params": { "adata": "adata" }
         },
         "tsne": {
-          "usage": true,
+          "usage": false,
           "func_str": "sc.tl.tsne",
           "params": { "adata": "adata", "n_pcs": 30 }
         },
@@ -456,27 +448,37 @@
           "params": { "adata": "adata", "key_added": "louvain_clusters" }
         },
         "hclust": {
-          "usage": true,
+          "usage": false,
           "func_str": "AgglomerativeClustering",
           "params": {
             "n_clusters": 7,
             "affinity": "euclidean",
             "linkage": "ward"
           }
+        },
+        "dendogram": {
+          "usage": true,
+          "func_str": "sc.tl.dendrogram",
+          "params": {
+            "groupby": "leiden_clusters"
+          }
         }
       }
     },
     "DEG": {
       "adata_to_use": "preprocessed_adata",
+      "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
           "groupby": "leiden_clusters",
+          "groups": "all",
           "reference": "rest",
           "method": "wilcoxon",
           "key_added": "wilcoxon",
+          "layer": null,
           "n_genes": 12000,
           "use_raw": false
         }
@@ -490,7 +492,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -501,7 +503,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": true,
         "gene_sets": {
           "api_sets": {
@@ -559,175 +561,198 @@
         },
         "gsea": {
           "func_str": "gp.gsea",
+          "adata_cls_col_name": null,
           "usage": false,
           "params": {
             "data": "adata",
             "permutation_type": "phenotype",
             "permutation_num": 1000,
-            "method": "signal_to_noise",
+            "method": "s2n",
             "seed": 123,
             "threads": 4
           }
         }
       }
     },
-    "model": {
-      "model_type": {
-        "DestVI": {
-          "train": false,
+    "SpatialMarkersMapping": {
+      "usage": true,
+      "spatial_adata_to_use": "preprocessed_adata",
+      "scRNA_adata_to_use": "preprocessed_adata",
+      "get_cell_type_markers": {
+        "from_csv": {
           "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 500,
-            "early_stopping": true
-          }
+          "path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed\\PipelineRun_2024_05_21-06_48_25_PM\\ST\\Files\\ST_scMAGS_markers.csv",
+          "markers_column_name": "Markers",
+          "cell_type_column_name": "CellType"
         },
-        "SpatialStereoscope": {
-          "train": false,
-          "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "max_epochs": 500,
-            "early_stopping": true
-          }
-        },
-        "GraphST": {
+        "from_models": {
           "usage": true,
-          "train": true,
-          "adata_to_use": "preprocessed_adata",
-          "layer": "raw_counts",
-          "params": {
-            "epochs": 1200,
-            "random_seed": 50,
-            "deconvolution": true
+          "markers_column_name": "Markers",
+          "cell_type_column_name": "CellType",
+          "SCVI": {
+            "usage": false,
+            "train": false,
+            "labels_key": "ann_level_3_transferred_label",
+            "layer": "raw_counts",
+            "top_genes": 7,
+            "max_epochs": 1250,
+            "early_stopping": true,
+            "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scvi_markers_model",
+            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
+          },
+          "CellTypist": {
+            "usage": false,
+            "train": false,
+            "top_genes": 7,
+            "epochs": 1500,
+            "labels": "ann_level_3_transferred_label",
+            "n_jobs": 10,
+            "feature_selection": true,
+            "use_SGD": false,
+            "mini_batch": false,
+            "batch_number": 100,
+            "batch_size": 1000,
+            "balance_cell_type": false,
+            "pre_trained_model_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\STNav\\models\\scmodel",
+            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
+          },
+          "scMAGS": {
+            "usage": true,
+            "nof_sel": 1000,
+            "nof_markers": 8,
+            "labels": "ann_level_3_transferred_label",
+            "markers_save_path": "C:\\Users\\rafaelo\\OneDrive - NTNU\\Documents\\Projects\\STNav\\data\\processed"
           }
         }
       },
-      "pre_trained_model_path": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/DAIgnostics/stmodel"
+      "map_markers_to_spatial_cell_type": {
+        "top_markers_combination_method": {
+          "mean": true
+        }
+      },
+      "map_to_clusters": {
+        "percentile_threshold": 0.8,
+        "cluster_column_name": "leiden_clusters"
+      }
     },
     "SpatialNeighbors": {
       "Squidpy": {
-        "NHoodEnrichment": {
-          "usage": true,
-          "adata_to_use": "preprocessed_adata",
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "sq_neighborhood_adata",
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+        },
+        "data_type": "ST",
+        "usage": true,
+        "Squidpy_NHoodEnrichment": {
           "func_str": "sq.gr.nhood_enrichment",
-          "data_type": "ST",
           "params": {
             "adata": "adata",
             "cluster_key": "leiden_clusters"
           }
         },
-        "Co_Ocurrence": {
-          "usage": true,
-          "adata_to_use": "preprocessed_adata",
+        "Squidpy_Co_Ocurrence": {
           "func_str": "sq.gr.co_occurrence",
-          "data_type": "ST",
           "params": {
             "adata": "adata",
             "cluster_key": "leiden_clusters"
+          }
+        },
+        "Squidpy_Centrality": {
+          "func_str": "sq.gr.centrality_scores",
+          "params": {
+            "adata": "adata",
+            "cluster_key": "leiden_clusters",
+            "show_progress_bar": true
           }
         }
       }
     },
     "SpatiallyVariableGenes": {
-      "SpatialDE": {
-        "config_1": {
+      "Squidpy": {
+        "usage": true,
+        "checkpoint": {
           "usage": false,
-          "adata_to_use": "preprocessed_adata",
-          "data_type": "ST",
-          "params": {
-            "x_coord_name": "array_row",
-            "y_coord_name": "array_col"
-          },
-          "AEH": {
-            "usage": false,
-            "params": {
-              "C": 3,
-              "l": 1.5
-            }
-          }
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
-        "config_2": {
-          "usage": false,
-          "data_type": "ST",
-          "params": {
-            "x_coord_name": "array_row",
-            "y_coord_name": "array_col",
-            "counts": "total_counts"
-          },
-          "AEH": {
-            "usage": false,
-            "params": {
-              "C": 3,
-              "l": 1.5
-            }
-          }
-        }
-      },
-      "Squidpy_MoranI": {
+        "save_as": "Squidpy_SVG",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
+        "n_genes": 1000,
         "Squidpy_MoranI": {
-          "usage": true,
-          "adata_to_use": "preprocessed_adata",
           "func_str": "sq.gr.spatial_autocorr",
-          "data_type": "ST",
-          "n_genes": 1000,
           "params": {
             "adata": "adata",
             "mode": "moran",
-            "n_perms": 1000,
+            "n_perms": 25,
+            "n_jobs": 1
+          }
+        },
+        "Squidpy_Sepal": {
+          "func_str": "sq.gr.sepal",
+          "params": {
+            "adata": "adata",
+            "max_neighs": 4,
             "n_jobs": 1
           }
         }
       },
-      "Squidpy_Speal": {}
+      "scBSP": {
+        "usage": false,
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": ""
+        },
+        "save_as": "scBSP_SVG",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST"
+      }
     },
     "ReceptorLigandAnalysis": {
-      "Squidpy": {
-        "ligrec": {
-          "usage": true,
-          "adata_to_use": "preprocessed_adata",
-          "func_str": "sq.gr.ligrec",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "n_perms": 1000,
-            "cluster_key": "leiden_clusters",
-            "copy": true,
-            "use_raw": false,
-            "transmitter_params": { "categories": "ligand" },
-            "receiver_params": { "categories": "receptor" },
-            "key_added": "ligrec"
-          }
+      "Squidpy_ligrec": {
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": "PipelineRun_Checkpoint"
+        },
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "squidpy_ligrec_adata",
+        "usage": false,
+        "func_str": "sq.gr.ligrec",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "n_perms": 1000,
+          "cluster_key": "leiden_clusters",
+          "copy": true,
+          "use_raw": false,
+          "transmitter_params": { "categories": "ligand" },
+          "receiver_params": { "categories": "receptor" },
+          "key_added": "ligrec"
         }
       },
-      "SpatialDM": {
-        "SpatialDM_LigRec": {
-          "usage": true,
-          "adata_to_use": "deconvoluted_adata",
-          "func_str": "SpatialDM_wrapper",
-          "data_type": "ST",
-          "params": {
-            "adata": "adata",
-            "l": 1.2,
-            "cutoff": 0.2,
-            "single_cell": false,
-            "species": "human",
-            "min_cell": 3,
-            "n_perm": 1000,
-            "specified_ind_global": null,
-            "method_global": "both",
-            "specified_ind_local": null,
-            "method_local": "both",
-            "nproc": 1,
-            "method_sig_pairs": "permutation",
-            "fdr_sig_pairs": true,
-            "threshold_sig_pairs": 0.1,
-            "method_sig_spots": "permutation",
-            "fdr_sig_spots": false,
-            "threshold_sig_spots": 0.1
-          }
+      "stLearn_cci": {
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": "PipelineRun_2024_05_26-09_08_58_AM"
+        },
+        "adata_to_use": "deconvoluted_adata",
+        "save_as": "stlearn_cci_adata",
+        "usage": true,
+        "func_str": "stLearn_wrapper",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "min_spots": 20,
+          "distance": null,
+          "n_pairs": 5000,
+          "spot_mixtures": false,
+          "sig_spots": true,
+          "cell_prop_cutoff": 0.2,
+          "p_cutoff": 0.05,
+          "n_perms": 25,
+          "n_cpus": null,
+          "verbose": true
         }
       }
     }

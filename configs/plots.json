@@ -152,7 +152,7 @@
         }
       },
       "scRNA_hclust7.png": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.pl.umap",
         "adata_to_use": "preprocessed_adata",
         "data_type": "scRNA",
@@ -163,7 +163,7 @@
         }
       },
       "ST_hclust7.png": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.pl.umap",
         "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
@@ -198,22 +198,6 @@
         }
       }
     },
-    "sc_embedding": {
-      "ST_embedding.png": {
-        "usage": true,
-        "func_str": "sc.pl.embedding",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "basis": "spatial",
-          "cmap": "viridis",
-          "s": 80,
-          "add_outline": true,
-          "show": false
-        }
-      }
-    },
     "proportion_per_cell_plot": {
       "scRNA_proportion_per_cell_plot.png": {
         "usage": true,
@@ -236,6 +220,33 @@
           "adata": "adata",
           "group": "spatial_cell_ontology_class",
           "condition": "leiden_clusters",
+          "show": false
+        }
+      }
+    },
+    "sc_correlation_matrix": {
+      "scRNA_corr_matrix.png": {
+        "usage": true,
+        "func_str": "sc.pl.correlation_matrix",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "scRNA",
+        "params": {
+          "adata": "adata",
+          "groupby": "ann_level_3_transferred_label",
+          "show": false
+        }
+      }
+    },
+    "sc_heatmap": {
+      "scRNA_heatmap_by_cluster.png": {
+        "usage": true,
+        "func_str": "sc.pl.heatmap",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "scRNA",
+        "params": {
+          "adata": "adata",
+          "groupby": "leiden_clusters",
+          "cmap": "bwr",
           "show": false
         }
       }
@@ -331,6 +342,20 @@
         }
       }
     },
+    "sc_rank_genes_groups_tracksplot": {
+      "scRNA_rank_genes_tracksplot.png": {
+        "usage": true,
+        "func_str": "sc.pl.rank_genes_groups_tracksplot",
+        "adata_to_use": "preprocessed_DEG_adata",
+        "data_type": "scRNA",
+        "params": {
+          "adata": "adata",
+          "key": "wilcoxon",
+          "n_genes": 5,
+          "show": false
+        }
+      }
+    },
     "sc_rank_genes_groups_dotplot": {
       "scRNA_dotplot_by_CellType_config_1.png": {
         "usage": true,
@@ -379,11 +404,23 @@
       "ST_nhood_enrichment.png": {
         "usage": true,
         "func_str": "sq.pl.nhood_enrichment",
-        "adata_to_use": "NHoodEnrichment_adata",
+        "adata_to_use": "sq_neighborhood_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
           "cluster_key": "leiden_clusters"
+        }
+      },
+      "ST_nhood_average.png": {
+        "usage": true,
+        "func_str": "sq.pl.nhood_enrichment",
+        "adata_to_use": "sq_neighborhood_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "cluster_key": "leiden_clusters",
+          "method": "average",
+          "cmap": "inferno"
         }
       }
     },
@@ -391,7 +428,7 @@
       "ST_co_occurrence_1.png": {
         "usage": true,
         "func_str": "sq.pl.co_occurrence",
-        "adata_to_use": "Co_Ocurrence_adata",
+        "adata_to_use": "sq_neighborhood_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -402,7 +439,7 @@
       "ST_co_occurrence_all.png": {
         "usage": true,
         "func_str": "sq.pl.co_occurrence",
-        "adata_to_use": "Co_Ocurrence_adata",
+        "adata_to_use": "sq_neighborhood_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -462,174 +499,6 @@
       }
     },
     "sc_violin": {
-      "prop_by_cluster_SmoothCell.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["2_Smooth muscle", "Unknown"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_AT1.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["AT1"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_AT2.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["AT2"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_B cell lineage.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["B cell lineage"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_EC arterial.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["EC arterial"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_EC capillary.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["EC capillary"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_EC venous.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["EC venous"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_Fibroblasts.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["Fibroblasts"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_Innate lymphoid cell NK.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["Innate lymphoid cell NK"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_Macrophages.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["Macrophages"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_Mast cells.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["Mast cells"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_T cell lineage.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["T cell lineage"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_Lymphatic EC differentiating.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["Lymphatic EC differentiating"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
-      "prop_by_cluster_Lymphatic EC mature.png": {
-        "usage": true,
-        "func_str": "sc.pl.violin",
-        "adata_to_use": "deconvoluted_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "keys": ["Lymphatic EC mature"],
-          "groupby": "leiden_clusters",
-          "show": false
-        }
-      },
       "spatial_pct_mito.png": {
         "usage": false,
         "data_type": "ST",
@@ -695,39 +564,156 @@
       "ST_spatial_scatter.png": {
         "usage": true,
         "func_str": "sq.pl.spatial_scatter",
-        "adata_to_use": "Squidpy_MoranI_adata",
+        "adata_to_use": "Squidpy_SVG",
         "data_type": "ST",
         "params": {
           "adata": "adata",
           "size": 1.5,
-          "color": ["Samd11", "Perm1", "Hes4"],
+          "color": ["Igkc", "Scg2", "Rgs5"],
           "show": false
         }
       }
     },
-    "sdm_global_plot": {
-      "ST_global_plot.png": {
+    "st_ligrec_summary": {
+      "st_ligand_receptor.png": {
         "usage": true,
-        "func_str": "sdm.plottings.global_plot",
-        "adata_to_use": "SpatialDM_LigRec_adata",
+        "func_str": "st.pl.lr_summary",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
-          "sample": "adata",
-          "pairs": null,
+          "adata": "adata",
+          "n_top": 50,
           "show": false
         }
       }
     },
-    "sdm_plotting_pairs": {
-      "ST_plotting_pairs.png": {
+    "st_lr_diagnostic": {
+      "st_lr_diagnostics.png": {
         "usage": true,
-        "func_str": "sdm.plottings.plot_pairs",
-        "adata_to_use": "SpatialDM_LigRec_adata",
+        "func_str": "st.pl.lr_diagnostics",
+        "adata_to_use": "stlearn_cci_adata",
         "data_type": "ST",
         "params": {
-          "sample": "adata",
-          "pairs_to_plot": ["FN1_SDC4", "THBS2_SDC4"],
-          "marker": "s",
+          "adata": "adata",
+          "show": false
+        }
+      }
+    },
+    "st_lr_n_spots": {
+      "st_lr_n_spots.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_n_spots",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "n_top": 50,
+          "show": false
+        }
+      }
+    },
+    "st_lr_plot": {
+      "st_lr_plot.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_plot",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "n_top": 50,
+          "inner_size_prop": 0.08,
+          "middle_size_prop": 0.3,
+          "outer_size_prop": 0.5,
+          "outer_mode": "binary",
+          "pt_scale": 150,
+          "use_label": "cell_type",
+          "show_image": true,
+          "sig_spots": true,
+          "show": false
+        }
+      },
+      "st_lr_cci_plot.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_plot",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "n_top": null,
+          "inner_size_prop": null,
+          "middle_size_prop": null,
+          "outer_size_prop": 1,
+          "outer_mode": null,
+          "pt_scale": 15,
+          "use_label": "cell_type",
+          "show_arrows": true,
+          "show_image": true,
+          "sig_spots": false,
+          "sig_cci": true,
+          "arrow_head_width": 4,
+          "arrow_width": 2,
+          "arrow_cmap": "YlOrRd",
+          "arrow_vmax": 1,
+          "cell_alpha": 0.8,
+          "show": false
+        }
+      }
+    },
+    "st_cci_diagnostic": {
+      "st_cci_diagnostics.png": {
+        "usage": true,
+        "func_str": "st.pl.cci_check",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "use_label": "cell_type",
+          "show": false
+        }
+      }
+    },
+    "st_ccinet_plot": {
+      "st_cci_network.png": {
+        "usage": true,
+        "func_str": "st.pl.ccinet_plot",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "min_counts": 2,
+          "use_label": "cell_type",
+          "show": false
+        }
+      }
+    },
+    "st_LR_CCI_map": {
+      "LR_CCI_map.png": {
+        "usage": true,
+        "func_str": "st.pl.lr_cci_map",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lrs": null,
+          "min_total": 100,
+          "use_label": "cell_type",
+          "show": false
+        }
+      }
+    },
+    "st_CCI_map": {
+      "CCI_map.png": {
+        "usage": true,
+        "func_str": "st.pl.cci_map",
+        "adata_to_use": "stlearn_cci_adata",
+        "data_type": "ST",
+        "params": {
+          "adata": "adata",
+          "lr": "FN1_PLAUR",
+          "use_label": "cell_type",
           "show": false
         }
       }

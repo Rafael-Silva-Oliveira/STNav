@@ -1,0 +1,60 @@
+Gene name,Function
+MYH11,2_Smooth muscle marker
+DES,2_Smooth muscle marker
+MRVI1,2_Smooth muscle marker
+DGKG,2_Smooth muscle marker
+LDN18,AT1 marker
+AGER,AT1 marker
+TKN2,AT1 marker
+MS4A15,AT1 marker
+B4GALNT3,AT2 marker
+SLC22A31,AT2 marker
+PLA2G1B,AT2 marker
+MSLN,AT2 marker
+POU2AF1,B cell lineage marker
+JCHAIN,B cell lineage marker
+DERL3,B cell lineage marker
+IGHM,B cell lineage marker
+DKK2,EC arterial marker
+AVPR2,EC arterial marker
+ETFDH,EC arterial marker
+TRABD2A,EC arterial marker
+VIPR1,EC capillary marker
+BTNL9,EC capillary marker
+IL1RL1,EC capillary marker
+ACKR1,EC venous marker
+LU,EC venous marker
+L23,EC venous marker
+PE-1,EC venous marker
+OL6A2,Fibroblasts marker
+MMP2,Fibroblasts marker
+DCN,Fibroblasts marker
+LUM,Fibroblasts marker
+D247,Innate lymphoid cell NK marker
+ZMB,Innate lymphoid cell NK marker
+D7,Innate lymphoid cell NK marker
+SLC9A3R1,Innate lymphoid cell NK marker
+OSBPL3,Lymphatic EC differentiating marker
+SLC38A1,Lymphatic EC differentiating marker
+PROX1,Lymphatic EC differentiating marker
+MMP16,Lymphatic EC differentiating marker
+TFF3,Lymphatic EC mature marker
+NDUFAF1,Lymphatic EC mature marker
+PGM5-AS1,Lymphatic EC mature marker
+ELN-1,Lymphatic EC mature marker
+D163,Macrophages marker
+1QB,Macrophages marker
+SPI1,Macrophages marker
+APOC1,Macrophages marker
+TPSB2,Mast cells marker
+TPSAB1,Mast cells marker
+KIT,Mast cells marker
+PA3,Mast cells marker
+NFE4,Monocytes marker
+AC096667.1,Monocytes marker
+ETN,Monocytes marker
+LINC02580,Monocytes marker
+D69,T cell lineage marker
+PTPRC,T cell lineage marker
+IL7R,T cell lineage marker
+KLRB1,T cell lineage marker

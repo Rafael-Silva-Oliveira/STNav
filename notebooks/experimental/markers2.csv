@@ -1,0 +1,611 @@
+List,Name
+AT0,SCGB3A2
+AT0,SLPI
+AT0,CD207
+AT0,HLA-DPB1
+AT0,TYRP1
+AT0,SH2D6
+AT0,KCNN2
+AT0,TRH
+AT0,GATA5
+AT0,GDF15
+AT1,HOPX
+AT1,EMP2
+AT1,AGER
+AT1,SFTA2
+AT1,SFTPB
+AT1,CCL11
+AT1,KCNN2
+AT1,DSTN
+AT1,TRGV2
+AT1,SPIC
+AT2,SFTPC
+AT2,NAPSA
+AT2,SFTPB
+AT2,SFTPA1
+AT2,SFTPA2
+AT2,SLPI
+AT2,NPC2
+AT2,SERPINA1
+AT2,OMG
+AT2,S100A6
+AT2 proliferating,PEG10
+AT2 proliferating,TPSG1
+AT2 proliferating,SFN
+AT2 proliferating,TYMS
+AT2 proliferating,TK1
+AT2 proliferating,SIGLEC6
+AT2 proliferating,CCL11
+AT2 proliferating,SCT
+AT2 proliferating,TNFSF11
+AT2 proliferating,BRINP3
+Adventitial fibroblasts,DCN
+Adventitial fibroblasts,SFTPC
+Adventitial fibroblasts,MT2A
+Adventitial fibroblasts,FIBCD1
+Adventitial fibroblasts,NTNG2
+Adventitial fibroblasts,CFD
+Adventitial fibroblasts,IGFBP6
+Adventitial fibroblasts,LUM
+Adventitial fibroblasts,GPRC5A
+Adventitial fibroblasts,IGFBP4
+Alveolar Mph CCL3+,MT2A
+Alveolar Mph CCL3+,HLA-DRB1
+Alveolar Mph CCL3+,C1QC
+Alveolar Mph CCL3+,SOD2
+Alveolar Mph CCL3+,CCL4L2
+Alveolar Mph CCL3+,RPS4Y1
+Alveolar Mph CCL3+,MT1E
+Alveolar Mph CCL3+,CCL4
+Alveolar Mph CCL3+,GREM2
+Alveolar Mph CCL3+,BRINP3
+Alveolar Mph MT-positive,MT1X
+Alveolar Mph MT-positive,MT2A
+Alveolar Mph MT-positive,HMOX1
+Alveolar Mph MT-positive,CCL18
+Alveolar Mph MT-positive,CCL11
+Alveolar Mph MT-positive,DTX1
+Alveolar Mph MT-positive,GPR25
+Alveolar Mph MT-positive,VEGFD
+Alveolar Mph MT-positive,MT1F
+Alveolar Mph MT-positive,TRGV2
+Alveolar Mph proliferating,CCL11
+Alveolar Mph proliferating,CDH19
+Alveolar Mph proliferating,PCLAF
+Alveolar Mph proliferating,TYMS
+Alveolar Mph proliferating,KLK14
+Alveolar Mph proliferating,TFF2
+Alveolar Mph proliferating,GPR25
+Alveolar Mph proliferating,BRINP3
+Alveolar Mph proliferating,PAEP
+Alveolar Mph proliferating,JPH2
+Alveolar fibroblasts,RGCC
+Alveolar fibroblasts,A2M
+Alveolar fibroblasts,SIGLEC6
+Alveolar fibroblasts,TFF2
+Alveolar fibroblasts,RP11-501J20.5
+Alveolar fibroblasts,GNAO1
+Alveolar fibroblasts,GPX3
+Alveolar fibroblasts,KLK14
+Alveolar fibroblasts,TRGV2
+Alveolar fibroblasts,SMR3A
+Alveolar macrophages,FTH1
+Alveolar macrophages,FTL
+Alveolar macrophages,C1QB
+Alveolar macrophages,FABP4
+Alveolar macrophages,S100A11
+Alveolar macrophages,HLA-DRA
+Alveolar macrophages,C1QA
+Alveolar macrophages,ALOX5AP
+Alveolar macrophages,S100A10
+Alveolar macrophages,NKG7
+B cells,HLA-DRA
+B cells,MS4A1
+B cells,CD74
+B cells,TRGV2
+B cells,ROCR
+B cells,CDK15
+B cells,CCL11
+B cells,CDH19
+B cells,GPR182
+B cells,CD79A
+Basal resting,KRT15
+Basal resting,KRT17
+Basal resting,RPLP1
+Basal resting,CLU
+Basal resting,BCAM
+Basal resting,CYB5A
+Basal resting,CDH19
+Basal resting,RPS4Y1
+Basal resting,RPL41
+Basal resting,ALDH3A1
+CD4 T cells,SFTPC
+CD4 T cells,LCN2
+CD4 T cells,IL7R
+CD4 T cells,LTB
+CD4 T cells,OTC
+CD4 T cells,MALAT1
+CD4 T cells,CXCR4
+CD4 T cells,VIM
+CD4 T cells,KCNN2
+CD4 T cells,AVPR1A
+CD8 T cells,CCL5
+CD8 T cells,MALAT1
+CD8 T cells,NKG7
+CD8 T cells,TNFSF11
+CD8 T cells,SCGB1A1
+CD8 T cells,S100A8
+CD8 T cells,HLA-DRA
+CD8 T cells,CD3D
+CD8 T cells,FABP4
+CD8 T cells,TMSB4X
+Classical monocytes,S100A8
+Classical monocytes,S100A9
+Classical monocytes,LYZ
+Classical monocytes,TYROBP
+Classical monocytes,SCGB1A1
+Classical monocytes,SCGB3A1
+Classical monocytes,GNLY
+Classical monocytes,SAT1
+Classical monocytes,FTL
+Classical monocytes,S100A12
+Club (nasal),WFDC2
+Club (nasal),PSCA
+Club (nasal),S100A4
+Club (nasal),FABP5
+Club (nasal),SAT1
+Club (nasal),CSF3
+Club (nasal),IFI27
+Club (nasal),SERPINB3
+Club (nasal),S100A6
+Club (nasal),ALDH3A1
+Club (non-nasal),SCGB3A1
+Club (non-nasal),SCGB1A1
+Club (non-nasal),SLPI
+Club (non-nasal),WFDC2
+Club (non-nasal),TFF3
+Club (non-nasal),S100P
+Club (non-nasal),LCN2
+Club (non-nasal),TYRP1
+Club (non-nasal),TGM2
+Club (non-nasal),LINC01705
+DC1,CLEC9A
+DC1,KCNN2
+DC1,BRINP3
+DC1,GPR25
+DC1,APLN
+DC1,AADACL2
+DC1,GPR182
+DC1,SPIC
+DC1,HOXD9
+DC1,OTC
+DC2,HLA-DPB1
+DC2,HLA-DRA
+DC2,HLA-DPA1
+DC2,HLA-DQA1
+DC2,HLA-DRB1
+DC2,LYZ
+DC2,CD74
+DC2,TYROBP
+DC2,CST3
+DC2,HLA-DQB1
+Deuterosomal,CDC20B
+Deuterosomal,CCNO
+Deuterosomal,CCL11
+Deuterosomal,TYRP1
+Deuterosomal,TRGV2
+Deuterosomal,KCNN2
+Deuterosomal,MYOC
+Deuterosomal,GPR25
+Deuterosomal,SPIC
+Deuterosomal,OTC
+EC aerocyte capillary,EDNRB
+EC aerocyte capillary,EMCN
+EC aerocyte capillary,HPGD
+EC aerocyte capillary,IL1RL1
+EC aerocyte capillary,CCL11
+EC aerocyte capillary,CD207
+EC aerocyte capillary,AQP1
+EC aerocyte capillary,TYRP1
+EC aerocyte capillary,CDH19
+EC aerocyte capillary,HSPB3
+EC arterial,IGFBP3
+EC arterial,MGP
+EC arterial,HSPB1
+EC arterial,TMSB10
+EC arterial,CD207
+EC arterial,HSPB3
+EC arterial,CDK15
+EC arterial,SIGLEC6
+EC arterial,SH2D6
+EC arterial,HSPA1A
+EC general capillary,FCN3
+EC general capillary,IFI27
+EC general capillary,TMSB10
+EC general capillary,SFTPC
+EC general capillary,CLDN5
+EC general capillary,RGCC
+EC general capillary,IL7R
+EC general capillary,MT2A
+EC general capillary,LRRN4
+EC general capillary,IL32
+EC venous pulmonary,ACKR1
+EC venous pulmonary,CLU
+EC venous pulmonary,IGFBP7
+EC venous pulmonary,VWF
+EC venous pulmonary,GPR25
+EC venous pulmonary,GPX3
+EC venous pulmonary,CDH19
+EC venous pulmonary,FOXS1
+EC venous pulmonary,PRSS23
+EC venous pulmonary,CPE
+EC venous systemic,SPARCL1
+EC venous systemic,VIM
+EC venous systemic,ACKR1
+EC venous systemic,IGFBP7
+EC venous systemic,RP11-501J20.5
+EC venous systemic,ITGA11
+EC venous systemic,SPIC
+EC venous systemic,CCL11
+EC venous systemic,LINC01705
+EC venous systemic,SIGLEC6
+Goblet (bronchial),MUC5B
+Goblet (bronchial),AGR2
+Goblet (bronchial),CDH19
+Goblet (bronchial),SCGB1A1
+Goblet (bronchial),FDCSP
+Goblet (bronchial),ANKRD36C
+Goblet (bronchial),LINC01705
+Goblet (bronchial),BRINP3
+Goblet (bronchial),DTX1
+Goblet (bronchial),LRRN4
+Goblet (nasal),LYPD2
+Goblet (nasal),LCN2
+Goblet (nasal),FTH1
+Goblet (nasal),MUC5AC
+Goblet (nasal),WFDC2
+Goblet (nasal),VMO1
+Goblet (nasal),MT-CO2
+Goblet (nasal),S100A4
+Goblet (nasal),S100A6
+Goblet (nasal),SCGB3A1
+Goblet (subsegmental),SCGB1A1
+Goblet (subsegmental),FOXS1
+Goblet (subsegmental),TRGV2
+Goblet (subsegmental),OTC
+Goblet (subsegmental),CFD
+Goblet (subsegmental),TPSG1
+Goblet (subsegmental),ADRA2C
+Goblet (subsegmental),TYRP1
+Goblet (subsegmental),TNFSF11
+Goblet (subsegmental),CXCR5
+Hematopoietic stem cells,PRSS57
+Hematopoietic stem cells,CRHBP
+Hematopoietic stem cells,DPPA4
+Hematopoietic stem cells,OTC
+Hematopoietic stem cells,HPD
+Hematopoietic stem cells,LINC01705
+Hematopoietic stem cells,BRINP3
+Hematopoietic stem cells,HEMGN
+Hematopoietic stem cells,AADACL2
+Hematopoietic stem cells,DTX1
+Hillock-like,S100A2
+Hillock-like,KRT6A
+Hillock-like,S100A8
+Hillock-like,S100A9
+Hillock-like,KRT17
+Hillock-like,IFITM3
+Hillock-like,RHCG
+Hillock-like,CDH19
+Hillock-like,PPP1R15A
+Hillock-like,CCL11
+Interstitial Mph perivascular,MRC1
+Interstitial Mph perivascular,SRGN
+Interstitial Mph perivascular,HLA-DRA
+Interstitial Mph perivascular,HLA-DPA1
+Interstitial Mph perivascular,HLA-DPB1
+Interstitial Mph perivascular,MT2A
+Interstitial Mph perivascular,SELENOP
+Interstitial Mph perivascular,CCL11
+Interstitial Mph perivascular,HLA-DRB1
+Interstitial Mph perivascular,GPR182
+Ionocyte,OTC
+Ionocyte,LINC00636
+Ionocyte,GPR25
+Ionocyte,MSI1
+Ionocyte,STMN2
+Ionocyte,LAMP5
+Ionocyte,CD207
+Ionocyte,RSPO1
+Ionocyte,RP11-322E11.5
+Ionocyte,TRGV2
+Lymphatic EC differentiating,CDH19
+Lymphatic EC differentiating,LAMC3
+Lymphatic EC differentiating,CCL11
+Lymphatic EC differentiating,TYRP1
+Lymphatic EC differentiating,LINC01705
+Lymphatic EC differentiating,CD207
+Lymphatic EC differentiating,TFF2
+Lymphatic EC differentiating,TPSG1
+Lymphatic EC differentiating,CD1B
+Lymphatic EC differentiating,KCNN2
+Lymphatic EC mature,CCL21
+Lymphatic EC mature,TFF3
+Lymphatic EC mature,TFPI
+Lymphatic EC mature,CLDN5
+Lymphatic EC mature,RAMP2
+Lymphatic EC mature,TRGV2
+Lymphatic EC mature,MMRN1
+Lymphatic EC mature,PPFIBP1
+Lymphatic EC mature,CCL11
+Lymphatic EC mature,GPR25
+Lymphatic EC proliferating,TYRP1
+Lymphatic EC proliferating,CCL11
+Lymphatic EC proliferating,AMHR2
+Lymphatic EC proliferating,COMP
+Lymphatic EC proliferating,SEZ6L
+Lymphatic EC proliferating,CRHBP
+Lymphatic EC proliferating,NFIA-AS2
+Lymphatic EC proliferating,CD207
+Lymphatic EC proliferating,KCNN2
+Lymphatic EC proliferating,LINC01705
+Mast cells,TPSAB1
+Mast cells,TPSB2
+Mast cells,NTRK1
+Mast cells,ADRA2C
+Mast cells,CRLF2
+Mast cells,RP11-322E11.5
+Mast cells,HDC
+Mast cells,CPA3
+Mast cells,CTD-2547H18.1
+Mast cells,CACNA1C-AS2
+Mesothelium,ITLN1
+Mesothelium,CALB2
+Mesothelium,PRG4
+Mesothelium,GALNT9
+Mesothelium,FDCSP
+Mesothelium,TRGV2
+Mesothelium,CCL11
+Mesothelium,HSPB3
+Mesothelium,AADACL2
+Mesothelium,COMP
+Migratory DCs,OTC
+Migratory DCs,NUGGC
+Migratory DCs,CRLF2
+Migratory DCs,SIGLEC6
+Migratory DCs,CCL19
+Migratory DCs,FDCSP
+Migratory DCs,CCL22
+Migratory DCs,AOC1
+Migratory DCs,TRGV2
+Migratory DCs,SMPX
+Monocyte-derived Mph,VIM
+Monocyte-derived Mph,FTH1
+Monocyte-derived Mph,MTRNR2L8
+Monocyte-derived Mph,APOC1
+Monocyte-derived Mph,FOS
+Monocyte-derived Mph,MS4A1
+Monocyte-derived Mph,MT-ND1
+Monocyte-derived Mph,SFTPC
+Monocyte-derived Mph,ACP5
+Monocyte-derived Mph,RNASE1
+Multiciliated (nasal),PSCA
+Multiciliated (nasal),CAPS
+Multiciliated (nasal),CRIP1
+Multiciliated (nasal),AQP3
+Multiciliated (nasal),RP11-356K23.1
+Multiciliated (nasal),KLK14
+Multiciliated (nasal),TYRP1
+Multiciliated (nasal),MSI1
+Multiciliated (nasal),SCT
+Multiciliated (nasal),HSPB3
+Multiciliated (non-nasal),C20orf85
+Multiciliated (non-nasal),DNAAF1
+Multiciliated (non-nasal),GSTP1
+Multiciliated (non-nasal),FAM183A
+Multiciliated (non-nasal),AGR3
+Multiciliated (non-nasal),MUC16
+Multiciliated (non-nasal),MS4A8
+Multiciliated (non-nasal),PRDX5
+Multiciliated (non-nasal),DYNLL1
+Multiciliated (non-nasal),C9orf24
+Myofibroblasts,OTC
+Myofibroblasts,UPK3A
+Myofibroblasts,PI15
+Myofibroblasts,RP11-322E11.5
+Myofibroblasts,ASPN
+Myofibroblasts,ATP1A2
+Myofibroblasts,CLEC4O
+Myofibroblasts,LINC02812
+Myofibroblasts,TRGV2
+Myofibroblasts,CTAG2
+NK cells,TYROBP
+NK cells,NKG7
+NK cells,FCER1G
+NK cells,GNLY
+NK cells,CCL3
+NK cells,GZMB
+NK cells,HOPX
+NK cells,TMSB4X
+NK cells,CD7
+NK cells,OTC
+Neuroendocrine,CRLF2
+Neuroendocrine,KLHDC8A
+Neuroendocrine,CCL11
+Neuroendocrine,PI15
+Neuroendocrine,CDH19
+Neuroendocrine,GPR25
+Neuroendocrine,NPTX1
+Neuroendocrine,JPH2
+Neuroendocrine,GATA5
+Neuroendocrine,KRT1
+Non-classical monocytes,C1QA
+Non-classical monocytes,C1QB
+Non-classical monocytes,C1QC
+Non-classical monocytes,FABP4
+Non-classical monocytes,SAT1
+Non-classical monocytes,IFITM3
+Non-classical monocytes,AIF1
+Non-classical monocytes,CTSS
+Non-classical monocytes,FABP5
+Non-classical monocytes,SPIC
+Peribronchial fibroblasts,A2M
+Peribronchial fibroblasts,OTC
+Peribronchial fibroblasts,FBLN1
+Peribronchial fibroblasts,MGP
+Peribronchial fibroblasts,ADGRG3
+Peribronchial fibroblasts,IFNG-AS1
+Peribronchial fibroblasts,LUM
+Peribronchial fibroblasts,CALN1
+Peribronchial fibroblasts,CD1B
+Peribronchial fibroblasts,CRABP1
+Pericytes,AADACL2
+Pericytes,COMP
+Pericytes,BRINP3
+Pericytes,GREM2
+Pericytes,TRGV2
+Pericytes,OTC
+Pericytes,SPIC
+Pericytes,PAEP
+Pericytes,LINC00636
+Pericytes,AMHR2
+Plasma cells,JCHAIN
+Plasma cells,IGKC
+Plasma cells,IGHGP
+Plasma cells,IFNG-AS1
+Plasma cells,NUGGC
+Plasma cells,CDH19
+Plasma cells,MZB1
+Plasma cells,OTC
+Plasma cells,CD1B
+Plasma cells,IGKV1-12
+Plasmacytoid DCs,SCT
+Plasmacytoid DCs,SHD
+Plasmacytoid DCs,GZMB
+Plasmacytoid DCs,LAMP5
+Plasmacytoid DCs,CDK15
+Plasmacytoid DCs,RP11-501J20.5
+Plasmacytoid DCs,TFF2
+Plasmacytoid DCs,TPSG1
+Plasmacytoid DCs,OTC
+Plasmacytoid DCs,AADACL2
+SM activated stress response,TRGV2
+SM activated stress response,CRLF2
+SM activated stress response,TYRP1
+SM activated stress response,ATF3
+SM activated stress response,LINC01393
+SM activated stress response,STXBP5L
+SM activated stress response,RP11-501J20.5
+SM activated stress response,ADAMTS1
+SM activated stress response,OTC
+SM activated stress response,AMHR2
+SMG duct,SCGB3A1
+SMG duct,CD207
+SMG duct,TCN1
+SMG duct,LCN2
+SMG duct,CLU
+SMG duct,OTC
+SMG duct,TRGV2
+SMG duct,FDCSP
+SMG duct,LINC01638
+SMG duct,CTSG
+SMG mucous,BPIFB2
+SMG mucous,MUC5B
+SMG mucous,OTC
+SMG mucous,CCL11
+SMG mucous,RP11-501J20.5
+SMG mucous,CD207
+SMG mucous,KLK14
+SMG mucous,UPP2
+SMG mucous,FOXS1
+SMG mucous,TYRP1
+SMG serous (bronchial),PRR4
+SMG serous (bronchial),LYZ
+SMG serous (bronchial),LTF
+SMG serous (bronchial),OTC
+SMG serous (bronchial),AZGP1
+SMG serous (bronchial),SCGB3A1
+SMG serous (bronchial),HSPB3
+SMG serous (bronchial),RP11-501J20.5
+SMG serous (bronchial),RP11-1143G9.4
+SMG serous (bronchial),LINC01638
+SMG serous (nasal),STATH
+SMG serous (nasal),BPIFA1
+SMG serous (nasal),ZG16B
+SMG serous (nasal),CDH19
+SMG serous (nasal),CCL11
+SMG serous (nasal),COMP
+SMG serous (nasal),TPSG1
+SMG serous (nasal),EPGN
+SMG serous (nasal),TRH
+SMG serous (nasal),KLK14
+Smooth muscle,TAGLN
+Smooth muscle,ACTA2
+Smooth muscle,CALD1
+Smooth muscle,GPR25
+Smooth muscle,PLAC9
+Smooth muscle,IGFBP7
+Smooth muscle,TFF2
+Smooth muscle,AADACL2
+Smooth muscle,SOX10
+Smooth muscle,RP11-501J20.5
+Smooth muscle FAM83D+,ACTG2
+Smooth muscle FAM83D+,RP11-322E11.5
+Smooth muscle FAM83D+,MYOC
+Smooth muscle FAM83D+,TCL1A
+Smooth muscle FAM83D+,TRGV2
+Smooth muscle FAM83D+,DES
+Smooth muscle FAM83D+,SH2D6
+Smooth muscle FAM83D+,CTAG2
+Smooth muscle FAM83D+,LINC01638
+Smooth muscle FAM83D+,OTC
+Subpleural fibroblasts,PI15
+Subpleural fibroblasts,CD207
+Subpleural fibroblasts,TPSG1
+Subpleural fibroblasts,RBP5
+Subpleural fibroblasts,HPD
+Subpleural fibroblasts,RP11-501J20.5
+Subpleural fibroblasts,CSDC2
+Subpleural fibroblasts,SPIC
+Subpleural fibroblasts,TNFSF11
+Subpleural fibroblasts,HOXD9
+Suprabasal,KRT19
+Suprabasal,S100A2
+Suprabasal,SERPINB3
+Suprabasal,MT1X
+Suprabasal,SLPI
+Suprabasal,AQP3
+Suprabasal,RPS19
+Suprabasal,XIST
+Suprabasal,C1R
+Suprabasal,SAA1
+T cells proliferating,LINC01638
+T cells proliferating,NFIA-AS2
+T cells proliferating,OTC
+T cells proliferating,SIGLEC6
+T cells proliferating,VEGFD
+T cells proliferating,KCNN2
+T cells proliferating,KRT1
+T cells proliferating,LRCOL1
+T cells proliferating,CD207
+T cells proliferating,GPR182
+Tuft,TPSG1
+Tuft,CDK15
+Tuft,SPIC
+Tuft,GUCA1A
+Tuft,NFIA-AS2
+Tuft,PIMREG
+Tuft,SH2D6
+Tuft,MSI1
+Tuft,LINC01638
+Tuft,APLN
+pre-TB secretory,SFTPB
+pre-TB secretory,SCGB3A2
+pre-TB secretory,SCGB1A1
+pre-TB secretory,SCGB3A1
+pre-TB secretory,RNASE1
+pre-TB secretory,SAA1
+pre-TB secretory,CYB5A
+pre-TB secretory,SSUH2
+pre-TB secretory,CLU
+pre-TB secretory,GPR182

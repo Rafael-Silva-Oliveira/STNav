@@ -12,15 +12,16 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import scanorama
 import os
+import stlearn as st
 
 
 # Set the timeout to 10 seconds (adjust as needed)
-os.environ[
-    "PYDEVD_WARN_EVALUATION_TIMEOUT"
-] = "2000"  # Set the timeout to 10 seconds (adjust as needed)
-os.environ[
-    "PYDEVD_UNBLOCK_THREADS_TIMEOUT"
-] = "10"  # Set the timeout to 10 seconds (adjust as needed)
+os.environ["PYDEVD_WARN_EVALUATION_TIMEOUT"] = (
+    "2000"  # Set the timeout to 10 seconds (adjust as needed)
+)
+os.environ["PYDEVD_UNBLOCK_THREADS_TIMEOUT"] = (
+    "10"  # Set the timeout to 10 seconds (adjust as needed)
+)
 os.environ["PYDEVD_THREAD_DUMP_ON_WARN_EVALUATION_TIMEOUT"] = "True"
 
 # Training a model to predict proportions on spatial data using scRNA seq as reference
