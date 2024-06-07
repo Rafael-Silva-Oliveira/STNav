@@ -4,7 +4,7 @@
     "path": "/home/rafaed/workbench/work/RO_src/data/processed",
     "cell_annotation": {
       "scArches_surgery": {
-        "usage": false,
+        "usage": true,
         "path_backbone": "/home/rafaed/workbench/work/RO_src/data/external/HCLA",
         "path_query_data": "HLCA_query.h5ad",
         "adata_query_batch": "Delorey_batch_1",
@@ -14,12 +14,12 @@
           "usage": false,
           "gene_mapping_path": ""
         },
-        "train": false,
+        "train": true,
         "ref_model_dir": "HLCA_reference_model",
         "ref_model_features": "HLCA_reference_model/var_names.csv",
         "surgery_model_dir": "HCLA",
         "surgery_params": {
-          "epochs": 500,
+          "epochs": 750,
           "early_stopping_monitor": "elbo_train",
           "early_stopping_patience": 10,
           "early_stopping_min_delta": 0.001,

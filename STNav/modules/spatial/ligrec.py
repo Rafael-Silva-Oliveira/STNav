@@ -5,13 +5,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import SpatialDE
-import NaiveDE
+# import SpatialDE
+# import NaiveDE
 import squidpy as sq
 import json
 import torch
 from loguru import logger
-from GraphST.utils import project_cell_to_spot
 from STNav.utils.decorators import pass_STNavCore_params
 from STNav.utils.helpers import (
     return_filtered_params,
@@ -31,9 +30,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # Get current date
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
-import spatialdm.plottings as pl
-import squidpy as sq
-
+# import spatialdm.plottings as pl
 
 @pass_STNavCore_params
 def ReceptorLigandAnalysis(STNavCorePipeline):
