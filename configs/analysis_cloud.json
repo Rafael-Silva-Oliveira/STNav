@@ -367,10 +367,10 @@
       "usage": true,
       "path": ""
     },
-    "path": "/home/rafaed/workbench/work/RO_src/data/processed",
+    "path": "/home/rafaed/workbench/work/workbench/rafaed/work/RO_src/data/raw/VisiumHD/square_008um",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "/home/rafaed/workbench/work/RO_src/data/raw/VisiumHD/square_008um/spatial",
+    "source_image_path": "/home/rafaed/workbench/work/workbench/rafaed/work/RO_src/data/raw/VisiumHD/square_008um",
     "quality_control": {
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
