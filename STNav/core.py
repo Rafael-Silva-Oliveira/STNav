@@ -346,8 +346,9 @@ class STNavCore(object):
             logger.info(
                 f"Applying log1p with the following params {config['log1p']['params']}"
             )
-
-            sc.pp.log1p(**return_filtered_params(config=config["log1p"], adata=adata))
+            # TODO: fix this part
+            sc.pp.log1p(adata)
+            # sc.pp.log1p(**return_filtered_params(config=config["log1p"], adata=adata))
 
             logger.info(
                 f"\n Applying the log changed the counts from UMI counts to log counts. The sum of log counts from the 3 first examples (cells for scRNA or spots for ST) from adata.X after applying log: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
