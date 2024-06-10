@@ -82,7 +82,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                 num_view = 12
 
                 save_path_top = (
-                    STNavCorePipeline.saving_path + "\\Plots\\" + "moran_I_top" + ".png"
+                    STNavCorePipeline.saving_path + "/Plots/" + "moran_I_top" + ".png"
                 )
                 top_autocorr = (
                     adata.uns["moranI"]["I"]
@@ -104,7 +104,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                 save_path_bot = (
                     STNavCorePipeline.saving_path
-                    + "\\Plots\\"
+                    + "/Plots/"
                     + "moran_I_bottom"
                     + ".png"
                 )
@@ -130,7 +130,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                 # Save to excel file
                 with pd.ExcelWriter(
-                    f"{STNavCorePipeline.saving_path}\\{data_type}\\Files\\{data_type}_Squidpy_MoranI_{date}.xlsx"
+                    f"{STNavCorePipeline.saving_path}/{data_type}/Files/{data_type}_Squidpy_MoranI_{date}.xlsx"
                 ) as writer:
                     adata.uns["moranI"].to_excel(
                         writer,
@@ -149,7 +149,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                 # Save to excel file
                 with pd.ExcelWriter(
-                    f"{STNavCorePipeline.saving_path}\\{data_type}\\Files\\{data_type}_Squidpy_Sepal_{date}.xlsx"
+                    f"{STNavCorePipeline.saving_path}/{data_type}/Files/{data_type}_Squidpy_Sepal_{date}.xlsx"
                 ) as writer:
                     adata.uns["sepal_score"].to_excel(
                         writer,

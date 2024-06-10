@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scanpy as sc
+
 # import SpatialDE
 # import NaiveDE
 import squidpy as sq
@@ -19,7 +20,8 @@ from STNav.utils.helpers import (
     save_processed_adata,
     return_from_checkpoint,
 )
-import stlearn as st
+
+# import stlearn as st
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -31,6 +33,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 # Get current date
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 # import spatialdm.plottings as pl
+
 
 @pass_STNavCore_params
 def ReceptorLigandAnalysis(STNavCorePipeline):
@@ -68,7 +71,7 @@ def ReceptorLigandAnalysis(STNavCorePipeline):
                 )
 
                 with pd.ExcelWriter(
-                    f"{STNavCorePipeline.saving_path}\\{STNavCorePipeline.data_type}\\Files\\{STNavCorePipeline.data_type}_LigRec_{date}.xlsx"
+                    f"{STNavCorePipeline.saving_path}/{STNavCorePipeline.data_type}/Files/{STNavCorePipeline.data_type}_LigRec_{date}.xlsx"
                 ) as writer:
                     for sheet_name, file in {
                         "LigRec Means": res["means"],

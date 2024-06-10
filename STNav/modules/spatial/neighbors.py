@@ -79,7 +79,7 @@ def SpatialNeighbors(STNavCorePipeline):
                 )
 
                 save_path = (
-                    STNavCorePipeline.saving_path + "\\Plots\\" + "centrality" + ".png"
+                    STNavCorePipeline.saving_path + "/Plots/" + "centrality" + ".png"
                 )
 
                 with plt.rc_context():  # Use this to set figure params like size and dpi

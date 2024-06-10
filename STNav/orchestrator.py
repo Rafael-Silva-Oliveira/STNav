@@ -66,11 +66,11 @@ class Orchestrator(object):
 
                 checkpoint_path = (
                     f"{self.saving_path}"
-                    + "\\"
+                    + "/"
                     + pipeline_run
-                    + "\\"
-                    + f"{data_type}\\Files"
-                    + "\\"
+                    + "/"
+                    + f"{data_type}/Files"
+                    + "/"
                     + f"{adata_name}.h5ad"
                 )
 

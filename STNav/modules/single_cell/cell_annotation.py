@@ -8,7 +8,7 @@ from datetime import datetime
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import scarches as sca
+# import scarches as sca
 from loguru import logger
 from scipy import sparse
 

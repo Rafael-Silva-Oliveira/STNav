@@ -16,8 +16,9 @@ import torch
 from loguru import logger
 from sklearn.cluster import AgglomerativeClustering
 import scvi
-from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
-from scvi.model import CondSCVI, DestVI
+
+# from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
+# from scvi.model import CondSCVI, DestVI
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
@@ -608,11 +609,11 @@ class STNavCore(object):
             # Save to excel
             ranked_genes_list.to_excel(
                 self.saving_path
-                + "\\"
+                + "/"
                 + self.data_type
-                + "\\"
+                + "/"
                 + "Files"
-                + "\\"
+                + "/"
                 + self.data_type
                 + f"_DEG_rank_genes_groups_by_{groupby_used}_df.xlsx",
                 index=False,
@@ -796,11 +797,11 @@ class STNavCore(object):
                     adata=adata,
                 )
                 GARD_final_df.to_excel(
-                    f"{self.saving_path}\\{self.data_type}\\Files\\GARD_score.xlsx"
+                    f"{self.saving_path}/{self.data_type}/Files/GARD_score.xlsx"
                 )
 
             with pd.ExcelWriter(
-                f"{self.saving_path}\\{self.data_type}\\Files\\{self.data_type}_GSEA_{date}.xlsx"
+                f"{self.saving_path}/{self.data_type}/Files/{self.data_type}_GSEA_{date}.xlsx"
             ) as writer:
                 for sheet_name, gsea_df in gsea_dataframes.items():
                     gsea_df.to_excel(writer, sheet_name=sheet_name, index=False)
