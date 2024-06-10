@@ -540,7 +540,7 @@ def return_filtered_params(config, adata=None):
     filtered_params = {k: v for k, v in params.items() if k in valid_arguments}
 
     # If Adata is None, then simply return filtered_params. Else, add the adata, data or other data type to the filtered_params dictionary
-    if any(hasattr(adata, atr) for atr in ["X", "obs", "var"]):
+    if any(hasattr(adata, atr) for atr in ["X", "obs", "data", "var"]):
         if "adata" in filtered_params.keys():
             filtered_params["adata"] = eval(filtered_params["adata"])
         if "data" in filtered_params.keys():

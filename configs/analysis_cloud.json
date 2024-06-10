@@ -121,7 +121,7 @@
         "func_str": "sc.pp.log1p",
         "usage": true,
         "params": {
-          "X": "adata"
+          "data": "adata"
         }
       },
       "scale": {
