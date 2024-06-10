@@ -136,9 +136,9 @@ def save_processed_adata(
 
                 final_path = (
                     f"{new_path}"
-                    + "\\"
-                    + f"{STNavCorePipeline.data_type}\\Files"
-                    + "\\"
+                    + "/"
+                    + f"{STNavCorePipeline.data_type}/Files"
+                    + "/"
                     + f"{adata_name}.h5ad"
                 )
 
@@ -166,9 +166,9 @@ def save_processed_adata(
 
                 final_path = (
                     f"{STNavCorePipeline.saving_path}"
-                    + "\\"
-                    + f"{STNavCorePipeline.data_type}\\Files"
-                    + "\\"
+                    + "/"
+                    + f"{STNavCorePipeline.data_type}/Files"
+                    + "/"
                     + f"{adata_name}.h5ad"
                 )
 
@@ -220,9 +220,9 @@ def save_processed_adata(
 
             final_path = (
                 f"{STNavCorePipeline.saving_path}"
-                + "\\"
-                + f"{STNavCorePipeline.data_type}\\Files"
-                + "\\"
+                + "/"
+                + f"{STNavCorePipeline.data_type}/Files"
+                + "/"
                 + f"{adata_name}.h5ad"
             )
 
@@ -830,7 +830,7 @@ def run_prerank(
                 gp.gseaplot(
                     rank_metric=res.ranking,
                     term=res.res2d.Term[0:5],
-                    ofname=f"{saving_path}\\{data_type}\\Files\\{data_type}_gseaplot_{group}_{date}.png",
+                    ofname=f"{saving_path}/{data_type}/Files/{data_type}_gseaplot_{group}_{date}.png",
                     **res.results[res.res2d.Term[0]],
                 )
             except Exception as e:
@@ -856,7 +856,7 @@ def run_prerank(
         gp.gseaplot(
             rank_metric=res.ranking,
             term=res.res2d.Term[0:5],
-            ofname=f"{saving_path}\\{data_type}\\Files\\{data_type}_gseaplot_AllGenes_{date}.png",
+            ofname=f"{saving_path}/{data_type}/Files/{data_type}_gseaplot_AllGenes_{date}.png",
             **res.results[res.res2d.Term[0]],
         )
 
@@ -900,7 +900,7 @@ def run_gsea(
                 gp.gseaplot(
                     rank_metric=res.ranking,
                     term=res.res2d.Term[0],
-                    ofname=f"{saving_path}\\{data_type}\\Files\\{data_type}_gseaplot_{group}_{date}.png",
+                    ofname=f"{saving_path}/{data_type}/Files/{data_type}_gseaplot_{group}_{date}.png",
                     **res.results[res.res2d.Term[0]],
                 )
             except Exception as e:
@@ -927,7 +927,7 @@ def run_gsea(
         gp.gseaplot(
             rank_metric=res.ranking,
             term=res.res2d.Term[0],
-            ofname=f"{saving_path}\\{data_type}\\Files\\{data_type}_gseaplot_AllGenes_{date}.png",
+            ofname=f"{saving_path}/{data_type}/Files/{data_type}_gseaplot_AllGenes_{date}.png",
             **res.results[res.res2d.Term[0]],
         )
 
