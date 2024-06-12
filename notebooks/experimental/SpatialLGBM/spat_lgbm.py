@@ -21,7 +21,7 @@ import squidpy as sq
 from mapie.metrics import (
     classification_coverage_score,
     classification_mean_width_score,
-)<
+)
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.calibration import calibration_curve
 import pickle

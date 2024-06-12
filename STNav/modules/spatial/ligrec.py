@@ -21,7 +21,7 @@ from STNav.utils.helpers import (
     return_from_checkpoint,
 )
 
-# import stlearn as st
+import stlearn as st
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))

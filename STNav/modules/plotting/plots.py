@@ -20,7 +20,8 @@ import scanpy as sc
 
 # import scarches as sca
 import seaborn as sns
-import spatialdm as sdm
+
+# import spatialdm as sdm
 import squidpy as sq
 from gseapy.plot import gseaplot
 

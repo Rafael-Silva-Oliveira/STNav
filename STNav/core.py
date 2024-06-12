@@ -17,8 +17,8 @@ from loguru import logger
 from sklearn.cluster import AgglomerativeClustering
 import scvi
 
-# from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
-# from scvi.model import CondSCVI, DestVI
+from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
+from scvi.model import CondSCVI, DestVI
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
@@ -120,11 +120,8 @@ class STNavCore(object):
                 f"Failed to set new index _index. This might've happened because the index of var is already the genes/feature names, so no changes need to be made."
             )
 
-        save_processed_adata(
-            STNavCorePipeline=self,
-            name="raw_adata",
-            adata=adata,
-        )
+        save_processed_adata(STNavCorePipeline=self, name="raw_adata", adata=adata)
+
         del adata
 
     def QC(self):
@@ -259,7 +256,7 @@ class STNavCore(object):
         step = "preprocessing"
         config = self.config[self.data_type][step]
         adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
-        adata = sc.read_h5ad(adata_path)
+        adata: an.AnnData = sc.read_h5ad(filename=adata_path)
 
         adata.var_names_make_unique()
         logger.info(

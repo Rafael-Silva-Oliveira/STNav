@@ -20,7 +20,8 @@ import scanpy as sc
 
 # import scarches as sca
 import seaborn as sns
-import spatialdm as sdm
+
+# import spatialdm as sdm
 import squidpy as sq
 from gseapy.plot import gseaplot
 
@@ -171,19 +172,28 @@ def save_processed_adata(
                     + "/"
                     + f"{adata_name}.h5ad"
                 )
+                try:
+                    if not isinstance(adata_final.obsm["spatial"], str):
+                        adata_final.obsm["spatial"] = adata_final.obsm[
+                            "spatial"
+                        ].astype(str)
+                        adata_final.uns["spatial"] = adata_final.uns["spatial"].astype(
+                            str
+                        )
+
+                except Exception as e:
+                    pass
 
                 if fix_write:
                     try:
                         adata_final = fix_write_h5ad(adata=adata_final)
                     except Exception as e:
                         logger.warning(f"fix_write_h5ad failed {e}")
+                    if "lrfeatures" in adata_final.uns.keys():
+                        adata_final.uns["lrfeatures"] = adata_final.uns[
+                            "lrfeatures"
+                        ].astype(float)
                     adata_final.write_h5ad(final_path)
-                else:
-                    try:
-                        adata_final.write_h5ad(final_path)
-                    except Exception as e:
-                        logger.error(f"Exception occurred saving {adata_name} - {e}")
-
                 # Save the path to the adata_dict for later use
                 if (
                     adata_name
@@ -225,6 +235,15 @@ def save_processed_adata(
                 + "/"
                 + f"{adata_name}.h5ad"
             )
+            try:
+                adata_final.obs["in_tissue"] = adata_final.obs["in_tissue"].astype(str)
+                adata_final.obs["array_row"] = adata_final.obs["array_row"].astype(str)
+                adata_final.obs["array_col"] = adata_final.obs["array_col"].astype(str)
+                (str)
+                adata_final.obsm["spatial"] = adata_final.obsm["spatial"].astype(float)
+
+            except Exception as e:
+                pass
 
             if fix_write:
                 try:
@@ -238,7 +257,7 @@ def save_processed_adata(
                 adata_final.write_h5ad(final_path)
             else:
                 try:
-                    adata_final.write_h5ad(final_path)
+                    adata_final.write_h5ad(filename=final_path)
                 except Exception as e:
                     logger.error(f"Exception occurred saving {adata_name} - {e}")
 

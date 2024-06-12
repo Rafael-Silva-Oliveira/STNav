@@ -1,7 +1,7 @@
 {
   "scRNA": {
     "usage": true,
-    "path": "/home/rafaed/workbench/work/workbench/rafaed/work/RO_src/data/processed/Keep/PipelineRun_2024_02_23-09_22_35_AM/scRNA/Files/scRNA_raw_adata.h5ad",
+    "path": "/mnt/work/RO_src/data/processed/Keep/PipelineRun_2024_02_23-09_22_35_AM/scRNA/Files/scRNA_raw_adata.h5ad",
     "cell_annotation": {
       "scArches_surgery": {
         "usage": false,
@@ -367,10 +367,10 @@
       "usage": true,
       "path": ""
     },
-    "path": "/home/rafaed/workbench/work/workbench/rafaed/work/RO_src/data/raw/VisiumHD/square_008um",
+    "path": "/mnt/work/RO_src/data/raw/VisiumHD/square_008um",
     "count_file": "filtered_feature_bc_matrix.h5",
     "load_images": true,
-    "source_image_path": "/home/rafaed/workbench/work/workbench/rafaed/work/RO_src/data/raw/VisiumHD/square_008um",
+    "source_image_path": "/mnt/work/RO_src/data/raw/VisiumHD/square_008um",
     "quality_control": {
       "adata_to_use": "raw_adata",
       "save_as": "QCed_adata",
@@ -686,8 +686,8 @@
             "top_genes": 7,
             "max_epochs": 1250,
             "early_stopping": true,
-            "pre_trained_model_path": "/home/rafaed/workbench/work/RO_src/Pipelines/STNav/STNav/models/scmodel",
-            "markers_save_path": "C:/Users/rafaelo/OneDrive - NTNU/Documents/Projects/STNav/data/processed"
+            "pre_trained_model_path": "/mnt/work/RO_src/models/scmodel",
+            "markers_save_path": "/mnt/work/RO_src/data/processed"
           },
           "CellTypist": {
             "usage": false,
@@ -702,15 +702,15 @@
             "batch_number": 100,
             "batch_size": 1000,
             "balance_cell_type": false,
-            "pre_trained_model_path": "/home/rafaed/workbench/work/RO_src/Pipelines/STNav/STNav/models/scmodel",
-            "markers_save_path": "/home/rafaed/workbench/work/RO_src/data/processed"
+            "pre_trained_model_path": "/mnt/work/RO_src/models/scmodel",
+            "markers_save_path": "/mnt/work/RO_src/data/processed"
           },
           "scMAGS": {
             "usage": true,
             "nof_sel": 1000,
             "nof_markers": 8,
             "labels": "ann_level_3_transferred_label",
-            "markers_save_path": "/home/rafaed/workbench/work/RO_src/data/processed"
+            "markers_save_path": "/mnt/work/RO_src/data/processed"
           }
         }
       },
