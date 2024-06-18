@@ -505,7 +505,7 @@
           "params": {
             "adata": "adata",
             "key_added": "leiden_clusters",
-            "resolution": 0.75
+            "resolution": 1
           }
         },
         "louvain": {
@@ -526,7 +526,7 @@
           }
         },
         "dendogram": {
-          "usage": true,
+          "usage": false,
           "func_str": "sc.tl.dendrogram",
           "params": {
             "groupby": "leiden_clusters"
@@ -670,7 +670,7 @@
       "get_cell_type_markers": {
         "from_csv": {
           "usage": false,
-          "path": "",
+          "path": "/mnt/work/workbench/rafaed/work/RO_src/data/processed/PipelineRun_2024_06_13-06_20_38_PM/ST/Files/ST_scMAGS_markers.csv",
           "markers_column_name": "Markers",
           "cell_type_column_name": "CellType"
         },
@@ -782,7 +782,7 @@
           "func_str": "sq.gr.sepal",
           "params": {
             "adata": "adata",
-            "max_neighs": 4,
+            "max_neighs": 6,
             "n_jobs": 1
           }
         }
@@ -806,7 +806,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "squidpy_ligrec_adata",
-        "usage": false,
+        "usage": true,
         "func_str": "sq.gr.ligrec",
         "data_type": "ST",
         "params": {
@@ -831,7 +831,7 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {

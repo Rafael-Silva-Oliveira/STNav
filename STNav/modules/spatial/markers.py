@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import squidpy as sq
+from loguru import logger
 from STNav.utils.decorators import pass_STNavCore_params
 from STNav.utils.helpers import (
     return_filtered_params,
@@ -13,23 +14,12 @@ from STNav.utils.helpers import (
     save_processed_adata,
     return_from_checkpoint,
 )
-
-# import scvi
-# from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
-# from scvi.model import CondSCVI, DestVI
+import scvi
+from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
+from scvi.model import CondSCVI, DestVI
 import torch
+from scvi.external import Tangram
 from tqdm import tqdm
-from loguru import logger
-import inspect
-
-# from scvi.model import CondSCVI, DestVI, SCVI
-import torch
-import celltypist
-from celltypist import models
-import json
-from scipy.sparse import csr_matrix
-
-# import scmags as sm
 
 # Set scanpy parameters
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -41,6 +31,25 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 # Get current date
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 # import spatialdm.plottings as pl
+import squidpy as sq
+
+
+from loguru import logger
+from STNav.utils.decorators import pass_STNavCore_params
+import inspect
+import scvi
+import scanpy as sc
+from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
+from scvi.model import CondSCVI, DestVI, SCVI
+import torch
+import celltypist
+from celltypist import models
+import scanpy as sc
+import celltypist
+from celltypist import models
+import json
+from scipy.sparse import csr_matrix
+import scmags as sm
 
 
 def convert_form_anndata(adata, cell_annotation_col):
