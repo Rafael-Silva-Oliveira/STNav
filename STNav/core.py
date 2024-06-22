@@ -39,6 +39,7 @@ from STNav.utils.helpers import (
     save_processed_adata,
     return_from_checkpoint,
     extract_pipeline_run,
+    is_normalized,
 )
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -106,7 +107,7 @@ class STNavCore(object):
         )
 
         # If debug is True, select a random subset of the data
-        debug = True
+        debug = False
         if debug:
             subset_fraction = 0.1  # Define the fraction of data to keep as subset
             sc.pp.subsample(adata, fraction=subset_fraction)
@@ -287,6 +288,7 @@ class STNavCore(object):
         logger.info(
             f"adata.obs contains the current cell/spot information: \n {adata.obs=} \n with the following columns: {adata.obs.columns=}"
         )
+        is_normalized(adata)
 
         # Filter genes by counts
         if config["filter_genes"]["usage"]:
@@ -362,6 +364,7 @@ class STNavCore(object):
             f"Examples from saved 'lognorm' layer: {adata.layers['lognorm'][0,10:80].toarray()}"
         )
         adata.raw = adata
+        is_normalized(adata)
 
         if config["highly_variable_genes"]["usage"]:
             logger.info(

@@ -415,7 +415,7 @@ st_adata_pred.write_h5ad("predicted_adata_deconv.h5ad")
 #     main()
 
 st_adata_pred.write_h5ad(
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\notebooks\experimental\SpatialLGBM\predicted_adata_deconv.h5ad",
+    r".\predicted_adata_deconv.h5ad",
 )
 st_adata_pred.obs.columns
 import matplotlib.pyplot as plt

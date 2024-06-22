@@ -735,3 +735,95 @@ EC capillary_scatter.png
 Fibroblasts_scatter.png
 optimized_model.pkl
 notebooks/experimental/DestVI with Spatial Conn/figures/Cell_Type.png
+notebooks/experimental/cell_typist_adata.h5ad
+notebooks/experimental/cell_typist_scatter.png
+notebooks/experimental/EC capillary.png
+notebooks/experimental/EC venous.png
+notebooks/experimental/Fibroblasts.png
+notebooks/experimental/Goblet (nasal).png
+notebooks/experimental/Goblet (subsegmental).png
+notebooks/experimental/Hematopoietic stem cells.png
+notebooks/experimental/Hillock-like.png
+notebooks/experimental/Immune.png
+notebooks/experimental/Interstitial Mph perivascular.png
+notebooks/experimental/Ionocyte.png
+notebooks/experimental/Lymphatic EC differentiating.png
+notebooks/experimental/Lymphatic EC mature.png
+notebooks/experimental/Lymphatic EC proliferating.png
+notebooks/experimental/Macrophages.png
+notebooks/experimental/Mast cells.png
+notebooks/experimental/Mesothelium.png
+notebooks/experimental/Migratory DCs.png
+notebooks/experimental/Monocyte-derived Mph.png
+notebooks/experimental/Multiciliated (nasal).png
+notebooks/experimental/Multiciliated (non-nasal).png
+notebooks/experimental/Myofibroblasts.png
+notebooks/experimental/NK cells.png
+notebooks/experimental/Non-classical monocytes.png
+notebooks/experimental/Peribronchial fibroblasts.png
+notebooks/experimental/Pericytes.png
+notebooks/experimental/Plasma cells.png
+notebooks/experimental/Plasmacytoid DCs.png
+notebooks/experimental/pre-TB secretory.png
+notebooks/experimental/SM activated stress response.png
+notebooks/experimental/SMG duct.png
+notebooks/experimental/SMG mucous.png
+notebooks/experimental/SMG serous (bronchial).png
+notebooks/experimental/SMG serous (nasal).png
+notebooks/experimental/Smooth muscle FAM83D+.png
+notebooks/experimental/Smooth muscle.png
+notebooks/experimental/Stroma.png
+notebooks/experimental/Subpleural fibroblasts.png
+notebooks/experimental/Suprabasal.png
+notebooks/experimental/T cell lineage.png
+notebooks/experimental/T cells proliferating.png
+notebooks/experimental/Tuft.png
+notebooks/experimental/Unknown.png
+notebooks/experimental/Smooth muscle.png
+nohup.out
+notebooks/experimental/Scrapped/SpaGCN/raw_sample.h5ad
+notebooks/experimental/SpatialLGBM/predicted_LGBM.h5ad
+notebooks/experimental/EC capillary.png
+notebooks/experimental/EC venous.png
+notebooks/experimental/Fibroblasts.png
+notebooks/experimental/Goblet (nasal).png
+notebooks/experimental/Goblet (subsegmental).png
+notebooks/experimental/Hematopoietic stem cells.png
+notebooks/experimental/Hillock-like.png
+notebooks/experimental/Immune.png
+notebooks/experimental/Interstitial Mph perivascular.png
+notebooks/experimental/Ionocyte.png
+notebooks/experimental/Lymphatic EC differentiating.png
+notebooks/experimental/Lymphatic EC mature.png
+notebooks/experimental/Lymphatic EC proliferating.png
+notebooks/experimental/Macrophages.png
+notebooks/experimental/Mast cells.png
+notebooks/experimental/Mesothelium.png
+notebooks/experimental/Migratory DCs.png
+notebooks/experimental/Monocyte-derived Mph.png
+notebooks/experimental/Multiciliated (nasal).png
+notebooks/experimental/Multiciliated (non-nasal).png
+notebooks/experimental/Myofibroblasts.png
+notebooks/experimental/NK cells.png
+notebooks/experimental/Non-classical monocytes.png
+notebooks/experimental/Peribronchial fibroblasts.png
+notebooks/experimental/Pericytes.png
+notebooks/experimental/Plasma cells.png
+notebooks/experimental/Plasmacytoid DCs.png
+notebooks/experimental/pre-TB secretory.png
+notebooks/experimental/SM activated stress response.png
+notebooks/experimental/SMG duct.png
+notebooks/experimental/SMG mucous.png
+notebooks/experimental/SMG serous (bronchial).png
+notebooks/experimental/SMG serous (nasal).png
+notebooks/experimental/Smooth muscle FAM83D+.png
+notebooks/experimental/Smooth muscle.png
+notebooks/experimental/Stroma.png
+notebooks/experimental/Subpleural fibroblasts.png
+notebooks/experimental/Suprabasal.png
+notebooks/experimental/T cell lineage.png
+notebooks/experimental/T cells proliferating.png
+notebooks/experimental/Tuft.png
+notebooks/experimental/Unknown.png
+notebooks/experimental/Smooth muscle.png
+nohup.out

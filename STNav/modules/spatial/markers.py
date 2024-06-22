@@ -396,7 +396,7 @@ class SpatialMarkersMapping:
         # Replace the raw counts with the log normalized counts
         st_adata.X = csr_matrix(st_adata.layers["lognorm"])
 
-        # st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
+        st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
 
         # st_adata.X = csr_matrix(st_adata.layers["lognorm"])
         df = pd.DataFrame.sparse.from_spmatrix(

@@ -1044,3 +1044,72 @@ def GARD(df, rank_dictionary):
     df["RSI"] = RSI_list
 
     return df
+
+
+def is_normalized(adata):
+    """
+    Check if the data in an AnnData object is normalized or not.
+
+    Parameters:
+    adata : anndata.AnnData
+        Annotated data matrix.
+
+    Returns:
+    bool
+        True if the data is likely normalized, False otherwise.
+    """
+    import numpy as np
+
+    # TODO: fix this, still showing normalized when it is raw
+
+    # Check the maximum, minimum, and mean value in the matrix
+    max_value = np.max(adata.X.data)
+    min_value = np.min(adata.X.data)
+    mean_value = np.mean(adata.X.data)
+
+    # If the maximum value is very large and the values are integers, it's likely that the matrix contains raw counts
+    if max_value > 1000 and np.issubdtype(adata.X.dtype, np.integer):
+        logger.info("The data is likely raw counts.")
+        return False
+
+    # If the values are floating point numbers and the maximum value is small, it's likely that the matrix has been normalized
+    if np.issubdtype(adata.X.dtype, np.floating):
+        logger.info("The data is likely normalized.")
+        return True
+
+    # If none of the above conditions are met, log an info message and return None
+    logger.info("The data type does not match typical raw counts or normalized data.")
+    return None
+
+
+def assert_counts(adata, check_for):
+    """
+    Assert if the data in an AnnData object is normalized or raw counts.
+
+    Parameters:
+    adata : anndata.AnnData
+        Annotated data matrix.
+    check_for : str
+        The type of data to check for. Should be either "raw" or "normalized".
+
+    Raises:
+    AssertionError
+        If the data does not match the expected type.
+    """
+    import numpy as np
+
+    # Check the maximum, minimum, and mean value in the matrix
+    max_value = np.max(adata.X.data)
+    min_value = np.min(adata.X.data)
+    mean_value = np.mean(adata.X.data)
+
+    if check_for == "raw":
+        assert max_value > 1000 and np.issubdtype(
+            adata.X.dtype, np.integer
+        ), "The data is not raw counts."
+    elif check_for == "normalized":
+        assert np.issubdtype(adata.X.dtype, np.floating), "The data is not normalized."
+    else:
+        raise ValueError(
+            "Invalid value for check_for. Should be either 'raw' or 'normalized'."
+        )

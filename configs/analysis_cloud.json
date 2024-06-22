@@ -235,7 +235,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -258,7 +258,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -269,7 +269,7 @@
         }
       },
       "GSEA": {
-        "usage": false,
+        "usage": true,
         "stratify_by_group": false,
         "gene_sets": {
           "api_sets": {
@@ -505,7 +505,7 @@
           "params": {
             "adata": "adata",
             "key_added": "leiden_clusters",
-            "resolution": 1
+            "resolution": 0.1
           }
         },
         "louvain": {
@@ -538,7 +538,7 @@
       "adata_to_use": "preprocessed_adata",
       "save_as": "preprocessed_DEG_adata",
       "rank_genes_groups": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
@@ -561,7 +561,7 @@
         }
       },
       "rank_genes_groups_df": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.get.rank_genes_groups_df",
         "params": {
           "adata": "adata",
@@ -572,7 +572,7 @@
         }
       },
       "GSEA": {
-        "usage": false,
+        "usage": true,
         "stratify_by_group": true,
         "gene_sets": {
           "api_sets": {
@@ -806,7 +806,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "squidpy_ligrec_adata",
-        "usage": true,
+        "usage": false,
         "func_str": "sq.gr.ligrec",
         "data_type": "ST",
         "params": {

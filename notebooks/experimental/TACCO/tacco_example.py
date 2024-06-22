@@ -1,6 +1,9 @@
 import tacco as tc
 import scanpy as sc
 
+import squidpy as sq
+import matplotlib.pyplot as plt
+
 adata = sc.read_h5ad(
     r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_12-06_07_40_PM/ST/Files/raw_adata.h5ad"
 )
@@ -11,7 +14,7 @@ reference.obs.columns
 adata.var_names_make_unique()
 reference.var_names_make_unique()
 
-mthd = "OT"
+mthd = "nnls"
 tc.tl.annotate(
     adata,
     reference,
@@ -27,8 +30,9 @@ adata.obs[f"cell_type_{mthd}"] = adata.obsm[f"ann_{mthd}"].idxmax(axis=1)
 
 adata.obs[f"cell_type_{mthd}"].value_counts()
 
-import squidpy as sq
-import matplotlib.pyplot as plt
+adata.write_h5ad("./OT_annotated.h5ad")
+
+adata
 
 plt.style.use("default")
 sq.pl.spatial_scatter(
@@ -40,7 +44,6 @@ sq.pl.spatial_scatter(
     save=f"cell_type_{mthd}.png",
     legend_fontsize=3.5,  # adjust this value to make the legend smaller
 )
-
 
 unique_cell_types = adata.obs[f"cell_type_{mthd}"].unique()
 
@@ -75,3 +78,6 @@ for cell_type in unique_cell_types:
     # Save the figure
     plt.savefig(f"{cell_type}_scatter.png", dpi=1000)  # save the plot as a PNG file
     plt.show()
+
+
+# Concordancy score
