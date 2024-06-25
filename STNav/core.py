@@ -762,7 +762,7 @@ class STNavCore(object):
                 adata_path = self.adata_dict[self.data_type]["DEG_adata"]
                 df2 = sc.read_h5ad(adata_path).obs
 
-                # First, merge the dataframes on the 'group' column
+                # First, merge the dataframes on the 'group' column (the clusters essentially)
                 merged_df = pd.merge(
                     df2.reset_index(),
                     df1,
@@ -789,9 +789,19 @@ class STNavCore(object):
                     final_df, config_gsea["gene_sets"]["manual_sets"]["sets"]
                 )
 
+                # TODO: check the clusters on adata.obs vs the ones in GARD_final_df...
                 adata.obs = GARD_final_df
+                adata.obs["Negative Radiation Sensitivity (RS)"] = adata.obs[
+                    "Negative Radiation Sensitivity (RS)"
+                ].astype(str)
+                adata.obs["Positive Radiation Sensitivity (RR)"] = adata.obs[
+                    "Positive Radiation Sensitivity (RR)"
+                ].astype(str)
+                adata.obs["RSI"] = adata.obs["RSI"].astype(int)
+                adata.obs["leiden_clusters"] = adata.obs["leiden_clusters"].astype(str)
 
                 save_processed_adata(
+                    fix_write=True,
                     STNavCorePipeline=self,
                     name="preprocessed_adata_GARD",
                     adata=adata,

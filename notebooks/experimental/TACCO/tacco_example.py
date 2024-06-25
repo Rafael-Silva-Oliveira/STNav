@@ -14,25 +14,26 @@ reference.obs.columns
 adata.var_names_make_unique()
 reference.var_names_make_unique()
 
-mthd = "nnls"
+mthd = "OT"
 tc.tl.annotate(
     adata,
     reference,
+    bisections=0,
+    bisection_divisor=3,
+    max_annotation=1,
     annotation_key="ann_level_3_transferred_label",
     result_key=f"ann_{mthd}",
     method=mthd,
+    remove_constant_genes=True,
+    remove_zero_cells=True,
     remove_mito=True,
 )
 
-adata.obsm[f"ann_{mthd}"].iloc[0, :]
 
 adata.obs[f"cell_type_{mthd}"] = adata.obsm[f"ann_{mthd}"].idxmax(axis=1)
 
 adata.obs[f"cell_type_{mthd}"].value_counts()
-
-adata.write_h5ad("./OT_annotated.h5ad")
-
-adata
+adata.write_h5ad(f"annotated_adata_{mthd}.h5ad")
 
 plt.style.use("default")
 sq.pl.spatial_scatter(
@@ -44,6 +45,7 @@ sq.pl.spatial_scatter(
     save=f"cell_type_{mthd}.png",
     legend_fontsize=3.5,  # adjust this value to make the legend smaller
 )
+plt.savefig(f"{mthd}_scatter.png", dpi=1000)  # save the plot as a PNG file
 
 unique_cell_types = adata.obs[f"cell_type_{mthd}"].unique()
 

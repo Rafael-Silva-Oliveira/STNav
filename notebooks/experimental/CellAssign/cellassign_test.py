@@ -82,10 +82,28 @@ predictions.head()
 
 sns.clustermap(predictions, cmap="viridis")
 follicular_bdata.obs["cellassign_predictions"] = predictions.idxmax(axis=1).values
+follicular_bdata.obs["in_tissue"] = follicular_bdata.obs["in_tissue"].astype(int)
+follicular_bdata.obs["array_row"] = follicular_bdata.obs["array_row"].astype(int)
+follicular_bdata.obs["array_col"] = follicular_bdata.obs["array_col"].astype(dtype=int)
+follicular_bdata.obsm["spatial"] = follicular_bdata.obsm["spatial"].astype(dtype=float)
 
+follicular_bdata.write_h5ad("cell_assign_adata.h5ad")
 sc.pl.umap(
     follicular_bdata,
     color=["celltype", "cellassign_predictions"],
     frameon=False,
     ncols=1,
 )
+
+
+import squidpy as sq
+import matplotlib.pyplot as plt
+
+sq.pl.spatial_scatter(
+    follicular_bdata,
+    color="cellassign_predictions",
+    shape="square",
+    size=1,
+    legend_fontsize=3.5,  # adjust this value to make the legend smaller
+)
+plt.savefig(f"cellassign_scatter.png", dpi=1000)

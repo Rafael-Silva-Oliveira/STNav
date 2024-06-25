@@ -827,3 +827,7 @@ notebooks/experimental/Tuft.png
 notebooks/experimental/Unknown.png
 notebooks/experimental/Smooth muscle.png
 nohup.out
+notebooks/experimental/topACT/scgenes.txt
+notebooks/experimental/topACT/sclabels.txt
+notebooks/experimental/topACT/scmatrix.mtx
+notebooks/experimental/topACT/spatial.csv

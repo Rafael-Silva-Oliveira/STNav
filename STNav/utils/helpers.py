@@ -1042,6 +1042,9 @@ def GARD(df, rank_dictionary):
         RSI_list.append(RSI)
 
     df["RSI"] = RSI_list
+    # Apply the function to each column in adata.obs
+    for column in df.columns:
+        convert_column(df, column)
 
     return df
 
@@ -1113,3 +1116,14 @@ def assert_counts(adata, check_for):
         raise ValueError(
             "Invalid value for check_for. Should be either 'raw' or 'normalized'."
         )
+
+
+def convert_column(df, column):
+    if df[column].dtype == "object":
+        try:
+            df[column] = df[column].astype(int)
+        except ValueError:
+            try:
+                df[column] = df[column].astype(float)
+            except ValueError:
+                df[column] = df[column].astype(str)

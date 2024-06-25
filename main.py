@@ -5,6 +5,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 import json
 import os
 from datetime import datetime
+import sys
 
 import scanpy as sc
 from loguru import logger
@@ -75,9 +76,11 @@ def main(
         print("Directory already exists or is already populated with files!")
 
     # Has to be after creating the dir otherwise it will print directory already exists.
-
     with open(f"{directory}/dependencies/requirements.txt", "w") as f:
-        subprocess.run(["pip", "freeze"], stdout=f)
+        subprocess.run([sys.executable, "-m", "pip", "freeze"], stdout=f)
+    # with open(f"{directory}/dependencies/requirements_pipreqs.txt", "r") as f:
+    #     script_dir = os.path.dirname(os.path.realpath(__file__))
+    #     subprocess.run(["pipreqs", script_dir, "--force"])
     with open(f"{directory}/configs/analysis.json", "w", encoding="utf-8") as f:
         json.dump(analysis_json, f, ensure_ascii=False, indent=4)
     with open(f"{directory}/configs/plotting.json", "w", encoding="utf-8") as f:

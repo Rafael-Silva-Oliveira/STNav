@@ -6,26 +6,32 @@ import scanpy as sc
 from sklearn.metrics import cohen_kappa_score
 import squidpy as sq
 
-# Merge the three methods on common indices
-OT_pred = sc.read_h5ad(r"/mnt/work/workbench/rafaed/work/RO_src/OT_annotated.h5ad")
-LGBM_pred = sc.read_h5ad(
-    r"/mnt/work/workbench/rafaed/work/RO_src/Pipelines/STNav/notebooks/experimental/SpatialLGBM/predicted_LGBM.h5ad"
-)
-scMAGS_pred = sc.read_h5ad(
-    r"/mnt/work/workbench/rafaed/work/RO_src/data/processed/PipelineRun_2024_06_20-09_51_35_AM/ST/Files/deconvoluted_adata.h5ad"
-)
-scMAGS_pred.obs["cell_type"] = scMAGS_pred.obs["cell_type"].str.replace(
-    "_Mean_LogNorm_Conn_Adj_scMAGS", "", regex=False
+# # Merge the three methods on common indices
+# OT_pred = sc.read_h5ad(r"/mnt/work/workbench/rafaed/work/RO_src/OT_annotated.h5ad")
+# LGBM_pred = sc.read_h5ad(
+#     r"/mnt/work/workbench/rafaed/work/RO_src/Pipelines/STNav/notebooks/experimental/SpatialLGBM/predicted_LGBM.h5ad"
+# )
+# scMAGS_pred = sc.read_h5ad(
+#     r"/mnt/work/workbench/rafaed/work/RO_src/data/processed/PipelineRun_2024_06_20-09_51_35_AM/ST/Files/deconvoluted_adata.h5ad"
+# )
+# scMAGS_pred.obs["cell_type"] = scMAGS_pred.obs["cell_type"].str.replace(
+#     "_Mean_LogNorm_Conn_Adj_scMAGS", "", regex=False
 )
 
 # Merge all three methods on their common indices:
 file_paths = [
-    r"/mnt/work/workbench/rafaed/work/RO_src/OT_annotated.h5ad",
+    r"/mnt/work/RO_src/annotated_adata_OT.h5ad",
     r"/mnt/work/workbench/rafaed/work/RO_src/Pipelines/STNav/notebooks/experimental/SpatialLGBM/predicted_LGBM.h5ad",
-    r"/mnt/work/workbench/rafaed/work/RO_src/data/processed/PipelineRun_2024_06_20-09_51_35_AM/ST/Files/deconvoluted_adata.h5ad",
+    r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_15-09_33_10_AM/ST/Files/deconvoluted_adata.h5ad",
+    r"/mnt/work/RO_src/annotated_adata_svm.h5ad"
 ]
 
-prediction_columns = ["cell_type_OT", "predicted_cell_type_non_conformal", "cell_type"]
+prediction_columns = [
+    "cell_type_OT",
+    "predicted_cell_type_non_conformal",
+    "cell_type",
+    "cell_type_svm",
+]
 dfs = []
 for file_path, pred_col in zip(file_paths, prediction_columns):
     adata = sc.read_h5ad(file_path)
@@ -39,14 +45,14 @@ for file_path, pred_col in zip(file_paths, prediction_columns):
     dfs.append(df)
 
 # Merge all DataFrames on their common indices
-merged_df = dfs[0]
-for df in dfs[1:]:
-    merged_df = merged_df.join(df, how="inner")
-
+# merged_df = dfs[0]
+# for df in dfs[1:]:
+#     merged_df = merged_df.join(df, how="inner")
+merged_df = pd.concat(dfs, axis=1, join="inner")
 # Display the merged DataFrame
 print(merged_df.head())
 
-merged_df["cell_type"] = merged_df["cell_type"].str.replace(y
+merged_df["cell_type"] = merged_df["cell_type"].str.replace(
     "_Mean_LogNorm_Conn_Adj_scMAGS", "", regex=False
 )
 merged_df
@@ -144,7 +150,12 @@ plt.savefig(f"scatter.png", dpi=1000)
 
 
 # Define methods and cell types
-methods = ["cell_type_OT", "predicted_cell_type_non_conformal", "cell_type"]
+methods = [
+    "cell_type_OT",
+    "predicted_cell_type_non_conformal",
+    "cell_type",
+    "cell_type_svm",
+]
 cell_types = merged_df["cell_type_OT"].unique()
 
 cell_types
@@ -156,24 +167,20 @@ unique_cell_types = pd.unique(merged_df.values.ravel("K"))
 # Plot concordance matrix for each cell type
 for cell_type in unique_cell_types:
     # Initialize a concordance matrix for the current cell type
+    # Initialize a concordance matrix for the current cell type
     concordance_matrix = pd.DataFrame(index=methods, columns=methods)
 
     # Calculate pairwise concordance scores for the current cell type
     for method1 in methods:
         for method2 in methods:
             # Filter for current cell type
-            method1_filtered = merged_df[method1] == cell_type
-            method2_filtered = merged_df[method2] == cell_type
-            # Calculate concordance score
-            intersection = sum(method1_filtered & method2_filtered)
-            union = sum(method1_filtered | method2_filtered)
+            method1_labels = merged_df[method1] == cell_type
+            method2_labels = merged_df[method2] == cell_type
 
-            if union == 0:
-                jaccard_index = 0
-            else:
-                jaccard_index = intersection / union
+            # Calculate Cohen's Kappa score
+            kappa_score = cohen_kappa_score(method1_labels, method2_labels)
 
-            concordance_matrix.loc[method1, method2] = jaccard_index
+            concordance_matrix.loc[method1, method2] = kappa_score
 
     # Convert to float
     concordance_matrix = concordance_matrix.astype(float)
@@ -186,3 +193,9 @@ for cell_type in unique_cell_types:
     plt.ylabel("Methods")
     plt.savefig(f"{cell_type} concordance")
     plt.show()
+
+gard = sc.read_h5ad(
+    r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_22-04_51_39_PM/ST/Files/preprocessed_adata_GARD.h5ad"
+)
+
+merged_df
