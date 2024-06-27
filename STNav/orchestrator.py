@@ -27,11 +27,7 @@ from STNav.modules.st import (
     SpatiallyVariableGenes,
     SpatialNeighbors,
     SpatialMarkersMapping,
-)
-from STNav.utils.helpers import (
-    return_filtered_params,
-    SpatialDM_wrapper,
-    save_processed_adata,
+    NicheAnalysis,
 )
 
 username = os.path.expanduser("~")
@@ -152,6 +148,7 @@ class Orchestrator(object):
             MAPPING = SpatialMarkersMapping(STNavCorePipeline)
             self.cell_markers_dict = MAPPING.run_mapping(mapping_config=mapping_config)
 
+        NicheAnalysis(STNavCorePipeline)
         SpatiallyVariableGenes(STNavCorePipeline)
         SpatialNeighbors(STNavCorePipeline)
         ReceptorLigandAnalysis(STNavCorePipeline)

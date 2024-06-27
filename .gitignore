@@ -831,3 +831,9 @@ notebooks/experimental/topACT/scgenes.txt
 notebooks/experimental/topACT/sclabels.txt
 notebooks/experimental/topACT/scmatrix.mtx
 notebooks/experimental/topACT/spatial.csv
+notebooks/experimental/topACT/counts_stacked_small.parquet
+notebooks/experimental/topACT/counts_stacked.parquet
+notebooks/experimental/topACT/demo-output.png
+notebooks/experimental/topACT/demo-output.txt
+notebooks/experimental/topACT/outfile_small.npy
+notebooks/experimental/topACT/outfile.npy

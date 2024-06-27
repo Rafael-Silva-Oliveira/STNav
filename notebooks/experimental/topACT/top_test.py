@@ -20,10 +20,16 @@ def readfile(filename) -> list[str]:
 
 
 adata_st: sc.AnnData = sc.read_h5ad(
-    filename=r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_24-09_20_28_AM/ST/Files/raw_adata.h5ad"
+    filename=r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_15-09_33_10_AM/ST/Files/raw_adata.h5ad"
 )
+# adata_st_sub = sc.pp.subsample(adata_st, fraction=0.05, copy=True)
+# adata_st_sub
+sc.pp.filter_genes(adata_st, min_counts=50)
+sc.pp.filter_cells(adata_st, min_genes=3)
+sc.pp.highly_variable_genes(adata_st, n_top_genes=5000, flavor="seurat_v3", subset=True)
+
 adata_sc: sc.AnnData = sc.read_h5ad(
-    filename=r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_24-09_20_28_AM/scRNA/Files/raw_adata.h5ad"
+    filename=r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_15-09_33_10_AM/scRNA/Files/raw_adata.h5ad"
 )
 
 
@@ -56,6 +62,10 @@ def annData_converter(
     logger.info("Making gene names unique for both scRNA and ST dataset.")
     sc_adata.var_names_make_unique()
     st_adata.var_names_make_unique()
+
+    logger.info(f"Shape of st_adata is {st_adata}")
+    logger.info(f"Shape of sc_adata is {sc_adata}")
+
     # Extract the count matrix from the single-cell data
     mtx = scipy.sparse.coo_matrix(sc_adata.X).astype(dtype="int64")
 
@@ -119,7 +129,11 @@ def annData_converter(
         # Order x and y
         counts_stacked = counts_stacked.sort_values(by=["x", "y"])
 
-        counts_stacked.to_parquet(path="counts_stacked.parquet")
+        counts_stacked.to_parquet(path="counts_stacked_small.parquet")
+
+    logger.info(
+        f"Spatial dataframe of size {counts_stacked.shape} created.\n{counts_stacked}"
+    )
 
     return mtx, genes, labels, counts_stacked
 
@@ -150,7 +164,11 @@ if __name__ == "__main__":
     # Classify
     logger.info("Classifying spatial data")
     sd.classify_parallel(
-        classifier=clf, min_scale=3, max_scale=9, num_proc=8, outfile="outfile.npy"
+        classifier=clf,
+        min_scale=3,
+        max_scale=9,
+        num_proc=8,
+        outfile="outfile.npy",
     )
 
     confidence_mtx = np.load(file="outfile.npy")
@@ -158,7 +176,7 @@ if __name__ == "__main__":
     logger.info("Extracting annotations and image")
     annotations = spatial.extract_image(confidence_matrix=confidence_mtx, threshold=0.5)
 
-    np.savetxt(fname="demo-output.txt", X=annotations, fmt="%1.f")
-
+    np.savetxt(fname="demo-output-final.txt", X=annotations, fmt="%1.f")
+    logger.info(f"Annotations: {annotations}\n confidence matrix: {confidence_mtx}")
     plt.imshow(X=annotations, interpolation="None")
-    plt.savefig("demo-output.png")
+    plt.savefig("demo-output-final.png")

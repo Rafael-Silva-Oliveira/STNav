@@ -1,2 +1,2 @@
-from .core import STNavCore
+from .processing import STNavCore
 from .orchestrator import Orchestrator

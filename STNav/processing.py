@@ -797,7 +797,7 @@ class STNavCore(object):
                 adata.obs["Positive Radiation Sensitivity (RR)"] = adata.obs[
                     "Positive Radiation Sensitivity (RR)"
                 ].astype(str)
-                adata.obs["RSI"] = adata.obs["RSI"].astype(int)
+                adata.obs["RSI"] = adata.obs["RSI"].astype(float)
                 adata.obs["leiden_clusters"] = adata.obs["leiden_clusters"].astype(str)
 
                 save_processed_adata(

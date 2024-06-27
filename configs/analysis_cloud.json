@@ -727,7 +727,7 @@
     "SpatialNeighbors": {
       "Squidpy": {
         "adata_to_use": "preprocessed_adata",
-        "save_as": "sq_neighborhood_adata",
+        "save_as": "sq_neighborhood",
         "checkpoint": {
           "usage": false,
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
@@ -738,16 +738,14 @@
           "func_str": "sq.gr.nhood_enrichment",
           "params": {
             "adata": "adata",
-            "cluster_key": "leiden_clusters",
-            "n_jobs": -1
+            "cluster_key": "leiden_clusters"
           }
         },
         "Squidpy_Co_Ocurrence": {
           "func_str": "sq.gr.co_occurrence",
           "params": {
             "adata": "adata",
-            "cluster_key": "leiden_clusters",
-            "n_jobs": -1
+            "cluster_key": "leiden_clusters"
           }
         },
         "Squidpy_Centrality": {
@@ -755,8 +753,7 @@
           "params": {
             "adata": "adata",
             "cluster_key": "leiden_clusters",
-            "show_progress_bar": true,
-            "n_jobs": -1
+            "show_progress_bar": true
           }
         }
       }
@@ -789,16 +786,6 @@
             "n_jobs": 1
           }
         }
-      },
-      "scBSP": {
-        "usage": false,
-        "checkpoint": {
-          "usage": false,
-          "pipeline_run": ""
-        },
-        "save_as": "scBSP_SVG",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "ST"
       }
     },
     "ReceptorLigandAnalysis": {
@@ -808,7 +795,7 @@
           "pipeline_run": "PipelineRun_Checkpoint"
         },
         "adata_to_use": "preprocessed_adata",
-        "save_as": "squidpy_ligrec_adata",
+        "save_as": "squidpy_ligrec",
         "usage": false,
         "func_str": "sq.gr.ligrec",
         "data_type": "ST",
@@ -833,7 +820,7 @@
           "pipeline_run": "PipelineRun_2024_05_26-09_08_58_AM"
         },
         "adata_to_use": "deconvoluted_adata",
-        "save_as": "stlearn_cci_adata",
+        "save_as": "stlearn_cci",
         "usage": false,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
@@ -849,6 +836,44 @@
           "n_perms": 25,
           "n_cpus": null,
           "verbose": true
+        }
+      }
+    },
+    "NicheAnalysis": {
+      "Monkeybread": {
+        "usage": true,
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+        },
+        "save_as": "monkeybread_niches",
+        "adata_to_use": "deconvoluted_adata",
+        "data_type": "ST",
+        "Niches": {
+          "func_str": "mb.calc.cellular_niches",
+          "params": {
+            "adata": "adata",
+            "cell_type_key": "cell_type",
+            "radius": 75,
+            "normalize_counts": false,
+            "standard_scale": true,
+            "clip_min": -5,
+            "clip_max": 5,
+            "n_neighbors": 100,
+            "resolution": 0.25,
+            "min_niche_size": 300,
+            "key_added": "niche",
+            "non_niche_value": "Unknown"
+          }
+        },
+        "Niche_DE": {
+          "func_str": "sq.gr.spatial_autocorr",
+          "params": {
+            "adata": "adata",
+            "mode": "moran",
+            "n_perms": 25,
+            "n_jobs": 1
+          }
         }
       }
     }
