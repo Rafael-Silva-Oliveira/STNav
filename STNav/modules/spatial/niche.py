@@ -1,6 +1,14 @@
 import monkeybread as mb
 import scanpy as sc
 from loguru import logger
+import os
+import sys
+
+# Add the project root to the sys.path
+current_dir = os.path.dirname(__file__)
+project_root = os.path.abspath(os.path.join(current_dir, "../../.."))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 from STNav.utils.decorators import pass_STNavCore_params
 from STNav.utils.helpers import (
     return_filtered_params,
@@ -11,6 +19,7 @@ from STNav.utils.helpers import (
 
 from datetime import datetime
 import json
+
 
 # Get current date
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
