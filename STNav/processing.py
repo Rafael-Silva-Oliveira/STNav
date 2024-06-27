@@ -27,7 +27,6 @@ import inspect
 
 import os
 from STNav.utils.helpers import (
-    GARD,
     fix_write_h5ad,
     log_adataX,
     return_filtered_params,
@@ -633,116 +632,99 @@ class STNavCore(object):
             )
 
             # Define a list to hold gene sets (manual or API)
-            gene_set_dict = {}
             gsea_dataframes = {}
 
-            # Handle manual gene sets
-            if config_gsea["gene_sets"]["manual_sets"]["usage"]:
-                gene_set_dict["manual_sets"] = config_gsea["gene_sets"]["manual_sets"][
-                    "sets"
-                ]
-                logger.info(
-                    f"Adding manual gene sets.\n {gene_set_dict['manual_sets']}"
-                )
-
             # Handle API gene sets
-            if config_gsea["gene_sets"]["api_sets"]["usage"]:
-                gene_set_dict["api_sets"] = [
+            if config_gsea["gene_sets"]["usage"]:
+                gene_set_list = [
                     ontology
-                    for ontology, boolean in config_gsea["gene_sets"]["api_sets"][
-                        "sets"
-                    ].items()
+                    for ontology, boolean in config_gsea["gene_sets"]["sets"].items()
                     if boolean
                 ]
 
-                logger.info(f"Adding API gene sets.\n {gene_set_dict['api_sets']}")
+                logger.info(f"Adding API gene sets.\n {gene_set_list}")
 
             # Iterate over gene sets
             enrichr_list = []
             prerank_list = []
             gsea_list = []
+            set_name = "API"
 
-            for set_name, gene_set_list_or_dict in gene_set_dict.items():
-                gene_set_names = gp.get_library_name(organism="human")
-                if set_name == "manual_sets":
-                    gene_set_list = {}
-                    for gene_set_name, gene_set_dict in gene_set_list_or_dict.items():
-                        gene_set_list[gene_set_name] = list(gene_set_dict.keys())
-                else:
-                    gene_set_list = gene_set_list_or_dict
-                # Setdefault is overriding data... I need to save the "set_name" and pass it as parameter to the gsea_dataframes.setdefault("set_name...", res).
-                if config_gsea["stratify_by_group"]:
-                    if config_gsea["enrichr"]["usage"]:
-                        _enrichr_sub = run_enrichr(
-                            gene_set_list=gene_set_list,
-                            ranked_genes_list=ranked_genes_list,
-                            config_gsea=config_gsea,
-                            data_type=self.data_type,
-                            set_name=set_name,
-                            group_bool=True,
-                        )
-                        enrichr_list.append(_enrichr_sub)
+            gene_set_names = gp.get_library_name(organism="human")
 
-                    if config_gsea["prerank"]["usage"]:
-                        _prerank_sub = run_prerank(
-                            gene_set_list=gene_set_list,
-                            ranked_genes_list=ranked_genes_list,
-                            config_gsea=config_gsea,
-                            data_type=self.data_type,
-                            set_name=set_name,
-                            group_bool=True,
-                            saving_path=self.saving_path,
-                        )
-                        prerank_list.append(_prerank_sub)
-
-                    if config_gsea["gsea"]["usage"]:
-                        _gsea_sub = run_gsea(
-                            adata=adata,
-                            gene_set_list=gene_set_list,
-                            ranked_genes_list=ranked_genes_list,
-                            config_gsea=config_gsea,
-                            data_type=self.data_type,
-                            set_name=set_name,
-                            group_bool=True,
-                            saving_path=self.saving_path,
-                        )
-                        gsea_list.append(_gsea_sub)
-
+            # Setdefault is overriding data... I need to save the "set_name" and pass it as parameter to the gsea_dataframes.setdefault("set_name...", res).
+            if config_gsea["stratify_by_group"]:
                 if config_gsea["enrichr"]["usage"]:
-                    _enrichr = run_enrichr(
+                    _enrichr_sub = run_enrichr(
                         gene_set_list=gene_set_list,
                         ranked_genes_list=ranked_genes_list,
                         config_gsea=config_gsea,
                         data_type=self.data_type,
                         set_name=set_name,
-                        group_bool=False,
+                        group_bool=True,
                     )
-                    enrichr_list.append(_enrichr)
+                    enrichr_list.append(_enrichr_sub)
 
                 if config_gsea["prerank"]["usage"]:
-                    _prerank = run_prerank(
+                    _prerank_sub = run_prerank(
                         gene_set_list=gene_set_list,
                         ranked_genes_list=ranked_genes_list,
                         config_gsea=config_gsea,
                         data_type=self.data_type,
                         set_name=set_name,
-                        group_bool=False,
+                        group_bool=True,
                         saving_path=self.saving_path,
                     )
-                    prerank_list.append(_prerank)
+                    prerank_list.append(_prerank_sub)
 
                 if config_gsea["gsea"]["usage"]:
-                    _gsea = run_gsea(
+                    _gsea_sub = run_gsea(
                         adata=adata,
                         gene_set_list=gene_set_list,
                         ranked_genes_list=ranked_genes_list,
                         config_gsea=config_gsea,
                         data_type=self.data_type,
                         set_name=set_name,
-                        group_bool=False,
+                        group_bool=True,
                         saving_path=self.saving_path,
                     )
-                    gsea_list.append(_gsea)
+                    gsea_list.append(_gsea_sub)
+
+            if config_gsea["enrichr"]["usage"]:
+                _enrichr = run_enrichr(
+                    gene_set_list=gene_set_list,
+                    ranked_genes_list=ranked_genes_list,
+                    config_gsea=config_gsea,
+                    data_type=self.data_type,
+                    set_name=set_name,
+                    group_bool=False,
+                )
+                enrichr_list.append(_enrichr)
+
+            if config_gsea["prerank"]["usage"]:
+                _prerank = run_prerank(
+                    gene_set_list=gene_set_list,
+                    ranked_genes_list=ranked_genes_list,
+                    config_gsea=config_gsea,
+                    data_type=self.data_type,
+                    set_name=set_name,
+                    group_bool=False,
+                    saving_path=self.saving_path,
+                )
+                prerank_list.append(_prerank)
+
+            if config_gsea["gsea"]["usage"]:
+                _gsea = run_gsea(
+                    adata=adata,
+                    gene_set_list=gene_set_list,
+                    ranked_genes_list=ranked_genes_list,
+                    config_gsea=config_gsea,
+                    data_type=self.data_type,
+                    set_name=set_name,
+                    group_bool=False,
+                    saving_path=self.saving_path,
+                )
+                gsea_list.append(_gsea)
 
             if len(enrichr_list) > 0:
                 gsea_dataframes["enrichr"] = pd.concat(enrichr_list).reset_index()
@@ -750,65 +732,6 @@ class STNavCore(object):
                 gsea_dataframes["prerank"] = pd.concat(prerank_list).reset_index()
             if len(gsea_list) > 0:
                 gsea_dataframes["gsea"] = pd.concat(gsea_list).reset_index()
-
-            if (
-                self.data_type == "ST"
-            ):  # If its manual set and stratify by group is true...
-                df1 = gsea_dataframes["enrichr"][
-                    gsea_dataframes["enrichr"]["set_name"] == "manual_sets"
-                ][["Genes", "Term", "group"]]
-
-                # NOTE: check if AR can be present if we run GARD with all the data instead of the preprocessed adata (The more genes included, the better for gard)
-                adata_path = self.adata_dict[self.data_type]["DEG_adata"]
-                df2 = sc.read_h5ad(adata_path).obs
-
-                # First, merge the dataframes on the 'group' column (the clusters essentially)
-                merged_df = pd.merge(
-                    df2.reset_index(),
-                    df1,
-                    left_on="leiden_clusters",
-                    right_on="group",
-                    how="left",
-                )
-
-                # Pivot the dataframe to get the desired structure
-                result_df = merged_df.pivot(
-                    index="index", columns="Term", values="Genes"
-                ).fillna(0)
-                result_df.index.name = None
-
-                # Remove a nan column that is created by the result of merging.
-                result_df.drop(result_df.columns[0], axis=1, inplace=True)
-
-                final_df = pd.merge(df2, result_df, left_index=True, right_index=True)
-                for col in final_df.select_dtypes(include=["category"]).columns:
-                    final_df[col] = final_df[col].cat.add_categories([0])
-
-                final_df.fillna(0, inplace=True)
-                GARD_final_df = GARD(
-                    final_df, config_gsea["gene_sets"]["manual_sets"]["sets"]
-                )
-
-                # TODO: check the clusters on adata.obs vs the ones in GARD_final_df...
-                adata.obs = GARD_final_df
-                adata.obs["Negative Radiation Sensitivity (RS)"] = adata.obs[
-                    "Negative Radiation Sensitivity (RS)"
-                ].astype(str)
-                adata.obs["Positive Radiation Sensitivity (RR)"] = adata.obs[
-                    "Positive Radiation Sensitivity (RR)"
-                ].astype(str)
-                adata.obs["RSI"] = adata.obs["RSI"].astype(float)
-                adata.obs["leiden_clusters"] = adata.obs["leiden_clusters"].astype(str)
-
-                save_processed_adata(
-                    fix_write=True,
-                    STNavCorePipeline=self,
-                    name="preprocessed_adata_GARD",
-                    adata=adata,
-                )
-                GARD_final_df.to_excel(
-                    f"{self.saving_path}/{self.data_type}/Files/GARD_score.xlsx"
-                )
 
             with pd.ExcelWriter(
                 f"{self.saving_path}/{self.data_type}/Files/{self.data_type}_GSEA_{date}.xlsx"

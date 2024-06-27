@@ -55,6 +55,7 @@ def main(
         "log": [],
         "dependencies": [],
         "configs": [],
+        "paths": [],
     }
     # TODO: save yaml file, as well as the config json files used in the pipeline with the versions of packages, etc
     # Check if the directory already exists
@@ -78,9 +79,6 @@ def main(
     # Has to be after creating the dir otherwise it will print directory already exists.
     with open(f"{directory}/dependencies/requirements.txt", "w") as f:
         subprocess.run([sys.executable, "-m", "pip", "freeze"], stdout=f)
-    # with open(f"{directory}/dependencies/requirements_pipreqs.txt", "r") as f:
-    #     script_dir = os.path.dirname(os.path.realpath(__file__))
-    #     subprocess.run(["pipreqs", script_dir, "--force"])
     with open(f"{directory}/configs/analysis.json", "w", encoding="utf-8") as f:
         json.dump(analysis_json, f, ensure_ascii=False, indent=4)
     with open(f"{directory}/configs/plotting.json", "w", encoding="utf-8") as f:
@@ -88,13 +86,37 @@ def main(
 
     logger.add(f"{directory}/log/loguru.log")
     logger.info(f"Directory where outputs will be saved: {directory}")
-    adata_dict = ORCHESTRATOR.run_analysis(saving_dir=directory)
 
-    ORCHESTRATOR.run_plots(
-        saving_dir=directory,
-        adata_dict=adata_dict,
-    )
-    logger.info(f"Pipeline run on {date} sucessfully completed.")
+    # Save adata_dict as json so it can be loaded directly to the run_plots without having to run the analysis
+    if (
+        plotting_json["use_other_run"]["usage"]
+        and plotting_json["use_other_run"]["path"] != ""
+    ):
+        logger.warning(
+            f"The setting 'use_other_run' is set to True. Using the adata_dict from the path {plotting_json['use_other_run']['path']}.\n\nNOTE: This will ONLY run the plotting config and not the analysis config and it will overwrite any previous plots in the pipeline. If you want to run the analysis from scratch, set 'use_other_run' to 'false'."
+        )
+        adata_dict = json.load(open(file=plotting_json["use_other_run"]["path"]))
+
+        # TODO: change the directory with the directory from the adata_dict (need to extract the one that has the pipeline run date ID)
+        ORCHESTRATOR.run_plots(
+            saving_dir=...,
+            adata_dict=adata_dict,
+        )
+        logger.info(f"Plots from {directory} sucessfully generated/updated.")
+
+    else:
+
+        adata_dict = ORCHESTRATOR.run_analysis(saving_dir=directory)
+
+        with open(f"{directory}/paths/adata_dict.json", "w", encoding="utf-8") as f:
+            json.dump(plotting_json, f, ensure_ascii=False, indent=4)
+
+        ORCHESTRATOR.run_plots(
+            saving_dir=directory,
+            adata_dict=adata_dict,
+        )
+
+        logger.info(f"Pipeline run on {date} sucessfully completed.")
 
 
 if __name__ == "__main__":

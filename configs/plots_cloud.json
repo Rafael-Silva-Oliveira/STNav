@@ -1,5 +1,8 @@
 {
-  "saving_path": "",
+  "use_other_run": {
+    "usage": false,
+    "run_path": ""
+  },
   "plots": {
     "sc_highly_variable_genes": {
       "scRNA_highly_variable_genes_config_1.png": {

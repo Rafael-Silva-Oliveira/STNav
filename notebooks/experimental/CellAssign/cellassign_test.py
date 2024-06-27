@@ -95,10 +95,14 @@ sc.pl.umap(
     ncols=1,
 )
 
+follicular_bdata = sc.read_h5ad(r"/mnt/work/RO_src/cell_assign_adata.h5ad")
 
 import squidpy as sq
 import matplotlib.pyplot as plt
 
+follicular_bdata.obs["cellassign_predictions"] = follicular_bdata.obs[
+    "cellassign_predictions"
+].astype(str)
 sq.pl.spatial_scatter(
     follicular_bdata,
     color="cellassign_predictions",
@@ -107,3 +111,4 @@ sq.pl.spatial_scatter(
     legend_fontsize=3.5,  # adjust this value to make the legend smaller
 )
 plt.savefig(f"cellassign_scatter.png", dpi=1000)
+follicular_bdata.obs["cellassign_predictions"].value_counts()
