@@ -1,5 +1,5 @@
 {
-  "use_other_run": {
+  "run_just_plots": {
     "usage": false,
     "run_path": ""
   },

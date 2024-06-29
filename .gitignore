@@ -837,3 +837,7 @@ notebooks/experimental/topACT/demo-output.png
 notebooks/experimental/topACT/demo-output.txt
 notebooks/experimental/topACT/outfile_small.npy
 notebooks/experimental/topACT/outfile.npy
+notebooks/experimental/DecoupleR_ORA/adata_ulm.h5ad
+notebooks/experimental/DecoupleR_ORA/decouplr_adata.h5ad
+notebooks/experimental/topACT/demo-output-final.png
+notebooks/experimental/topACT/demo-output-final.txt

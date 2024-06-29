@@ -16,6 +16,7 @@ import torch
 from loguru import logger
 from sklearn.cluster import AgglomerativeClustering
 import scvi
+import squidpy as sq
 
 from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
 from scvi.model import CondSCVI, DestVI
@@ -147,38 +148,6 @@ class STNavCore(object):
             ("^Hb[^(p)]")
         )  # adata.var_names.str.contains('^Hb.*-')
 
-        # TODO: Perform spatial projection with MT genes. Get DEG genes for MT
-
-        if config["print_mt"]:
-            adata_cp = adata.copy()
-            sc.pp.neighbors(adata_cp, n_pcs=30, n_neighbors=20)
-            sc.tl.leiden(adata_cp, key_added="leiden_clusters")
-            sc.tl.rank_genes_groups(
-                adata_cp,
-                groupby="leiden_clusters",
-                method="wilcoxon",
-                key_added="wilcoxon",
-                n_genes=1000,
-                use_raw=False,
-            )
-
-            # Get top 10 MT DEG genes
-            adata_cp_top_genes = sc.get.rank_genes_groups_df(
-                adata_cp, key="wilcoxon", pval_cutoff=0.1, log2fc_min=1, group=None
-            )
-            adata_cp_top_genes_MT = adata_cp_top_genes.loc[
-                adata_cp_top_genes["names"].str.contains("MT-"), :
-            ]
-            adata_cp_top_genes_MT.sort_values(
-                by="logfoldchanges", inplace=True, ascending=False
-            )
-            top_10_MT_genes = adata_cp_top_genes_MT["names"].tolist()[:8]
-            # sc.pl.spatial(adata_cp, img_key="hires", color=top_10_MT_genes)
-            # sc.pl.spatial(adata_cp, img_key="hires", color="leiden_clusters")
-
-            # tmp = pd.crosstab(adata.obs["cell_ontology_class"], adata.obs["leiden_clusters"], normalize="index")
-            # tmp.plot.bar(stacked=True).legend(loc="upper right")
-
         if config["calculate_qc_metrics"]["usage"]:
 
             sc.pp.calculate_qc_metrics(
@@ -253,6 +222,7 @@ class STNavCore(object):
             print(
                 f"{sum(genes_to_remove)} genes removed. Original size was {adata_original.n_obs} cells and {adata_original.n_vars} genes. New size is {adata.n_obs} cells and {adata.n_vars} genes"
             )
+
         save_processed_adata(
             STNavCorePipeline=self, name=config["save_as"], adata=adata
         )
@@ -313,6 +283,8 @@ class STNavCore(object):
                 f"	After filtering cells: {adata.n_obs= } observations (cells if scRNA, spots if ST) x {adata.n_vars= } cells. Confirm if this is true."
             )
 
+        # TODO: comapre the raw_adata with the current adata after filtering, and from the raw, create an ID with 1 or 0 that shows which were removed and kept; Then plot and save the plot
+
         if config["unnormalize"]["usage"]:
             adata_to_unnormalize = adata.copy()
             adata_unnormalized = unnormalize(
@@ -324,6 +296,24 @@ class STNavCore(object):
             adata.layers["unnormalized_counts"] = adata_unnormalized.X.copy()
 
         # Save original X data - adata.X would be the raw counts
+        if self.data_type == "ST":
+
+            adata_original = sc.read_h5ad(
+                filename=self.adata_dict[self.data_type]["raw_adata"]
+            )
+            adata_original.obs["status"] = np.where(
+                adata_original.obs.index.isin(adata.obs.index), "Passed", "Failed"
+            )
+            sq.pl.spatial_scatter(
+                adata_original,
+                color="status",
+                shape="square",
+                size=1,
+                legend_fontsize=20,  # adjust this value to make the legend smaller
+            )
+            plt.savefig(f"{self.saving_path}/Plots/QC_passed.png", dpi=1000)
+            del adata_original
+
         adata.layers["raw_counts"] = adata.X.copy()
 
         # Normalized total to CPM (1e6)

@@ -398,6 +398,9 @@ class SpatialMarkersMapping:
 
         st_adata.X = st_adata.obsp["spatial_connectivities"].dot(st_adata.X)
 
+        # from decouplr - https://decoupler-py.readthedocs.io/en/latest/notebooks/spatial.html#
+        # st_adata.X = st_adata.obsp["spatial_connectivities"].A.dot(st_adata.X.A)
+
         # st_adata.X = csr_matrix(st_adata.layers["lognorm"])
         df = pd.DataFrame.sparse.from_spmatrix(
             st_adata.X,

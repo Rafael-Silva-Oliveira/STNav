@@ -269,7 +269,7 @@
         }
       },
       "GSEA": {
-        "usage": true,
+        "usage": false,
         "stratify_by_group": true,
         "gene_sets": {
           "usage": true,
@@ -714,12 +714,12 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "squidpy_ligrec",
-        "usage": false,
+        "usage": true,
         "func_str": "sq.gr.ligrec",
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "n_perms": 1000,
+          "n_perms": 100,
           "cluster_key": "leiden_clusters",
           "copy": true,
           "use_raw": false,
@@ -739,7 +739,7 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci",
-        "usage": false,
+        "usage": true,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {

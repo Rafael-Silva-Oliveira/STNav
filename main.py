@@ -30,6 +30,7 @@ def main(
     PLOTTING_CONFIG: dict,
     SAVING_PATH: dict,
 ) -> None:
+    # TODO: cool to use dc.get_acts or swap_layers from the decoupleR...
 
     assert not (
         SAVING_PATH["cloud"]["usage"] and SAVING_PATH["local"]["usage"]
@@ -89,13 +90,13 @@ def main(
 
     # Save adata_dict as json so it can be loaded directly to the run_plots without having to run the analysis
     if (
-        plotting_json["use_other_run"]["usage"]
-        and plotting_json["use_other_run"]["path"] != ""
+        plotting_json["run_just_plots"]["usage"]
+        and plotting_json["run_just_plots"]["path"] != ""
     ):
         logger.warning(
-            f"The setting 'use_other_run' is set to True. Using the adata_dict from the path {plotting_json['use_other_run']['path']}.\n\nNOTE: This will ONLY run the plotting config and not the analysis config and it will overwrite any previous plots in the pipeline. If you want to run the analysis from scratch, set 'use_other_run' to 'false'."
+            f"The setting 'run_just_plots' is set to True. Using the adata_dict from the path {plotting_json['run_just_plots']['path']}.\n\nNOTE: This will ONLY run the plotting config and not the analysis config and it will overwrite any previous plots in the pipeline. If you want to run the analysis from scratch, set 'run_just_plots' to 'false'."
         )
-        adata_dict = json.load(open(file=plotting_json["use_other_run"]["path"]))
+        adata_dict = json.load(open(file=plotting_json["run_just_plots"]["path"]))
 
         # TODO: change the directory with the directory from the adata_dict (need to extract the one that has the pipeline run date ID)
         ORCHESTRATOR.run_plots(
