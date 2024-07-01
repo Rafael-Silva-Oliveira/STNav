@@ -16,14 +16,13 @@ import squidpy as sq
 # )
 # scMAGS_pred.obs["cell_type"] = scMAGS_pred.obs["cell_type"].str.replace(
 #     "_Mean_LogNorm_Conn_Adj_scMAGS", "", regex=False
-)
 
 # Merge all three methods on their common indices:
 file_paths = [
     r"/mnt/work/RO_src/annotated_adata_OT.h5ad",
-    r"/mnt/work/workbench/rafaed/work/RO_src/Pipelines/STNav/notebooks/experimental/SpatialLGBM/predicted_LGBM.h5ad",
+    r"/mnt/work/workbench/rafaed/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/SpatialLGBM/predicted_LGBM.h5ad",
     r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_15-09_33_10_AM/ST/Files/deconvoluted_adata.h5ad",
-    r"/mnt/work/RO_src/annotated_adata_svm.h5ad"
+    r"/mnt/work/RO_src/annotated_adata_svm.h5ad",
 ]
 
 prediction_columns = [

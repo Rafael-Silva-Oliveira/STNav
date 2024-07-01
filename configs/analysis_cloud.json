@@ -714,7 +714,7 @@
         },
         "adata_to_use": "preprocessed_adata",
         "save_as": "squidpy_ligrec",
-        "usage": true,
+        "usage": false,
         "func_str": "sq.gr.ligrec",
         "data_type": "ST",
         "params": {
