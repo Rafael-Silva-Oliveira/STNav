@@ -1,6 +1,6 @@
 import tacco as tc
 import scanpy as sc
-
+import pandas as pd
 import squidpy as sq
 import matplotlib.pyplot as plt
 
@@ -13,6 +13,27 @@ reference = sc.read_h5ad(
 reference.obs.columns
 adata.var_names_make_unique()
 reference.var_names_make_unique()
+
+
+# Create a cell_type x gene markers
+markers = pd.read_csv(
+    r"/mnt/work/RO_src/data/processed/PipelineRun_2024_07_02-10_56_44_AM/ST/Files/ST_scMAGS_markers.csv"
+)
+
+cell_type_markers_dict = markers.groupby("CellType")["Markers"].apply(list).to_dict()
+cell_type_markers_dict
+
+all_marker_genes = list(
+    set([marker for markers in cell_type_markers_dict.values() for marker in markers])
+)
+all_marker_genes
+
+reference_profiles = pd.DataFrame(
+    data=adata.X.toarray(), columns=adata.var.index, index=adata.obs.index
+)
+
+reference_profiles
+
 
 mthd = "OT"
 tc.tl.annotate(

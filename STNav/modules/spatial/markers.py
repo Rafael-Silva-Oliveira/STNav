@@ -239,9 +239,7 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
 def scMAGS_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
-    exp_data, labels, gene_names = convert_form_anndata(
-        sc_adata, "ann_level_3_transferred_label"
-    )
+    exp_data, labels, gene_names = convert_form_anndata(sc_adata, "cell_type_fine")
     mags = sm.ScMags(data=exp_data, labels=labels, gene_ann=gene_names)
     mags.filter_genes(nof_sel=config["nof_sel"])
     mags.sel_clust_marker(nof_markers=config["nof_markers"])

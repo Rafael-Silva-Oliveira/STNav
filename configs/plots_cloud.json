@@ -224,7 +224,7 @@
         "data_type": "scRNA",
         "params": {
           "adata": "adata",
-          "group": "ann_level_3_transferred_label",
+          "group": "cell_type_fine",
           "condition": "leiden_clusters",
           "show": false
         }
@@ -250,7 +250,7 @@
         "data_type": "scRNA",
         "params": {
           "adata": "adata",
-          "groupby": "ann_level_3_transferred_label",
+          "groupby": "cell_type_fine",
           "show": false
         }
       }
@@ -281,7 +281,7 @@
           "n_genes": 5,
           "key": "wilcoxon",
           "show_gene_labels": true,
-          "groupby": "ann_level_3_transferred_label",
+          "groupby": "cell_type_fine",
           "show": false
         }
       },
@@ -325,7 +325,7 @@
           "adata": "adata",
           "n_genes": 5,
           "key": "wilcoxon",
-          "groupby": "ann_level_3_transferred_label",
+          "groupby": "cell_type_fine",
           "show": false
         }
       }
@@ -341,7 +341,7 @@
           "groups": null,
           "n_genes": 5,
           "key": "wilcoxon",
-          "groupby": "ann_level_3_transferred_label",
+          "groupby": "cell_type_fine",
           "show": false
         }
       },
@@ -383,7 +383,7 @@
         "params": {
           "adata": "adata",
           "groupby": [
-            "ann_level_3_transferred_label"
+            "cell_type_fine"
           ],
           "key": "wilcoxon",
           "n_genes": 5,

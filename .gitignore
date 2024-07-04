@@ -841,3 +841,46 @@ notebooks/experimental/DecoupleR_ORA/adata_ulm.h5ad
 notebooks/experimental/DecoupleR_ORA/decouplr_adata.h5ad
 notebooks/experimental/topACT/demo-output-final.png
 notebooks/experimental/topACT/demo-output-final.txt
+notebooks/experimental/cdata_test.xlsx
+notebooks/experimental/combined_annotations.h5ad
+notebooks/experimental/model_healthy_lung.pkl
+notebooks/experimental/model_sclc_lung.pkl
+notebooks/experimental/B2C/adata_02_micron.h5ad
+notebooks/experimental/B2C/bdata.h5ad
+notebooks/experimental/B2C/gex.npz
+notebooks/experimental/B2C/gex.tiff
+notebooks/experimental/B2C/he.npz
+notebooks/experimental/B2C/he.tiff
+notebooks/experimental/B2C/if_gex.npz
+notebooks/experimental/B2C/if_gex.tiff
+notebooks/experimental/B2C/if.npz
+notebooks/experimental/B2C/if.tiff
+notebooks/experimental/B2C/model_sclc_lung.pkl
+notebooks/experimental/celltypist_demo_folder/b2c_celltypist.png
+notebooks/experimental/celltypist_demo_folder/cell_typist_sclc_nonadjusted.png
+notebooks/experimental/celltypist_demo_folder/combined_adata_nonadjusted.h5ad
+notebooks/experimental/celltypist_demo_folder/combined_adata.h5ad
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/AE1_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/AEP_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/B cell_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Basal_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/cell_typist_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Ciliated_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Club_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/DC_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Endothelial_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Fibroblast_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Ionocyte_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Macrophage_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Mast_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Mucinous_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Neuroendocrine_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Neutrophil_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Plasma cell_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/SCLC-A_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/SCLC-N_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/SCLC-P_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/T cell_sclc.png
+notebooks/experimental/celltypist_demo_folder/Adjusted_Conn/Tuft_sclc.png
+notebooks/experimental/celltypist_demo_folder/Non_Adjusted/model_healthy_lung.pkl
+notebooks/experimental/figures/cell_typist_sclc.png

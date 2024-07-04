@@ -1,7 +1,7 @@
 {
   "scRNA": {
     "usage": true,
-    "path": "/mnt/work/RO_src/data/processed/Keep/PipelineRun_2024_02_23-09_22_35_AM/scRNA/Files/scRNA_raw_adata.h5ad",
+    "path": "/mnt/work/RO_src/data/raw/scRNA/SCLC/SCLC_lung.h5ad",
     "cell_annotation": {
       "scArches_surgery": {
         "usage": false,
@@ -226,7 +226,7 @@
           "usage": true,
           "func_str": "sc.tl.dendrogram",
           "params": {
-            "groupby": "ann_level_3_transferred_label"
+            "groupby": "cell_type_fine"
           }
         }
       }
@@ -239,7 +239,7 @@
         "func_str": "sc.tl.rank_genes_groups",
         "params": {
           "adata": "adata",
-          "groupby": "ann_level_3_transferred_label",
+          "groupby": "cell_type_fine",
           "groups": "all",
           "reference": "rest",
           "method": "wilcoxon",
@@ -440,7 +440,7 @@
           "params": {
             "adata": "adata",
             "n_pcs": 30,
-            "n_neighbors": 20
+            "n_neighbors": 10
           }
         },
         "umap": {
@@ -599,9 +599,9 @@
           "SCVI": {
             "usage": false,
             "train": false,
-            "labels_key": "ann_level_3_transferred_label",
+            "labels_key": "cell_type_fine",
             "layer": "raw_counts",
-            "top_genes": 7,
+            "top_genes": 15,
             "max_epochs": 1250,
             "early_stopping": true,
             "pre_trained_model_path": "/mnt/work/RO_src/models/scmodel",
@@ -612,7 +612,7 @@
             "train": false,
             "top_genes": 7,
             "epochs": 1500,
-            "labels": "ann_level_3_transferred_label",
+            "labels": "cell_type_fine",
             "n_jobs": 10,
             "feature_selection": true,
             "use_SGD": false,
@@ -626,8 +626,8 @@
           "scMAGS": {
             "usage": true,
             "nof_sel": 1000,
-            "nof_markers": 8,
-            "labels": "ann_level_3_transferred_label",
+            "nof_markers": 15,
+            "labels": "cell_type_fine",
             "markers_save_path": "/mnt/work/RO_src/data/processed"
           }
         }
@@ -700,7 +700,7 @@
           "func_str": "sq.gr.sepal",
           "params": {
             "adata": "adata",
-            "max_neighs": 4,
+            "max_neighs": 6,
             "n_jobs": 1
           }
         }
@@ -739,7 +739,7 @@
         },
         "adata_to_use": "deconvoluted_adata",
         "save_as": "stlearn_cci",
-        "usage": true,
+        "usage": false,
         "func_str": "stLearn_wrapper",
         "data_type": "ST",
         "params": {

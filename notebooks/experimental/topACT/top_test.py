@@ -13,6 +13,14 @@ from loguru import logger
 from tqdm import tqdm
 import anndata as ad
 
+import scanpy as sc
+
+sc_adata = sc.read_h5ad(
+    r"/mnt/work/RO_src/data/processed/PipelineRun_2024_06_30-08_30_51_PM/scRNA/Files/raw_adata.h5ad"
+)
+
+sc_adata.obs["ann_level_3_transferred_label"].value_counts()
+
 
 def readfile(filename) -> list[str]:
     with open(file=filename) as f:

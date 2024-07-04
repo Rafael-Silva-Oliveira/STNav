@@ -108,7 +108,7 @@ def main(
     else:
 
         adata_dict = ORCHESTRATOR.run_analysis(saving_dir=directory)
-
+        # TODO: fix thisadata_Dict to return the actual data from the config
         with open(f"{directory}/paths/adata_dict.json", "w", encoding="utf-8") as f:
             json.dump(plotting_json, f, ensure_ascii=False, indent=4)
 

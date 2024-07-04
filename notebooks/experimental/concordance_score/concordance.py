@@ -52,12 +52,43 @@ merged_df = pd.concat(dfs, axis=1, join="inner")
 print(merged_df.head())
 
 merged_df["cell_type"] = merged_df["cell_type"].str.replace(
-    "_Mean_LogNorm_Conn_Adj_scMAGS", "", regex=False
+    "_Mean_LogNorm_Conn_Adj", "", regex=False
 )
 merged_df
-import matplotlib.pyplot as plt
-import squidpy as sq
 
+merged_df["cell_type"].unique()
+# Plot corr proportions
+# Calculate the proportion of each cell type for each method
+proportions = merged_df.apply(lambda x: x.value_counts(normalize=True))
+proportions
+# Transpose the DataFrame
+proportions = proportions.transpose()
+proportions.to_excel("proportions_methods.xlsx")
+# Calculate the correlation matrix
+correlation_matrix = proportions.corr()
+
+print(correlation_matrix)
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
+# Choose one method as the "ground truth"
+ground_truth = merged_df["cell_type_OT"]
+
+# Choose another method to compare to the ground truth
+predicted = merged_df["cell_type_svm"]
+
+# Calculate the confusion matrix
+cm = confusion_matrix(ground_truth, predicted)
+
+# Plot the confusion matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt="d", cmap="coolwarm")
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Ground Truth")
+plt.show()
+plt.savefig("test_cm.png")
 cell_types = merged_df["cell_type_OT"].unique()
 
 # Create a figure with 3 subplots

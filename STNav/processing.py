@@ -107,9 +107,9 @@ class STNavCore(object):
         )
 
         # If debug is True, select a random subset of the data
-        debug = False
+        debug = True
         if debug:
-            subset_fraction = 0.1  # Define the fraction of data to keep as subset
+            subset_fraction = 0.05  # Define the fraction of data to keep as subset
             sc.pp.subsample(adata, fraction=subset_fraction)
         logger.info(
             f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
