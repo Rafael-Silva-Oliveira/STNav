@@ -22,6 +22,7 @@ import scarches as sca
 from loguru import logger
 from scipy import sparse
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
@@ -511,6 +512,65 @@ sc.pl.umap(adata_to_annotate, color=["overcluster"], legend_loc="on data", s=5)
 sclc_markers = []
 sc.tl.score_genes(adata_to_annotate, sclc_markers, score_name="SCLC_score")
 
+# Check overlap with our data
+sc.pl.umap(adata_to_annotate, color=["some", "markers"], s=5)
+
+# Or we can just plot the SCLC score and see which section has it highest
+sc.pl.umap(adata_to_annotate, color=["SCLC_score"], s=5)
+
+# We can plot the median values of these scores, and in a barplot we can have an idea of which clusters has a higher SCLC score, and thus confirm the cells that are classified as SCLC
+sclc_scores = (
+    adata_to_annotate.obs[["overcluster", "SCLC_score"]].groupby("overcluster").median()
+)
+
+plt.figure()
+sns.barplot(sclc_scores, y="SCLC_score", x=sclc_scores.index)
+
+# Create an isolated dataframe with the labels and the scores from the CellTypist and scVI models
+
+scores = (
+    adata_to_annotate.obs[["transfer_score", "sclc_cancer_score", "sclc_normal_score"]]
+    .groupby("overcluster")
+    .agg(lambda x: x.mode())
+)
+labels = (
+    adata_to_annotate.obs[["predicted", "sclc_cancer_labels", "sclc_normal_labels"]]
+    .groupby("overcluster")
+    .agg(lambda x: x.mean())
+)
+
+mapping_res = labels.merge(right=scores, left_index=True, right_index=True)
+
+
+# We can now use our SCLC score + transfered labels from the annotated reference + manually looking for marker genes for each cell type, to confirm and/or change the cell types for each cluster
+
+for x in range(len(adata_to_annotate.obs.overcluster.unique())):
+    print(f'"{x}":"",')
+
+# Now we can use PanglaoDB, CellTypist markers, etc to look for markers associated with a given cell type, or manually look in references for markers
+
+# First, find marker genes for each cluster
+sc.tl.rank_genes_groups(adata_to_annotate, groupby="overcluster")
+marks = sc.get.rank_genes_groups_df(adata_to_annotate, group=None)
+
+# Plot using umap for the markers, and see if they overlap with the clusters and cell types on the UMAP
+sc.pl.umap(adata_to_annotate, color=["marker"], legend_loc="on data", s=5)
+
+# ... and compare with the marks dataframe, to see if the markers on the umap above, correspond to the clusters found in the rank_genes_groups
+marks[marks.names.isin(["markers"])].sort_values(
+    "logfoldchanges", ascending=False
+).head()
+
+# ... we can further compare with our SCLC score to see if the cell type we're evaluating has a high and positive SCLC score (if its SCLC) or not (if its other cell types such as immune, etc). If the markers identify clusters associated with non SCLC and the SCLC score is negative, then we have strong indications that is in fact not a SCLC cell for that cluster
+
+
+# Plotting trick to make UMAP easily visible, grey
+ax = sc.pl.umap(adata_to_annotate, palette="lightgrey", show=False)
+sc.pl.umap(adata_to_annotate[adata_to_annotate.obs.overcluster=="1"], color="overcluster", ax=ax, legend_loc=None, palette="k")
+
+# Finally, map the dictionary to the cell type
+adata_to_annotate.obs["final_cell_type"] = adata.obs.overcluster.map(over2cell)
+sc.pl.umap(adata_to_annotate color = ["final_cell_type"], s=2, legend_loc = "on data")
 # ################# 4.3 Annotation using reference atlas and query dataset ##############################
 # ################# 4.3.1 scArches ##############################
 
