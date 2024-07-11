@@ -239,7 +239,15 @@ def SCVI_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
 def scMAGS_mapper(sc_adata, config, STNavCorePipeline, gene_col, celltype_col):
 
-    exp_data, labels, gene_names = convert_form_anndata(sc_adata, "cell_type_fine")
+    # Add assertion that checks if cell_annotation_col is in sc_adata.obs.columns
+    cell_annotation_col = "cell_type_fine"
+    assert (
+        cell_annotation_col in sc_adata.obs.columns
+    ), f"'{cell_annotation_col}' not in sc_adata.obs.columns"
+
+    exp_data, labels, gene_names = convert_form_anndata(
+        sc_adata, cell_annotation_col=cell_annotation_col
+    )
     mags = sm.ScMags(data=exp_data, labels=labels, gene_ann=gene_names)
     mags.filter_genes(nof_sel=config["nof_sel"])
     mags.sel_clust_marker(nof_markers=config["nof_markers"])
@@ -379,7 +387,7 @@ class SpatialMarkersMapping:
     ):
         logger.info("Mapping markers to spatial cell types.")
         config = mapping_config["map_markers_to_spatial_cell_type"]
-        cell_type_col_name = "cell_type"
+        cell_type_col_name = "cell_type_markers"
         decomposition_type = "Mean_LogNorm_Conn_Adj"
 
         # Add spatial connectivities

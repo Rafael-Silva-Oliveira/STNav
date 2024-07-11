@@ -112,9 +112,7 @@
         "func_str": "sc.pp.normalize_total",
         "usage": true,
         "params": {
-          "adata": "adata",
-          "target_sum": 1e4,
-          "inplace": true
+          "adata": "adata"
         }
       },
       "log1p": {
@@ -374,9 +372,7 @@
         "func_str": "sc.pp.normalize_total",
         "usage": true,
         "params": {
-          "adata": "adata",
-          "target_sum": 1e4,
-          "inplace": true
+          "adata": "adata"
         }
       },
       "log1p": {
@@ -640,6 +636,23 @@
       "map_to_clusters": {
         "percentile_threshold": 0.8,
         "cluster_column_name": "leiden_clusters"
+      }
+    },
+    "DeconvolutionModels": {
+      "CellTypist": {
+        "usage": false,
+        "pre_trained_model_path": "/mnt/work/RO_src/Pipelines/STAnalysis/STNav/models",
+        "Annotate": {
+          "adata_to_use": "raw_adata",
+          "params": {
+            "X": "adata",
+            "transpose_output": false,
+            "mode": "best match",
+            "p_thres": 0.5,
+            "majority_voting": false,
+            "min_prop": 0
+          }
+        }
       }
     },
     "SpatialNeighbors": {
