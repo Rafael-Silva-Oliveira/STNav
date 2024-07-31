@@ -356,3 +356,18 @@ def perform_scArches_surgery(AnalysisPipeline):
     # self.adata_dict[self.data_type].setdefault("raw_adata", adata_query_final)
 
     return adata_query_final
+
+
+def perform_surgery_if_needed(self, data_type_dict, STNavCorePipeline):
+    if data_type_dict["cell_annotation"]["scArches_surgery"]["usage"]:
+        adata_raw = perform_scArches_surgery(STNavCorePipeline)
+        STNavCorePipeline.adata_dict[STNavCorePipeline.data_type].setdefault(
+            "raw_adata", adata_raw
+        )
+    elif data_type_dict["cell_annotation"]["celltypist_surgery"]["usage"]:
+        adata_raw = perform_celltypist(STNavCorePipeline)
+        STNavCorePipeline.adata_dict[STNavCorePipeline.data_type].setdefault(
+            "raw_adata", adata_raw
+        )
+    else:
+        STNavCorePipeline.read_rna()

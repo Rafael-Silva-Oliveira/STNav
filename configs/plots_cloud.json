@@ -1,21 +1,10 @@
 {
   "run_just_plots": {
     "usage": false,
-    "run_path": ""
+    "run_path": "/mnt/work/RO_src/data/processed/PipelineRun_2024_07_15-02_04_15_PM/paths/adata_dict.json"
   },
   "plots": {
     "sc_highly_variable_genes": {
-      "scRNA_highly_variable_genes_config_1.png": {
-        "usage": true,
-        "func_str": "sc.pl.highly_variable_genes",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata_or_result": "adata",
-          "log": false,
-          "show": false
-        }
-      },
       "ST_highly_variable_genes_config_2.png": {
         "usage": true,
         "func_str": "sc.pl.highly_variable_genes",
@@ -29,17 +18,6 @@
       }
     },
     "sc_highest_expressed_genes_plot": {
-      "scRNA_highest_expressed_genes_config_1.png": {
-        "usage": true,
-        "func_str": "sc.pl.highest_expr_genes",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "n_top": 15,
-          "show": false
-        }
-      },
       "ST_highest_expressed_genes_config_2.png": {
         "usage": true,
         "func_str": "sc.pl.highest_expr_genes",
@@ -53,21 +31,6 @@
       }
     },
     "sc_pca_plot": {
-      "scRNA_pca_plot_config_1.png": {
-        "usage": true,
-        "func_str": "sc.pl.pca",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "ncols": 2,
-          "color": [
-            "leiden_clusters"
-          ],
-          "show": false,
-          "annotate_var_explained": true
-        }
-      },
       "ST_pca_plot_config_1.png": {
         "usage": true,
         "func_str": "sc.pl.pca",
@@ -94,16 +57,6 @@
           "adata": "adata",
           "show": false
         }
-      },
-      "scRNA_pca_loadings_plot_config_1.png": {
-        "usage": true,
-        "func_str": "sc.pl.pca_loadings",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "show": false
-        }
       }
     },
     "sc_pca_variance_ratio_plot": {
@@ -118,35 +71,9 @@
           "n_pcs": 30,
           "show": false
         }
-      },
-      "scRNA_pca_variance_ratio_plot_config_1.png": {
-        "usage": true,
-        "func_str": "sc.pl.pca_variance_ratio",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "log": false,
-          "n_pcs": 30,
-          "show": false
-        }
       }
     },
     "sc_umap_plot": {
-      "scRNA_UMAP_LeidenClusters.png": {
-        "usage": true,
-        "func_str": "sc.pl.umap",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "color": [
-            "leiden_clusters"
-          ],
-          "edges": true,
-          "show": false
-        }
-      },
       "ST_UMAP_LeidenClusters.png": {
         "usage": true,
         "func_str": "sc.pl.umap",
@@ -160,50 +87,11 @@
           "edges": true,
           "show": false
         }
-      },
-      "scRNA_hclust7.png": {
-        "usage": false,
-        "func_str": "sc.pl.umap",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "color": [
-            "hclust_7"
-          ],
-          "show": false
-        }
-      },
-      "ST_hclust7.png": {
-        "usage": false,
-        "func_str": "sc.pl.umap",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "ST",
-        "params": {
-          "adata": "adata",
-          "color": [
-            "hclust_7"
-          ],
-          "show": false
-        }
       }
     },
     "sc_tsne_plot": {
-      "scRNA_tsne.png": {
-        "usage": true,
-        "func_str": "sc.pl.tsne",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "color": [
-            "leiden_clusters"
-          ],
-          "show": false
-        }
-      },
       "ST_tsne.png": {
-        "usage": true,
+        "usage": false,
         "func_str": "sc.pl.tsne",
         "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
@@ -217,18 +105,6 @@
       }
     },
     "proportion_per_cell_plot": {
-      "scRNA_proportion_per_cell_plot.png": {
-        "usage": true,
-        "func_str": "proportion_per_cell_plot",
-        "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "group": "cell_type_fine",
-          "condition": "leiden_clusters",
-          "show": false
-        }
-      },
       "ST_proportion_per_cell_plot.png": {
         "usage": false,
         "func_str": "proportion_per_cell_plot",
@@ -243,24 +119,24 @@
       }
     },
     "sc_correlation_matrix": {
-      "scRNA_corr_matrix.png": {
+      "ST_corr_matrix.png": {
         "usage": true,
         "func_str": "sc.pl.correlation_matrix",
         "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
-          "groupby": "cell_type_fine",
+          "groupby": "cell_type",
           "show": false
         }
       }
     },
     "sc_heatmap": {
-      "scRNA_heatmap_by_cluster.png": {
+      "ST_heatmap_by_cluster.png": {
         "usage": true,
         "func_str": "sc.pl.heatmap",
         "adata_to_use": "preprocessed_adata",
-        "data_type": "scRNA",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "groupby": "leiden_clusters",
@@ -270,30 +146,16 @@
       }
     },
     "sc_rank_genes_groups_heatmap_plot": {
-      "scRNA_rank_genes_groups_heatmap.png": {
-        "usage": true,
-        "func_str": "sc.pl.rank_genes_groups_heatmap",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "groups": null,
-          "n_genes": 5,
-          "key": "wilcoxon",
-          "show_gene_labels": true,
-          "groupby": "cell_type_fine",
-          "show": false
-        }
-      },
       "ST_rank_genes_groups_heatmap.png": {
-        "usage": false,
+        "usage": true,
         "func_str": "sc.pl.rank_genes_groups_heatmap",
         "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
-          "groups": "5",
+          "groups": null,
           "n_genes": 10,
+          "key": "wilcoxon",
           "show_gene_labels": true,
           "groupby": "leiden_clusters",
           "show": false
@@ -301,11 +163,11 @@
       }
     },
     "sc_rank_genes_groups": {
-      "scRNA_rank_genes_groups.png": {
+      "ST_rank_genes_groups.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "groups": null,
@@ -319,36 +181,22 @@
       "sc_rank_genes_groups_matrixplot.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups_matrixplot",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "n_genes": 5,
           "key": "wilcoxon",
-          "groupby": "cell_type_fine",
+          "groupby": "cell_type",
           "show": false
         }
       }
     },
     "sc_rank_genes_groups_stacked_violin_plot": {
-      "sc_rank_genes_groups_stacked_violin_plot_scRNA.png": {
-        "usage": true,
-        "func_str": "sc.pl.rank_genes_groups_stacked_violin",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
-        "params": {
-          "adata": "adata",
-          "groups": null,
-          "n_genes": 5,
-          "key": "wilcoxon",
-          "groupby": "cell_type_fine",
-          "show": false
-        }
-      },
       "sc_rank_genes_groups_stacked_violin_plot_ST.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups_stacked_violin",
-        "adata_to_use": "preprocessed_DEG_adata",
+        "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -361,11 +209,11 @@
       }
     },
     "sc_rank_genes_groups_tracksplot": {
-      "scRNA_rank_genes_tracksplot.png": {
+      "ST_rank_genes_tracksplot.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups_tracksplot",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "key": "wilcoxon",
@@ -375,15 +223,15 @@
       }
     },
     "sc_rank_genes_groups_dotplot": {
-      "scRNA_dotplot_by_CellType_config_1.png": {
+      "ST_dotplot_by_CellType_config_1.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups_dotplot",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "groupby": [
-            "cell_type_fine"
+            "cell_type"
           ],
           "key": "wilcoxon",
           "n_genes": 5,
@@ -393,11 +241,11 @@
       }
     },
     "sc_rank_genes_groups_violin": {
-      "scRNA_rank_genes_violin.png": {
+      "ST_rank_genes_violin.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups_violin",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "groups": null,
@@ -406,11 +254,11 @@
           "show": false
         }
       },
-      "scRNA_rank_genes_violin_0vs1.png": {
+      "ST_rank_genes_violin_0vs1.png": {
         "usage": true,
         "func_str": "sc.pl.rank_genes_groups_violin",
-        "adata_to_use": "preprocessed_DEG_adata",
-        "data_type": "scRNA",
+        "adata_to_use": "preprocessed_adata",
+        "data_type": "ST",
         "params": {
           "adata": "adata",
           "groups": "0",
@@ -424,7 +272,7 @@
       "ST_nhood_enrichment.png": {
         "usage": true,
         "func_str": "sq.pl.nhood_enrichment",
-        "adata_to_use": "sq_neighborhood_adata",
+        "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -434,7 +282,7 @@
       "ST_nhood_average.png": {
         "usage": true,
         "func_str": "sq.pl.nhood_enrichment",
-        "adata_to_use": "sq_neighborhood_adata",
+        "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -448,7 +296,7 @@
       "ST_co_occurrence_1.png": {
         "usage": true,
         "func_str": "sq.pl.co_occurrence",
-        "adata_to_use": "sq_neighborhood_adata",
+        "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",
@@ -459,7 +307,7 @@
       "ST_co_occurrence_all.png": {
         "usage": true,
         "func_str": "sq.pl.co_occurrence",
-        "adata_to_use": "sq_neighborhood_adata",
+        "adata_to_use": "preprocessed_adata",
         "data_type": "ST",
         "params": {
           "adata": "adata",

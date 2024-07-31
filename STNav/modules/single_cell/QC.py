@@ -22,6 +22,8 @@ def perform_QC(
     pct_counts_mt=25,
     qc_vars=["Mt", "Ribo", "Hb"],
 ):
+    adata.X = adata.raw.X.copy()
+
     adata.var_names_make_unique()
 
     # Filter genes by counts

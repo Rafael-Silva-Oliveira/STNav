@@ -968,3 +968,17 @@ STNav/models/model_healthy_lung.pkl
 STNav/models/model_sclc_lung_1000_epochs.pkl
 STNav/models/model_sclc_lung_balanced.pkl
 STNav/models/model_sclc_lung.pkl
+notebooks/downstream/scRNA/lvae_model/model.pt
+notebooks/downstream/scRNA/model/model.pt
+notebooks/downstream/ST/GARD/GARD_score.xlsx
+notebooks/downstream/ST/GARD/ranked_genes_list.xlsx
+notebooks/downstream/ST/GARD/RSI_enrichr.xlsx
+notebooks/downstream/ST/GARD/rsi_final_df.xlsx
+notebooks/downstream/ST/GARD/RSI_HD.png
+notebooks/downstream/ST/GARD/rsi.h5ad
+notebooks/experimental/B2C/adata_raw.h5ad
+notebooks/downstream/scRNA/adata_annotated.h5ad
+notebooks/downstream/scRNA/markers_CellTypist_markers.csv
+notebooks/downstream/scRNA/markers_heatmap_top_markers_SCVI_2024_07_16-09_46_17_AM.png
+notebooks/downstream/scRNA/markers_scMAGS_markers.csv
+notebooks/downstream/scRNA/markers_scVI_markers.csv

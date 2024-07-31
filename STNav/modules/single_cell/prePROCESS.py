@@ -38,10 +38,6 @@ def perform_preprocessing(
     )
 
     logger.info(
-        f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X before any filters or normalization: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-    )
-
-    logger.info(
         f"adata.var contains the current gene information: \n {adata.var=} \n with the following columns: {adata.var.columns=}"
     )
     logger.info(
@@ -51,31 +47,16 @@ def perform_preprocessing(
     adata.layers["raw_counts"] = adata.X.copy()
 
     logger.info(f"Applying normalization.")
+    adata.layers["normalized_counts"] = adata.layers["raw_counts"].copy()
 
-    logger.info(
-        f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X before normalizing: \n 1 - {adata.X[0,:].sum()= } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-    )
-    sc.pp.normalize_total(adata, target_sum=target_sum)
-
-    logger.info(
-        f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X after normalizing: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-    )
-    adata.layers["norm"] = adata.X
+    sc.pp.normalize_total(adata=adata, layer="normalized_counts")
 
     # It requires a positional argument and not just keyword arguments
     # Get the parameters from return_filtered_params
     logger.info(f"Applying log1p")
-    sc.pp.log1p(adata)
+    adata.layers["lognorm_counts"] = adata.layers["normalized_counts"].copy()
 
-    logger.info(
-        f"\n Applying the log changed the counts from UMI counts to log counts. The sum of log counts from the 3 first examples (cells for scRNA or spots for ST) from adata.X after applying log: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-    )
-    adata.layers["lognorm"] = adata.X
-
-    logger.info(
-        f"Examples from saved 'lognorm' layer: {adata.layers['lognorm'][0,10:80].toarray()}"
-    )
-    adata.raw = adata
+    sc.pp.log1p(adata, layer="lognorm_counts")
 
     logger.info(f"Selecting highly variable genes")
 
@@ -90,12 +71,10 @@ def perform_preprocessing(
         subset=subset_hvg,
     )
 
-    logger.info(
-        f"\n After applying highly variable genes, 3 first examples (cells for scRNA or spots for ST) from adata.X after applying highly variable genes: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-    )
-
     logger.info(f"Applying scaling")
-    sc.pp.scale(adata, zero_center=zero_center)
+    adata.layers["scaled_lognorm_counts"] = adata.layers["lognorm_counts"].copy()
+
+    sc.pp.scale(adata, zero_center=zero_center, layer="scaled_lognorm_counts")
 
     logger.info("Adding extra info for plotting")
 
@@ -121,9 +100,6 @@ def perform_preprocessing(
 
     logger.info(f"	Applying dendogram")
     sc.tl.dendrogram(adata, groupby="leiden")
-
-    # save the counts to a separate object for later, we need the normalized counts in raw for DEG dete.Save raw data before preprocessing values and further filtering
-    adata.layers["preprocessed_counts"] = adata.X.copy()
 
     logger.info(f"Current adata.X shape after preprocessing: {adata.X.shape}")
     logger.info(

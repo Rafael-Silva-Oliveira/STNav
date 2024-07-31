@@ -12,40 +12,27 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import torch
 from loguru import logger
-from sklearn.cluster import AgglomerativeClustering
-import scvi
 import squidpy as sq
-
-from scvi.external.stereoscope import RNAStereoscope, SpatialStereoscope
-from scvi.model import CondSCVI, DestVI
+import decoupler as dc
 
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 
 sc.settings.n_jobs >= -1
-import inspect
 
-import os
 from STNav.utils.helpers import (
-    fix_write_h5ad,
-    log_adataX,
     return_filtered_params,
     run_enrichr,
     run_gsea,
     run_prerank,
-    unnormalize,
     transform_adata,
     save_processed_adata,
     return_from_checkpoint,
-    extract_pipeline_run,
-    is_normalized,
+    swap_layer,
 )
 
 sc.set_figure_params(facecolor="white", figsize=(8, 8))
 sc.settings.verbosity = 3
-
-import anndata as ad
 
 
 class STNavCore(object):
@@ -60,26 +47,34 @@ class STNavCore(object):
         adata_dict: dict = None,
     ) -> None:
         self.config = config
-        self.saving_path = saving_path
-        self.data_type = data_type
+        self.saving_path: str = saving_path
+        self.data_type: str = data_type
         self.adata_dict = adata_dict
 
     def read_rna(self):
         config = self.config[self.data_type]
 
         # Load H5AD scRNA reference dataset
-        adata = sc.read_h5ad(config["path"])
+        adata: an.AnnData = sc.read_h5ad(filename=config["path"])
         logger.info(
             f"Loaded scRNA dataset with {adata.n_obs} cells and {adata.n_vars} genes."
         )
         adata.var_names = adata.var_names.str.capitalize()
         adata.var.index = adata.var.index.str.capitalize()
-
-        # Saving to adata to raw data simply to make sure that genes are now capitalized. This is to overcome an issue from scanpy.
-        adata.raw = adata
+        adata.var_names_make_unique()
+        debug = True
+        if debug:
+            subset_fraction = 0.025  # Define the fraction of data to keep as subset
+            sc.pp.subsample(data=adata, fraction=subset_fraction)
+        logger.info(
+            f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
+        )
+        # As destriping from b2c provides non-integer values, if integers are strictly necessary for a downstream application just round the count matrix.
+        adata.X.data = np.round(adata.X.data)
+        adata.raw = adata.copy()
 
         try:
-            adata.var.set_index("features", inplace=True)
+            adata.var.set_index(keys="features", inplace=True)
             adata.var.drop(columns=["_index"], inplace=True)
 
         except Exception as e:
@@ -99,7 +94,7 @@ class STNavCore(object):
         config = self.config[self.data_type]
 
         # Load Visium dataset
-        adata = sc.read_visium(
+        adata: an.AnnData = sc.read_visium(
             path=config["path"],
             count_file=config["count_file"],
             load_images=config["load_images"],
@@ -110,7 +105,7 @@ class STNavCore(object):
         debug = True
         if debug:
             subset_fraction = 0.05  # Define the fraction of data to keep as subset
-            sc.pp.subsample(adata, fraction=subset_fraction)
+            sc.pp.subsample(data=adata, fraction=subset_fraction)
         logger.info(
             f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
         )
@@ -121,7 +116,7 @@ class STNavCore(object):
         adata.raw = adata
 
         try:
-            adata.var.set_index("_index", inplace=True)
+            adata.var.set_index(keys="_index", inplace=True)
         except Exception as e:
             logger.warning(
                 f"Failed to set new index _index. This might've happened because the index of var is already the genes/feature names, so no changes need to be made."
@@ -131,21 +126,21 @@ class STNavCore(object):
 
         del adata
 
-    def QC(self):
+    def QC(self) -> None:
         step = "quality_control"
         config = self.config[self.data_type][step]
         adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
-        adata = sc.read_h5ad(adata_path)
+        adata: an.AnnData = sc.read_h5ad(filename=adata_path)
 
         logger.info("Running quality control.")
-        adata_original = adata.copy()
+        adata_original: an.AnnData = adata.copy()
         # mitochondrial genes
-        adata.var["Mt"] = adata.var_names.str.startswith("Mt-")
+        adata.var["Mt"] = adata.var_names.str.startswith(pat="Mt-")
         # ribosomal genes
-        adata.var["Ribo"] = adata.var_names.str.startswith(("Rps", "Rpl"))
+        adata.var["Ribo"] = adata.var_names.str.startswith(pat=("Rps", "Rpl"))
         # hemoglobin genes.
         adata.var["Hb"] = adata.var_names.str.contains(
-            ("^Hb[^(p)]")
+            pat=("^Hb[^(p)]")
         )  # adata.var_names.str.contains('^Hb.*-')
 
         if config["calculate_qc_metrics"]["usage"]:
@@ -216,7 +211,7 @@ class STNavCore(object):
                 )
             )
 
-            genes_to_remove = adata.var_names.str.contains(genes_to_remove_pattern)
+            genes_to_remove = adata.var_names.str.contains(pat=genes_to_remove_pattern)
             keep = np.invert(genes_to_remove)
             adata = adata[:, keep]
             print(
@@ -228,13 +223,12 @@ class STNavCore(object):
         )
         del adata
 
-    def preprocessing(self) -> an.AnnData:
+    def preprocessing(self) -> None:
         step = "preprocessing"
         config = self.config[self.data_type][step]
         adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
         adata: an.AnnData = sc.read_h5ad(filename=adata_path)
 
-        adata.var_names_make_unique()
         logger.info(
             f"Running preprocessing for {self.data_type} with '{config['adata_to_use']}' adata file."
         )
@@ -248,27 +242,22 @@ class STNavCore(object):
         )
 
         logger.info(
-            f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X before any filters or normalization: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-        )
-
-        logger.info(
             f"adata.var contains the current gene information: \n {adata.var=} \n with the following columns: {adata.var.columns=}"
         )
         logger.info(
-            f"adata.obs contains the current cell/spot information: \n {adata.obs=} \n with the following columns: {adata.obs.columns=}"
+            f"adata.obs contains the current bin information: \n {adata.obs=} \n with the following columns: {adata.obs.columns=}"
         )
-        is_normalized(adata)
 
         # Filter genes by counts
         if config["filter_genes"]["usage"]:
             logger.info(
-                f"Applying filtering genes with the following params {config['filter_genes']['params']} - Getting rid of genes that are found in fewer than 25 counts."
+                f"Applying filtering genes with the following params {config['filter_genes']['params']}."
             )
             sc.pp.filter_genes(
                 **return_filtered_params(config=config["filter_genes"], adata=adata)
             )
             logger.info(
-                f"	After filtering genes: {adata.n_obs} observations (cells if scRNA, spots if ST) x {adata.n_vars} genes."
+                f"	After filtering genes: {adata.n_obs} observations x {adata.n_vars} genes."
             )
 
         # Filter cells by counts
@@ -280,25 +269,13 @@ class STNavCore(object):
                 **return_filtered_params(config=config["filter_cells"], adata=adata)
             )
             logger.info(
-                f"	After filtering cells: {adata.n_obs= } observations (cells if scRNA, spots if ST) x {adata.n_vars= } cells. Confirm if this is true."
+                f"	After filtering cells: {adata.n_obs= } observations x {adata.n_vars= } cells. "
             )
-
-        # TODO: comapre the raw_adata with the current adata after filtering, and from the raw, create an ID with 1 or 0 that shows which were removed and kept; Then plot and save the plot
-
-        if config["unnormalize"]["usage"]:
-            adata_to_unnormalize = adata.copy()
-            adata_unnormalized = unnormalize(
-                adata_to_unnormalize, count_col=config["unnormalize"]["col_name"]
-            )
-            logger.info(
-                f"	Saving unnormalized data do layers as 'unnormalized_counts' for data type {self.data_type}"
-            )
-            adata.layers["unnormalized_counts"] = adata_unnormalized.X.copy()
 
         # Save original X data - adata.X would be the raw counts
         if self.data_type == "ST":
 
-            adata_original = sc.read_h5ad(
+            adata_original: an.AnnData = sc.read_h5ad(
                 filename=self.adata_dict[self.data_type]["raw_adata"]
             )
             adata_original.obs["status"] = np.where(
@@ -315,24 +292,22 @@ class STNavCore(object):
             del adata_original
 
         adata.layers["raw_counts"] = adata.X.copy()
+        adata.raw = adata
 
-        # Normalized total to CPM (1e6)
+        # Normalize counts
         if config["normalize"]["usage"]:
             logger.info(
                 f"Applying normalization with the following params {config['normalize']['params']}"
             )
 
-            logger.info(
-                f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X before normalizing: \n 1 - {adata.X[0,:].sum()= } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-            )
+            # Create a normalized counts copy of the raw_counts so that this is used to get the normalization
+            adata.layers[config["normalize"]["params"]["layer"]] = adata.layers[
+                "raw_counts"
+            ].copy()
+
             sc.pp.normalize_total(
                 **return_filtered_params(config=config["normalize"], adata=adata)
             )
-
-            logger.info(
-                f"\n The sum of UMIs from 3 first examples (cells scRNA or spots for ST) from adata.X after normalizing: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-            )
-            adata.layers["norm"] = adata.X
 
         if config["log1p"]["usage"]:
             # It requires a positional argument and not just keyword arguments
@@ -340,20 +315,11 @@ class STNavCore(object):
             logger.info(
                 f"Applying log1p with the following params {config['log1p']['params']}"
             )
-            # TODO: fix this part
-            sc.pp.log1p(adata)
-            # sc.pp.log1p(**return_filtered_params(config=config["log1p"], adata=adata))
+            adata.layers[config["log1p"]["params"]["layer"]] = adata.layers[
+                config["normalize"]["params"]["layer"]
+            ].copy()
 
-            logger.info(
-                f"\n Applying the log changed the counts from UMI counts to log counts. The sum of log counts from the 3 first examples (cells for scRNA or spots for ST) from adata.X after applying log: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-            )
-            adata.layers["lognorm"] = adata.X
-
-        logger.info(
-            f"Examples from saved 'lognorm' layer: {adata.layers['lognorm'][0,10:80].toarray()}"
-        )
-        adata.raw = adata
-        is_normalized(adata)
+            sc.pp.log1p(adata, layer=f"{config['log1p']['params']['layer']}")
 
         if config["highly_variable_genes"]["usage"]:
             logger.info(
@@ -374,10 +340,6 @@ class STNavCore(object):
                 )
             )
 
-            logger.info(
-                f"\n After applying highly variable genes, 3 first examples (cells for scRNA or spots for ST) from adata.X after applying highly variable genes: \n 1 - {adata.X[0,:].sum() = } \n 2 - {adata.X[1,:].sum() = } \n 3 - {adata.X[2,:].sum() = }"
-            )
-
         if config["scale"]["usage"]:
             logger.info(
                 f"Applying scaling with the following params {config['scale']['params']}"
@@ -389,6 +351,10 @@ class STNavCore(object):
 
             # Extract 'X' from the parameters
             X_value = filtered_params.pop("X", None)
+
+            adata.layers[config["scale"]["params"]["layer"]] = adata.layers[
+                config["log1p"]["params"]["layer"]
+            ].copy()
 
             # Call log1p function with X as positional argument and the rest as keyword arguments
             sc.pp.scale(
@@ -450,33 +416,6 @@ class STNavCore(object):
                 )
             )
 
-        if config["plotting_prep"]["louvain"]["usage"]:
-            logger.info(
-                f"	Applying louvain with the following params {config['plotting_prep']['louvain']['params']}"
-            )
-            sc.tl.louvain(
-                **return_filtered_params(
-                    config=config["plotting_prep"]["louvain"], adata=adata
-                )
-            )
-
-        if config["plotting_prep"]["hclust"]["usage"]:
-            logger.info(
-                f"	Applying hierarchical clustering with the following params {config['plotting_prep']['hclust']['params']}"
-            )
-            cluster = AgglomerativeClustering(
-                **return_filtered_params(config=config["plotting_prep"]["hclust"])
-            )
-            assert (
-                "X_pca" in adata.obsm
-            ), f"There's no X_pca component in adata.obsm {adata=}"
-            X_pca = adata.obsm["X_pca"]
-
-            adata.obs[
-                "hclust_"
-                + str(config["plotting_prep"]["hclust"]["params"]["n_clusters"])
-            ] = cluster.fit_predict(X_pca).astype(str)
-
         if config["plotting_prep"]["dendogram"]["usage"]:
             logger.info(
                 f"	Applying dendogram with the following params {config['plotting_prep']['dendogram']['params']}"
@@ -487,62 +426,27 @@ class STNavCore(object):
                     config=config["plotting_prep"]["dendogram"],
                 ),
             )
-        # save the counts to a separate object for later, we need the normalized counts in raw for DEG dete.Save raw data before preprocessing values and further filtering
-        adata.layers["preprocessed_counts"] = adata.X.copy()
-
-        logger.info(f"Current adata.X shape after preprocessing: {adata.X.shape}")
-        logger.info(
-            f"Current adata.raw.X shape after preprocessing: \n {adata.raw.X.shape = }"
-        )
-
-        logger.info(log_adataX(adata=adata, raw=False))
-
-        logger.info(
-            log_adataX(adata=adata, layer="preprocessed_counts", raw=True, step=step)
-        )
-
-        logger.info(log_adataX(adata=adata, layer="raw_counts", raw=True, step=step))
-
-        logger.info(log_adataX(adata=adata, layer="raw_counts", step=step))
 
         save_processed_adata(
             STNavCorePipeline=self, name=config["save_as"], adata=adata
         )
         del adata
 
-    def DEG(self):
+    def DEG(self) -> None:
 
         step = "DEG"
         config = self.config[self.data_type][step]
         adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
-        adata = sc.read_h5ad(adata_path)
+        adata: an.AnnData = sc.read_h5ad(filename=adata_path)
 
         logger.info(
             f"Running DEG for {self.data_type} with '{config['adata_to_use']}' adata file."
         )
 
-        # TODO: have an assert that verifies that the data is not raw. It has to be lognormalized instead of raw data counts to run DEG
-        # assert (), f"Adata for {config['adata_to_use']} seems to be raw counts Use a lognormalized version instead
-        adata_for_DEG = adata.raw.to_adata()
-
         # For DGE analysis we would like to run with all genes, on normalized values, so we will have to revert back to the raw matrix. In case you have raw counts in the matrix you also have to renormalize and logtransform. In this case, raw already has the normalized and log data for scRNA
-        if (
-            adata_for_DEG.n_vars
-            == self.config[self.data_type]["preprocessing"]["highly_variable_genes"][
-                "params"
-            ]["n_top_genes"]
-        ):
-            logger.warning(
-                f"DEG will be run on {adata_for_DEG.n_vars}, but DEG is expected to run on all lognormalized genes. Make sure the AnnData you're using for DEG has not been subsetted by highly_variable_genes. n_top_genes = {self.config[self.data_type]['preprocessing']['highly_variable_genes']['params']['n_top_genes']}"
-            )
 
         # Rank genes groups - Differential Expression of Genes (DEG)
         if config["rank_genes_groups"]["usage"]:
-            sc.tl.rank_genes_groups(
-                **return_filtered_params(
-                    config=config["rank_genes_groups"], adata=adata_for_DEG
-                )
-            )
 
             # Add this one just to make sure we have ranked genes on the subset with the highly variable genes as well. Mainly for plotting reasons.
             sc.tl.rank_genes_groups(
@@ -554,17 +458,9 @@ class STNavCore(object):
             save_processed_adata(
                 STNavCorePipeline=self, name=config["save_as"], adata=adata
             )
-            save_processed_adata(
-                STNavCorePipeline=self, name="DEG_adata", adata=adata_for_DEG
-            )
 
         # Filter rank genes groups
         if config["filter_rank_genes_groups"]["usage"]:
-            sc.tl.filter_rank_genes_groups(
-                **return_filtered_params(
-                    config=config["filter_rank_genes_groups"], adata=adata_for_DEG
-                )
-            )
             sc.tl.filter_rank_genes_groups(
                 **return_filtered_params(
                     config=config["filter_rank_genes_groups"], adata=adata
@@ -578,9 +474,9 @@ class STNavCore(object):
                 config["rank_genes_groups_df"]["params"]["key"]
                 == config["rank_genes_groups"]["params"]["key_added"]
             ), f"Key on rank_genes_groups is different than the one used in rank_genes_groups_df. Please, make sure they're the same. {rank_genes_groups_df = } is different than {rank_genes_groups =}"
-            ranked_genes_list = sc.get.rank_genes_groups_df(
+            ranked_genes_list: pd.DataFrame = sc.get.rank_genes_groups_df(
                 **return_filtered_params(
-                    config=config["rank_genes_groups_df"], adata=adata_for_DEG
+                    config=config["rank_genes_groups_df"], adata=adata
                 )
             )
 
@@ -597,7 +493,7 @@ class STNavCore(object):
 
             # Save to excel
             ranked_genes_list.to_excel(
-                self.saving_path
+                excel_writer=self.saving_path
                 + "/"
                 + self.data_type
                 + "/"
@@ -622,11 +518,11 @@ class STNavCore(object):
             )
 
             # Define a list to hold gene sets (manual or API)
-            gsea_dataframes = {}
+            gsea_dataframes: dict = {}
 
             # Handle API gene sets
             if config_gsea["gene_sets"]["usage"]:
-                gene_set_list = [
+                gene_set_list: list = [
                     ontology
                     for ontology, boolean in config_gsea["gene_sets"]["sets"].items()
                     if boolean
@@ -635,17 +531,17 @@ class STNavCore(object):
                 logger.info(f"Adding API gene sets.\n {gene_set_list}")
 
             # Iterate over gene sets
-            enrichr_list = []
-            prerank_list = []
-            gsea_list = []
-            set_name = "API"
+            enrichr_list: list = []
+            prerank_list: list = []
+            gsea_list: list = []
+            set_name: str = "API"
 
             gene_set_names = gp.get_library_name(organism="human")
 
             # Setdefault is overriding data... I need to save the "set_name" and pass it as parameter to the gsea_dataframes.setdefault("set_name...", res).
             if config_gsea["stratify_by_group"]:
                 if config_gsea["enrichr"]["usage"]:
-                    _enrichr_sub = run_enrichr(
+                    _enrichr_sub: pd.DataFrame = run_enrichr(
                         gene_set_list=gene_set_list,
                         ranked_genes_list=ranked_genes_list,
                         config_gsea=config_gsea,
@@ -656,7 +552,7 @@ class STNavCore(object):
                     enrichr_list.append(_enrichr_sub)
 
                 if config_gsea["prerank"]["usage"]:
-                    _prerank_sub = run_prerank(
+                    _prerank_sub: pd.DataFrame = run_prerank(
                         gene_set_list=gene_set_list,
                         ranked_genes_list=ranked_genes_list,
                         config_gsea=config_gsea,
@@ -668,7 +564,7 @@ class STNavCore(object):
                     prerank_list.append(_prerank_sub)
 
                 if config_gsea["gsea"]["usage"]:
-                    _gsea_sub = run_gsea(
+                    _gsea_sub: pd.DataFrame = run_gsea(
                         adata=adata,
                         gene_set_list=gene_set_list,
                         ranked_genes_list=ranked_genes_list,
@@ -681,7 +577,7 @@ class STNavCore(object):
                     gsea_list.append(_gsea_sub)
 
             if config_gsea["enrichr"]["usage"]:
-                _enrichr = run_enrichr(
+                _enrichr: pd.DataFrame = run_enrichr(
                     gene_set_list=gene_set_list,
                     ranked_genes_list=ranked_genes_list,
                     config_gsea=config_gsea,
@@ -692,7 +588,7 @@ class STNavCore(object):
                 enrichr_list.append(_enrichr)
 
             if config_gsea["prerank"]["usage"]:
-                _prerank = run_prerank(
+                _prerank: pd.DataFrame = run_prerank(
                     gene_set_list=gene_set_list,
                     ranked_genes_list=ranked_genes_list,
                     config_gsea=config_gsea,
@@ -704,7 +600,7 @@ class STNavCore(object):
                 prerank_list.append(_prerank)
 
             if config_gsea["gsea"]["usage"]:
-                _gsea = run_gsea(
+                _gsea: pd.DataFrame = run_gsea(
                     adata=adata,
                     gene_set_list=gene_set_list,
                     ranked_genes_list=ranked_genes_list,
@@ -717,16 +613,15 @@ class STNavCore(object):
                 gsea_list.append(_gsea)
 
             if len(enrichr_list) > 0:
-                gsea_dataframes["enrichr"] = pd.concat(enrichr_list).reset_index()
+                gsea_dataframes["enrichr"] = pd.concat(objs=enrichr_list).reset_index()
             if len(prerank_list) > 0:
-                gsea_dataframes["prerank"] = pd.concat(prerank_list).reset_index()
+                gsea_dataframes["prerank"] = pd.concat(objs=prerank_list).reset_index()
             if len(gsea_list) > 0:
-                gsea_dataframes["gsea"] = pd.concat(gsea_list).reset_index()
+                gsea_dataframes["gsea"] = pd.concat(objs=gsea_list).reset_index()
 
             with pd.ExcelWriter(
-                f"{self.saving_path}/{self.data_type}/Files/{self.data_type}_GSEA_{date}.xlsx"
+                path=f"{self.saving_path}/{self.data_type}/Files/{self.data_type}_GSEA_{date}.xlsx"
             ) as writer:
                 for sheet_name, gsea_df in gsea_dataframes.items():
                     gsea_df.to_excel(writer, sheet_name=sheet_name, index=False)
-        del adata_for_DEG
         del adata

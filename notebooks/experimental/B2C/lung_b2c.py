@@ -244,8 +244,8 @@ def convert_bins_to_cells(
     sc.pp.filter_genes(adata, min_cells=min_cells)
     sc.pp.filter_cells(adata, min_counts=min_counts)
 
-    # adata.raw = adata.copy()
-    # adata_raw = adata.copy()
+    adata_raw = adata.copy()
+    adata.raw = adata.copy()
 
     scaled_if_image(
         adata=adata, channel=IF_CHANNEL, mpp=mpp, save_path=f"{save_path}/if.tiff"
@@ -306,7 +306,10 @@ def convert_bins_to_cells(
         labels_key="labels_if_joint",
         spatial_keys=["spatial", "spatial_cropped"],
     )
-
+    adata_b2c.raw.to_adata().write(
+        "/mnt/work/RO_src/STAnalysis/notebooks/experimental/B2C/adata_raw.h5ad"
+    )
+    # adata_b2c.X = adata.raw.X
     adata_b2c.write_h5ad(filename=f"{save_path}/adata_b2c.h5ad")
     adata.write_h5ad(f"{save_path}/adata.h5ad")
 

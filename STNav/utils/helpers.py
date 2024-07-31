@@ -48,6 +48,69 @@ date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
 from STNav.utils.decorators import logger_wraps, pass_STNavCore_params
 
 
+def get_intersect(self, sc_adata, st_adata):
+
+    st_adata.var.index = st_adata.var.index.str.upper()
+    st_adata.var_names = st_adata.var_names.str.upper()
+
+    sc_adata.var.index = sc_adata.var.index.str.upper()
+    sc_adata.var_names = sc_adata.var_names.str.upper()
+
+    intersect = np.intersect1d(
+        sc_adata.var_names,
+        st_adata.var_names,
+    )
+    sc_adata.X = sc_adata.layers["raw_counts"]
+    st_adata.X = st_adata.layers["raw_counts"]
+
+    st_adata_intersect = st_adata[:, intersect]
+
+    sc_adata_intersect = sc_adata[:, intersect]
+
+    logger.info(
+        f"N_obs x N_var for ST and scRNA after intersection: \n{st_adata.n_obs} x {st_adata.n_vars} \n {sc_adata.n_obs} x {sc_adata.n_vars}"
+    )
+
+    return st_adata_intersect, sc_adata_intersect, intersect
+
+
+def swap_layer(adata, layer_key, X_layer_key="X", inplace=False):
+    """
+    Swaps an ``adata.X`` for a given layer.
+
+    Swaps an AnnData ``X`` matrix with a given layer. Generates a new object by default.
+
+    Parameters
+    ----------
+    adata : AnnData
+        Annotated data matrix.
+    layer_key : str
+        ``.layers`` key to place in ``.X``.
+    X_layer_key : str, None
+        ``.layers`` key where to move and store the original ``.X``. If None, the original ``.X`` is discarded.
+    inplace : bool
+        If ``False``, return a copy. Otherwise, do operation inplace and return ``None``.
+
+    Returns
+    -------
+    layer : AnnData, None
+        If ``inplace=False``, new AnnData object.
+    """
+
+    cdata = None
+    if inplace:
+        if X_layer_key is not None:
+            adata.layers[X_layer_key] = adata.X
+        adata.X = adata.layers[layer_key]
+    else:
+        cdata = adata.copy()
+        if X_layer_key is not None:
+            cdata.layers[X_layer_key] = cdata.X
+        cdata.X = cdata.layers[layer_key]
+
+    return cdata
+
+
 @pass_STNavCore_params
 def return_from_checkpoint(
     STNavCorePipeline,

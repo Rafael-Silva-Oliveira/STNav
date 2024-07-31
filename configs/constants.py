@@ -1,10 +1,10 @@
 ANALYSIS_CONFIG = {
-    "cloud": r"/mnt/work/RO_src/Pipelines/STAnalysis/configs/analysis_cloud.json",
+    "cloud": r"/mnt/work/RO_src/STAnalysis/configs/analysis_cloud.json",
     "local": "",
 }
 
 PLOTTING_CONFIG = {
-    "cloud": r"/mnt/work/RO_src/Pipelines/STAnalysis/configs/plots_cloud.json",
+    "cloud": r"/mnt/work/RO_src/STAnalysis/configs/plots_cloud.json",
     "local": "",
 }
 
