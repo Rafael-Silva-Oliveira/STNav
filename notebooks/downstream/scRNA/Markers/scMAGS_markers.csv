@@ -1,0 +1,122 @@
+CellType,Markers
+AE1,UPK3B
+AE1,AGER
+AE1,SCEL
+AE1,ANKRD29
+AE1,SEMA3B
+AE1,NTM
+AEP,PGC
+AEP,PLA2G1B
+AEP,WIF1
+AEP,NAPSA
+AEP,SFTPA1
+AEP,C4BPA
+B cell,MS4A1
+B cell,CD79A
+B cell,BANK1
+B cell,CCR7
+B cell,GPR183
+B cell,IRF8
+Basal,KRT19
+Basal,MT2A
+Basal,PERP
+Basal,VMP1
+Basal,RBM39
+Basal,NDUFA5
+Ciliated,CHD9NB
+Ciliated,TMEM190
+Ciliated,CAPSL
+Ciliated,ROPN1L
+Ciliated,CCDC78
+Ciliated,CFAP157
+Club,CP
+Club,FMO2
+Club,STEAP4
+Club,SFTA1P
+Club,AKR1C1
+Club,CXCL1
+DC,FCN1
+DC,LILRB2
+DC,CFP
+DC,FGL2
+DC,S100A8
+DC,C5AR1
+Endothelial,CDH5
+Endothelial,RAMP3
+Endothelial,CLEC14A
+Endothelial,CALCRL
+Endothelial,VWF
+Endothelial,GNG11
+Fibroblast,COL3A1
+Fibroblast,DCN
+Fibroblast,PDGFRB
+Fibroblast,COX7A1
+Fibroblast,COL1A1
+Fibroblast,BGN
+Ionocyte,SLC34A2
+Ionocyte,NAPSA
+Ionocyte,SFTPA2
+Ionocyte,SFTPA1
+Ionocyte,SCGB3A2
+Ionocyte,SFTPD
+Macrophage,VSIG4
+Macrophage,OLR1
+Macrophage,MSR1
+Macrophage,MCEMP1
+Macrophage,MS4A4A
+Macrophage,IGSF6
+Mast,TPSAB1
+Mast,TPSB2
+Mast,MS4A2
+Mast,CPA3
+Mast,RGS13
+Mast,IL1RL1
+Mucinous,CP
+Mucinous,LCN2
+Mucinous,SCGB3A1
+Mucinous,AGR2
+Mucinous,FOLR1
+Mucinous,FXYD3
+Neuroendocrine,EEF1A1
+Neuroendocrine,RACK1
+Neuroendocrine,FTL
+Neuroendocrine,EEF2
+Neuroendocrine,SAT1
+Neuroendocrine,HLA-DRA
+Neutrophil,LYZ
+Neutrophil,G0S2
+Neutrophil,NAMPT
+Neutrophil,SOD2
+Neutrophil,LITAF
+Neutrophil,GRN
+Plasma cell,TNFRSF17
+Plasma cell,FCRL5
+Plasma cell,PNOC
+Plasma cell,MZB1
+Plasma cell,JCHAIN
+Plasma cell,CD79A
+SCLC-A,ASCL1
+SCLC-A,GRP
+SCLC-A,SCG3
+SCLC-A,SCG5
+SCLC-A,CHGA
+SCLC-A,GNG4
+SCLC-N,NEUROD1
+SCLC-N,NPW
+SCLC-N,PRAME
+SCLC-N,GKAP1
+SCLC-N,PCBP4
+SCLC-N,TMEM97
+SCLC-P,RBP1
+SCLC-P,BEX3
+SCLC-P,DEK
+SCLC-P,STMN1
+SCLC-P,MARCKSL1
+SCLC-P,TUBB2B
+SCLC-P,POU2F3
+T cell,CD2
+T cell,CCL5
+T cell,CD3E
+T cell,CD7
+T cell,CST7
+T cell,TRAC

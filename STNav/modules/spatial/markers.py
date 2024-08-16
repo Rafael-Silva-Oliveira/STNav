@@ -127,9 +127,6 @@ class SpatialMarkersMapping:
                 plt.savefig(save_path, bbox_inches="tight")
                 plt.close()
 
-        logger.info(
-            "Saving the spatial plot using the max of the mean lognorms cell type markers."
-        )
         # cell_lognorms = [col for col in st_adata.obs.columns if "Mean_LogNorm" in col]
         # st_adata.obs[cell_type_col_name] = st_adata.obs[cell_lognorms].idxmax(axis=1)
 
@@ -151,6 +148,9 @@ class SpatialMarkersMapping:
         cell_lognorms = [col for col in st_adata.obs.columns if " Markers" in col]
         st_adata.obs[cell_type_col_name] = (
             st_adata.obs[cell_lognorms].idxmax(axis=1).str.replace(" Markers", "")
+        )
+        logger.info(
+            "Saving the spatial plot using the max of the mean lognorms cell type markers."
         )
         save_path = (
             self.STNavCorePipeline.saving_path
@@ -246,18 +246,23 @@ class SpatialMarkersMapping:
             st_adata=st_adata,
             cell_markers=cell_markers_dict,
         )
-
-        # Map the spatial cell types to the clusters based on top percentile of the combination score
-        spatial_cell_type_and_clusters_adata: sc.AnnData = self._map_to_clusters(
-            mapping_config=mapping_config,
-            st_adata=spatial_cell_type_adata,
-            cell_markers=cell_markers_dict,
-        )
         save_processed_adata(
             STNavCorePipeline=self.STNavCorePipeline,
             name=mapping_config["save_as"],
-            adata=spatial_cell_type_and_clusters_adata,
+            adata=spatial_cell_type_adata,
         )
+        # Map the spatial cell types to the clusters based on top percentile of the combination score
+        # spatial_cell_type_and_clusters_adata: sc.AnnData = self._map_to_clusters(
+        #     mapping_config=mapping_config,
+        #     st_adata=spatial_cell_type_adata,
+        #     cell_markers=cell_markers_dict,
+        # )
+        # save_processed_adata(
+        #     STNavCorePipeline=self.STNavCorePipeline,
+        #     name="preprocessed_spatial_cell_type_and_clusters",
+        #     adata=spatial_cell_type_and_clusters_adata,
+        # )
+
         # TODO: add this approach here for the cell type https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_vizgen_mouse_liver.html#assign-cell-types
         del st_adata
         del spatial_cell_type_and_clusters_adata

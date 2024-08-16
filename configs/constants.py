@@ -11,7 +11,7 @@ PLOTTING_CONFIG = {
 SAVING_PATH = {
     "cloud": {
         "usage": True,
-        "path": r"/mnt/work/RO_src/data/processed",
+        "path": r"/mnt/archive2/RO_src/data/processed",
     },
     "local": {
         "usage": False,

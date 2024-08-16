@@ -982,3 +982,10 @@ notebooks/downstream/scRNA/markers_CellTypist_markers.csv
 notebooks/downstream/scRNA/markers_heatmap_top_markers_SCVI_2024_07_16-09_46_17_AM.png
 notebooks/downstream/scRNA/markers_scMAGS_markers.csv
 notebooks/downstream/scRNA/markers_scVI_markers.csv
+notebooks/downstream/scRNA/adata.h5ad
+notebooks/downstream/scRNA/vae/adata.h5ad
+notebooks/downstream/scRNA/vae/model.pt
+notebooks/downstream/ST/CCC/LIANA/Fibroblast_scatter.png
+notebooks/downstream/ST/CCC/LIANA/SCLC-A_scatter.png
+notebooks/downstream/ST/CCC/LIANA/T cell_scatter.png
+notebooks/downstream/ST/CCC/LIANA/SCLC-N_scatter.png

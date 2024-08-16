@@ -150,7 +150,7 @@ def CellTypistDeconv(STNavCorePipeline, model_type, config) -> sc.AnnData:
 
     # Add the dummy variables to the original DataFrame
     st_adata.obs = pd.concat(objs=[st_adata.obs, dummies], axis=1)
-
+    # TODO: change to save each cell type - I think it was crashing due to image size
     # for cell_type in list(st_adata.obs["cell_type"]):
     #     if cell_type != "Unassigned":
     #         save_path = (
@@ -171,7 +171,7 @@ def CellTypistDeconv(STNavCorePipeline, model_type, config) -> sc.AnnData:
     #                 alpha_img=0.5,
     #                 show=False,
     #             )
-    #             plt.savefig(save_path, bbox_inches="tight", dpi=750)
+    #             plt.savefig(save_path, bbox_inches="tight", dpi=500)
 
     # if annotation_params["majority_voting"]:
     #     save_path_dotplot = (

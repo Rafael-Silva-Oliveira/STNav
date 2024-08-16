@@ -64,7 +64,7 @@ class STNavCore(object):
         adata.var_names_make_unique()
         debug = True
         if debug:
-            subset_fraction = 0.025  # Define the fraction of data to keep as subset
+            subset_fraction = 0.01  # Define the fraction of data to keep as subset
             sc.pp.subsample(data=adata, fraction=subset_fraction)
         logger.info(
             f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
@@ -104,7 +104,7 @@ class STNavCore(object):
         # If debug is True, select a random subset of the data
         debug = True
         if debug:
-            subset_fraction = 0.05  # Define the fraction of data to keep as subset
+            subset_fraction = 0.01  # Define the fraction of data to keep as subset
             sc.pp.subsample(data=adata, fraction=subset_fraction)
         logger.info(
             f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
@@ -228,6 +228,12 @@ class STNavCore(object):
         config = self.config[self.data_type][step]
         adata_path = self.adata_dict[self.data_type][config["adata_to_use"]]
         adata: an.AnnData = sc.read_h5ad(filename=adata_path)
+
+        counts: pd.DataFrame = sc.get.obs_df(
+            adata, keys=list(adata.var_names), use_raw=True
+        )
+
+        logger.info(f"Retrieving counts matrix:\n{counts}")
 
         logger.info(
             f"Running preprocessing for {self.data_type} with '{config['adata_to_use']}' adata file."

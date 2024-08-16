@@ -18,7 +18,7 @@ sc.settings.verbosity = 3
 from STNav import STNavCore
 from STNav.modules.pl import run_plots
 from STNav.modules.st import (
-    ReceptorLigandAnalysis,
+    CCI,
     SpatiallyVariableGenes,
     SpatialNeighbors,
     SpatialMarkersMapping,
@@ -56,11 +56,31 @@ class Orchestrator(object):
         return adata_dict
 
     def initialize_adata_dict(self):
+        """
+        Initializes the adata_dict attribute with the paths to the saved AnnData objects.
+
+        This function iterates over the steps and parameters in the analysis_config attribute and checks if a checkpoint
+        is specified for each step. If a checkpoint is specified, it verifies if the checkpoint file exists and adds
+        the path to the adata_dict attribute.
+
+        Returns:
+            dict: The initialized adata_dict attribute.
+        """
+
         def process_checkpoint(params, data_type):
+            """
+            Processes the checkpoint for a given step and data type.
+
+            Args:
+                params (dict): The parameters for the step.
+                data_type (str): The data type.
+            """
+            # Check if a checkpoint is specified for the step
             if "checkpoint" in params and params["checkpoint"]["usage"]:
                 pipeline_run = params["checkpoint"]["pipeline_run"]
                 adata_name = params["save_as"]
 
+                # Construct the checkpoint path
                 checkpoint_path = (
                     f"{self.saving_path}"
                     + "/"
@@ -71,7 +91,9 @@ class Orchestrator(object):
                     + f"{adata_name}.h5ad"
                 )
 
+                # Check if the checkpoint file exists
                 if os.path.exists(checkpoint_path):
+                    # Add the checkpoint path to the adata_dict attribute
                     adata_dict[data_type].update({adata_name: checkpoint_path})
                     logger.info(
                         f"Successfully created checkpoint on the {data_type} data type path for\n\n'{adata_name}' under the path:\n\n'{checkpoint_path}'."
@@ -81,44 +103,77 @@ class Orchestrator(object):
                         f"File '{checkpoint_path}' does not exist in the directory."
                     )
 
+        # Initialize the adata_dict attribute
         adata_dict = {}
+
+        # Iterate over the steps and parameters in the analysis_config attribute
         for data_type, steps in self.analysis_config.items():
             adata_dict.setdefault(data_type, {})
             for step, params in steps.items():
                 try:
+                    # Check if the step is one of the specified steps with checkpoints
                     if step in [
                         "SpatialNeighbors",
                         "SpatiallyVariableGenes",
                         "ReceptorLigandAnalysis",
                         "NicheAnalysis",
                     ]:
+                        # Iterate over the method names and parameters in the step
                         for method_name, config_params in params.items():
                             process_checkpoint(config_params, data_type)
+
+                    # Process the checkpoint for the step
                     process_checkpoint(params, data_type)
                 except Exception as e:
+                    # Log any errors that occur during processing
                     logger.error(f"Error on {step}: {e}")
                     continue
 
         return adata_dict
 
     def run_st_analysis_steps(self, STNavCorePipeline):
+        """
+        Runs the ST analysis steps on the given STNavCorePipeline object.
+
+        Args:
+            STNavCorePipeline (STNav.STNavCore): The STNavCorePipeline object to run the ST analysis steps on.
+        """
+
+        # Read RNA data
         STNavCorePipeline.read_rna()
+
+        # Perform QC
         STNavCorePipeline.QC()
+
+        # Preprocess the data
         STNavCorePipeline.preprocessing()
+
+        # Perform DEG analysis
         STNavCorePipeline.DEG()
 
+        # Check if SpatialMarkersMapping is enabled in the config
         if STNavCorePipeline.config["ST"]["SpatialMarkersMapping"]["usage"]:
+            # Get the mapping config
             mapping_config = STNavCorePipeline.config["ST"]["SpatialMarkersMapping"]
+
+            # Create a SpatialMarkersMapping object and run the mapping
             MAPPING = SpatialMarkersMapping(STNavCorePipeline=STNavCorePipeline)
             self.cell_markers_dict = MAPPING.run_mapping(mapping_config=mapping_config)
 
+        # Check if DeconvolutionModels is enabled in the config
         if STNavCorePipeline.config["ST"]["DeconvolutionModels"]["usage"]:
+            # Create a Deconvolution object and train or load the deconvolution model
             DECONV = Deconvolution(STNavCorePipeline=STNavCorePipeline)
             self.deconv_results = DECONV.train_or_load_deconv_model()
 
+        # Perform SpatiallyVariableGenes analysis
         SpatiallyVariableGenes(STNavCorePipeline=STNavCorePipeline)
+
+        # Perform SpatialNeighbors analysis
         SpatialNeighbors(STNavCorePipeline=STNavCorePipeline)
-        ReceptorLigandAnalysis(STNavCorePipeline=STNavCorePipeline)
+
+        # Perform ReceptorLigandAnalysis analysis
+        CCI(STNavCorePipeline=STNavCorePipeline)
 
     def run_plots(
         self,

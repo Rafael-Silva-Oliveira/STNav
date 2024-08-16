@@ -163,6 +163,3 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                     name=f"{config_params['save_as']}",
                 )
                 del adata
-
-            if method_name == "scBSP":
-                ...

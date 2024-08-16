@@ -17,6 +17,12 @@ import numpy as np
 import pandas as pd
 import scanorama
 import scanpy as sc
+import stlearn as st
+from typing import Union, Optional
+import liana as li
+import gc
+import decoupler as dc
+from mudata import MuData
 
 # import scarches as sca
 import seaborn as sns
@@ -83,18 +89,18 @@ def swap_layer(adata, layer_key, X_layer_key="X", inplace=False):
     Parameters
     ----------
     adata : AnnData
-        Annotated data matrix.
+            Annotated data matrix.
     layer_key : str
-        ``.layers`` key to place in ``.X``.
+            ``.layers`` key to place in ``.X``.
     X_layer_key : str, None
-        ``.layers`` key where to move and store the original ``.X``. If None, the original ``.X`` is discarded.
+            ``.layers`` key where to move and store the original ``.X``. If None, the original ``.X`` is discarded.
     inplace : bool
-        If ``False``, return a copy. Otherwise, do operation inplace and return ``None``.
+            If ``False``, return a copy. Otherwise, do operation inplace and return ``None``.
 
     Returns
     -------
     layer : AnnData, None
-        If ``inplace=False``, new AnnData object.
+            If ``inplace=False``, new AnnData object.
     """
 
     cdata = None
@@ -521,6 +527,8 @@ def SpatialDM_wrapper(
 
 def stLearn_wrapper(
     adata: an.AnnData,
+    layer: str,
+    cell_type_label: str,
     min_spots: int,
     distance,
     n_pairs: int,
@@ -534,19 +542,13 @@ def stLearn_wrapper(
 ):
     import stlearn as st
 
-    if "norm" not in adata.layers.keys():
-        logger.warning(
-            f"norm layer not found in adata.layers. Please make sure to run the normalization step before running stLearn LR analysis. See more: https://stlearn.readthedocs.io/en/latest/tutorials/Xenium_CCI.html."
-        )
-
-    adata.X = adata.layers["norm"]
+    adata.X = adata.layers[layer]
     # TODO: check if adata is just norm and not log norm
-    use_label = "cell_type"
 
     adata = st.convert_scanpy(adata)
 
     # NOTE: following commented code deprecated as we're no longer using deconvolution approaches. Simpler gene marker approach is now being used instead.
-    # adata.obs[f"{use_label}"] = (
+    # adata.obs[f"{cell_type_label}"] = (
     #     adata.obs[adata.obsm["deconvolution"].columns].idxmax(axis=1).astype("category")
     # )
     logger.info(
@@ -573,12 +575,12 @@ def stLearn_wrapper(
         logger.warning(f"Could not retrieve ligand-receptor interactions: {e}")
 
     logger.info(
-        f"Predicting significant CCIs.\n\nWith the establishment of significant areas of LR interaction from stLearn_ligrec, we can now determine the significantly interacting cell types using the label '{use_label}'."
+        f"Predicting significant CCIs.\n\nWith the establishment of significant areas of LR interaction from stLearn_ligrec, we can now determine the significantly interacting cell types using the label '{cell_type_label}'."
     )
 
     st.tl.cci.run_cci(
         adata=adata,
-        use_label=use_label,
+        use_label=cell_type_label,
         min_spots=min_spots,  # Minimum number of spots for LR to be tested.
         spot_mixtures=spot_mixtures,  # If True will use the label transfer scores,
         # so spots can have multiple cell types if score>cell_prop_cutoff
@@ -621,10 +623,16 @@ def return_filtered_params(config, adata=None):
     valid_arguments = inspect.signature(func).parameters.keys()
     filtered_params = {k: v for k, v in params.items() if k in valid_arguments}
 
+    missing_params = set(filtered_params) - set(config["params"].keys())
+    if len(missing_params) > 0:
+        raise ValueError(f"Missing parameters: {missing_params}")
+
     # If Adata is None, then simply return filtered_params. Else, add the adata, data or other data type to the filtered_params dictionary
     if any(hasattr(adata, atr) for atr in ["X", "obs", "var"]):
         if "adata" in filtered_params.keys():
             filtered_params["adata"] = eval(filtered_params["adata"])
+        if "mdata" in filtered_params.keys():
+            filtered_params["mdata"] = eval(filtered_params["mdata"])
         if "data" in filtered_params.keys():
             filtered_params["data"] = eval(filtered_params["data"])
         if "rnk" in filtered_params.keys():
@@ -1023,11 +1031,11 @@ def is_normalized(adata):
 
     Parameters:
     adata : anndata.AnnData
-        Annotated data matrix.
+            Annotated data matrix.
 
     Returns:
     bool
-        True if the data is likely normalized, False otherwise.
+            True if the data is likely normalized, False otherwise.
     """
     import numpy as np
 
@@ -1059,13 +1067,13 @@ def assert_counts(adata, check_for):
 
     Parameters:
     adata : anndata.AnnData
-        Annotated data matrix.
+            Annotated data matrix.
     check_for : str
-        The type of data to check for. Should be either "raw" or "normalized".
+            The type of data to check for. Should be either "raw" or "normalized".
 
     Raises:
     AssertionError
-        If the data does not match the expected type.
+            If the data does not match the expected type.
     """
     import numpy as np
 
