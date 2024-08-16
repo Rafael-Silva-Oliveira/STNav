@@ -308,7 +308,7 @@
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "data_type": "ST",
-        "usage": true,
+        "usage": false,
         "Squidpy_NHoodEnrichment": {
           "func_str": "sq.gr.nhood_enrichment",
           "params": {
@@ -335,7 +335,7 @@
     },
     "SpatiallyVariableGenes": {
       "Squidpy": {
-        "usage": true,
+        "usage": false,
         "checkpoint": {
           "usage": false,
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
@@ -372,7 +372,7 @@
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "data_type": "ST",
-        "usage": true,
+        "usage": false,
         "spatial_neighbors": {
           "func_str": "li.ut.spatial_neighbors",
           "params": {
@@ -445,7 +445,7 @@
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "data_type": "ST",
-        "usage": true,
+        "usage": false,
         "stLearn_cci": {
           "func_str": "stLearn_wrapper",
           "params": {
@@ -462,6 +462,52 @@
             "n_perms": 25,
             "n_cpus": null,
             "verbose": true
+          }
+        }
+      }
+    },
+    "FunctionalAnalysis": {
+      "decoupleR": {
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "preprocessed_adata",
+        "checkpoint": {
+          "usage": false,
+          "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+        },
+        "data_type": "ST",
+        "usage": true,
+        "databases": {
+          "PROGENy": {
+            "usage": true,
+            "func_str": "dc.run_mlm",
+            "params": {
+              "source": "source",
+              "target": "target",
+              "weight": "weight",
+              "verbose": true,
+              "use_raw": false
+            }
+          },
+          "CollecTRI": {
+            "usage": true,
+            "func_str": "dc.run_ulm",
+            "params": {
+              "source": "source",
+              "target": "target",
+              "weight": "weight",
+              "verbose": true,
+              "use_raw": false
+            }
+          },
+          "MSigDB": {
+            "usage": true,
+            "func_str": "dc.run_ora",
+            "params": {
+              "source": "geneset",
+              "target": "genesymbol",
+              "verbose": true,
+              "use_raw": false
+            }
           }
         }
       }

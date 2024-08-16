@@ -684,3 +684,7 @@ adata_to_annotate.obs["final_cell_type"] = adata.obs.overcluster.map(over2cell)
 sc.pl.umap(adata_to_annotate color = ["final_cell_type"], s=2, legend_loc = "on data")
 # ################# 4.3 Annotation using reference atlas and query dataset ##############################
 # ################# 4.3.1 scArches ##############################
+
+
+import decoupler as dc
+dc.show_resources()

@@ -265,6 +265,5 @@ class SpatialMarkersMapping:
 
         # TODO: add this approach here for the cell type https://squidpy.readthedocs.io/en/stable/notebooks/tutorials/tutorial_vizgen_mouse_liver.html#assign-cell-types
         del st_adata
-        del spatial_cell_type_and_clusters_adata
         del spatial_cell_type_adata
         return cell_markers_dict

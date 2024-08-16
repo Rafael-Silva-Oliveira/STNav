@@ -23,6 +23,7 @@ from STNav.modules.st import (
     SpatialNeighbors,
     SpatialMarkersMapping,
     Deconvolution,
+    FunctionalAnalysis,
 )
 
 username: str = os.path.expanduser(path="~")
@@ -174,6 +175,9 @@ class Orchestrator(object):
 
         # Perform ReceptorLigandAnalysis analysis
         CCI(STNavCorePipeline=STNavCorePipeline)
+
+        # Pefrom function analysis
+        FunctionalAnalysis(STNavCorePipeline=STNavCorePipeline)
 
     def run_plots(
         self,
