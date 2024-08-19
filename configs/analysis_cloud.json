@@ -1,7 +1,7 @@
 {
   "ST": {
     "usage": true,
-    "scRNA_path": "/mnt/work/RO_src/data/raw/scRNA/SCLC/SCLC_Annotated.h5ad",
+    "scRNA_path": "",
     "path": "/mnt/work/RO_src/STAnalysis/notebooks/experimental/B2C/adata_b2c.h5ad",
     "quality_control": {
       "adata_to_use": "raw_adata",
@@ -308,7 +308,7 @@
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "data_type": "ST",
-        "usage": false,
+        "usage": true,
         "Squidpy_NHoodEnrichment": {
           "func_str": "sq.gr.nhood_enrichment",
           "params": {
@@ -335,7 +335,7 @@
     },
     "SpatiallyVariableGenes": {
       "Squidpy": {
-        "usage": false,
+        "usage": true,
         "checkpoint": {
           "usage": false,
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
@@ -372,7 +372,7 @@
           "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
         },
         "data_type": "ST",
-        "usage": false,
+        "usage": true,
         "spatial_neighbors": {
           "func_str": "li.ut.spatial_neighbors",
           "params": {

@@ -10,6 +10,7 @@ import gc
 import decoupler as dc
 from mudata import MuData
 
+# %%
 adata = sc.read_h5ad(r"/mnt/archive2/RO_src/data/adata_subset3.h5ad")
 
 adata.var_names = adata.var_names.str.upper()
@@ -299,3 +300,67 @@ li.mt.bivariate(
 )
 
 # %%
+######### JUST PLOTTING ########
+
+
+adata = sc.read_h5ad(
+    r"/mnt/archive2/RO_src/data/processed/PipelineRun_2024_08_19-09_30_42_AM/ST/Files/preprocessed_adata.h5ad"
+)
+# %%
+lrdata = adata.obsm["local_scores"]
+
+# %%
+sc.set_figure_params(
+    dpi=80, dpi_save=300, format="png", frameon=False, transparent=True, figsize=[5, 5]
+)
+# %%
+sc.pl.spatial(lrdata, color=["TIMP1^CD63"], size=1.4, vmax=1, cmap="magma")
+
+# %%
+sc.pl.spatial(
+    lrdata,
+    layer="pvals",
+    color=["TIMP1^CD63"],
+    size=1.4,
+    cmap="magma_r",
+)
+
+# %%
+sc.pl.spatial(
+    lrdata,
+    layer="cats",
+    color=["TIMP1^CD63"],
+    size=1.4,
+    cmap="coolwarm",
+)
+# %%
+nmf = sc.read_h5ad(
+    r"/mnt/archive2/RO_src/data/processed/PipelineRun_2024_08_19-09_30_42_AM/ST/Files/LIANA_NMF.h5ad"
+)
+# %%
+sc.pl.spatial(nmf, color=[*nmf.var.index, None], size=1.4, ncols=2)
+
+
+# %%
+est = li.ut.obsm_to_adata(adata, "ulm_estimate")
+est.var["cv"] = est.X.std(axis=0) / est.X.mean(axis=0)
+top_tfs = est.var.sort_values("cv", ascending=False, key=abs).head(5).index
+
+# Create MuData object with TF activities and cell type proportions - In this case, the proportion is actually 1 or 0;
+mdata = MuData({"tf": est, "comps": comps})
+mdata.obsp = adata.obsp
+mdata.uns = adata.uns
+mdata.obsm = adata.obsm
+from itertools import product
+
+interactions = list(product(comps.var.index, top_tfs))
+# %%
+
+sc.pl.spatial(
+    mdata.mod["local_scores"],
+    color=["Myeloid<->SNAI2", "CM<->HAND1"],
+    size=1.4,
+    cmap="coolwarm",
+    vmax=1,
+    vmin=-1,
+)

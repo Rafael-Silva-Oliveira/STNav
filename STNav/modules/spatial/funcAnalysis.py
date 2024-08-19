@@ -5,9 +5,16 @@ import numpy as np
 import squidpy as sq
 from loguru import logger
 from STNav.utils.decorators import pass_STNavCore_params
+
 from STNav.utils.helpers import (
     return_filtered_params,
+    run_enrichr,
+    run_gsea,
+    run_prerank,
+    transform_adata,
+    save_processed_adata,
     return_from_checkpoint,
+    swap_layer,
 )
 
 
@@ -64,10 +71,6 @@ def FunctionalAnalysis(STNavCorePipeline):
                         db.loc[:, "geneset"] = [
                             name.split("HALLMARK_")[1] for name in db["geneset"]
                         ]
-
-                    logger.info(
-                        "Running activity inference with Univariate Linear Model (ULM)"
-                    )
 
                     if config_params["databases"][database]["func_str"] == "dc.run_ulm":
                         dc.run_ulm(
@@ -177,4 +180,8 @@ def FunctionalAnalysis(STNavCorePipeline):
                     #     .apply(lambda x: list(x))
                     #     .to_dict()
                     # )
-            tt = 2
+    save_processed_adata(
+        STNavCorePipeline=STNavCorePipeline,
+        name="preprocessed_adata",
+        adata=adata,
+    )

@@ -64,8 +64,21 @@ class STNavCore(object):
         adata.var_names_make_unique()
         debug = True
         if debug:
-            subset_fraction = 0.01  # Define the fraction of data to keep as subset
-            sc.pp.subsample(data=adata, fraction=subset_fraction)
+            min_row = adata.obs["array_row"].min()
+            max_row = adata.obs["array_row"].max()
+            min_col = adata.obs["array_col"].min()
+            max_col = adata.obs["array_col"].max()
+            # define a mask to easily pull out this region of the object in the future
+            mask = (
+                (adata.obs["array_row"] > min_row + (max_row - min_row) * 0.1)
+                & (adata.obs["array_row"] < min_row + (max_row - min_row) * 0.15)
+                & (adata.obs["array_col"] > min_col + (max_col - min_col) * 0.1)
+                & (adata.obs["array_col"] < min_col + (max_col - min_col) * 0.15)
+            )
+
+            adata = adata[mask].copy()
+            # subset_fraction = 0.3  # Define the fraction of data to keep as subset
+            # sc.pp.subsample(data=adata, fraction=subset_fraction)
         logger.info(
             f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
         )
@@ -102,9 +115,9 @@ class STNavCore(object):
         )
 
         # If debug is True, select a random subset of the data
-        debug = True
+        debug = False
         if debug:
-            subset_fraction = 0.01  # Define the fraction of data to keep as subset
+            subset_fraction = 0.3  # Define the fraction of data to keep as subset
             sc.pp.subsample(data=adata, fraction=subset_fraction)
         logger.info(
             f"Loaded 10X Visium dataset with {adata.n_obs} sequencing spots and {adata.n_vars} genes."
