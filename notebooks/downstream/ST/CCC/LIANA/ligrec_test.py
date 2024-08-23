@@ -301,10 +301,8 @@ li.mt.bivariate(
 
 # %%
 ######### JUST PLOTTING ########
-
-
 adata = sc.read_h5ad(
-    r"/mnt/archive2/RO_src/data/processed/PipelineRun_2024_08_19-09_30_42_AM/ST/Files/preprocessed_adata.h5ad"
+    r"/mnt/archive2/RO_src/data/processed/PipelineRun_2024_08_19-06_22_09_PM/ST/Files/preprocessed_adata.h5ad"
 )
 # %%
 lrdata = adata.obsm["local_scores"]
@@ -335,7 +333,7 @@ sc.pl.spatial(
 )
 # %%
 nmf = sc.read_h5ad(
-    r"/mnt/archive2/RO_src/data/processed/PipelineRun_2024_08_19-09_30_42_AM/ST/Files/LIANA_NMF.h5ad"
+    r"/mnt/archive2/RO_src/data/processed/PipelineRun_2024_08_19-10_47_37_AM/ST/Files/LIANA_NMF.h5ad"
 )
 # %%
 sc.pl.spatial(nmf, color=[*nmf.var.index, None], size=1.4, ncols=2)
@@ -364,3 +362,5 @@ sc.pl.spatial(
     vmax=1,
     vmin=-1,
 )
+
+# %%

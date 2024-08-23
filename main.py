@@ -125,10 +125,10 @@ def main(
         ) as f:
             json.dump(obj=adata_dict, fp=f, ensure_ascii=False, indent=4)
 
-        ORCHESTRATOR.run_plots(
-            saving_dir=directory,
-            adata_dict=adata_dict,
-        )
+        # ORCHESTRATOR.run_plots(
+        #     saving_dir=directory,
+        #     adata_dict=adata_dict,
+        # )
 
         logger.info(f"Pipeline run on {date} sucessfully completed.")
 

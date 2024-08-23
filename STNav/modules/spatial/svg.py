@@ -68,7 +68,28 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                 genes = adata[:, adata.var.highly_variable].var_names.values[
                     : config_params["n_genes"]
                 ]
+
+                # nearest neighborhood graph
+                sc.pp.neighbors(adata)
+                nn_graph_genes = adata.obsp["connectivities"]
+                # spatial proximity graph
                 sq.gr.spatial_neighbors(adata)
+                nn_graph_space = adata.obsp["spatial_connectivities"]
+
+                # Identify joint cluster. Add the 2 graphs, compute leiden and joint graph.
+                alpha = 0.2  # used to weight the importance of each graph
+
+                logger.info(
+                    "Computing joint graph for spatial domains with squidpy 'squidpy_spatial_domains'"
+                )
+                joint_graph = (1 - alpha) * nn_graph_genes + alpha * nn_graph_space
+                sc.tl.leiden(
+                    adata, adjacency=joint_graph, key_added="squidpy_spatial_domains"
+                )
+
+                # sq.pl.spatial_scatter(
+                #     adata, color=["leiden_clusters", "squidpy_domains"], wspace=0.9
+                # )
 
                 # Calculate spatially variable genes with Moran I statistic
                 config_params["Squidpy_MoranI"]["params"].setdefault("genes", genes)

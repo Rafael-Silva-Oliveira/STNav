@@ -71,9 +71,9 @@ class STNavCore(object):
             # define a mask to easily pull out this region of the object in the future
             mask = (
                 (adata.obs["array_row"] > min_row + (max_row - min_row) * 0.1)
-                & (adata.obs["array_row"] < min_row + (max_row - min_row) * 0.15)
+                & (adata.obs["array_row"] < min_row + (max_row - min_row) * 0.4)
                 & (adata.obs["array_col"] > min_col + (max_col - min_col) * 0.1)
-                & (adata.obs["array_col"] < min_col + (max_col - min_col) * 0.15)
+                & (adata.obs["array_col"] < min_col + (max_col - min_col) * 0.4)
             )
 
             adata = adata[mask].copy()

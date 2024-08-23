@@ -1,7 +1,7 @@
 {
   "run_just_plots": {
     "usage": false,
-    "run_path": "/mnt/work/RO_src/data/processed/PipelineRun_2024_07_15-02_04_15_PM/paths/adata_dict.json"
+    "run_path": ""
   },
   "plots": {
     "sc_highly_variable_genes": {
