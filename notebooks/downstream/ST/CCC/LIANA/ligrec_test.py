@@ -165,7 +165,7 @@ lr_loadings.sort_values("Factor2", ascending=False).head(10)
 # If the labels are in a single string, separated by commas, split them into lists
 df = pd.DataFrame()
 df["Cell Types"] = adata.obs["cell_type"].str.split(", ")
-# Explode the list into separate rows
+# Explode the list into separate rows 
 df_exploded = df.explode("Cell Types")
 df_binary = pd.get_dummies(df_exploded["Cell Types"])
 df_binary = df_binary.groupby(df_exploded.index).sum()

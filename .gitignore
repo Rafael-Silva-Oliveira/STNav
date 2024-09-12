@@ -1109,3 +1109,15 @@ notebooks/downstream/Bulk RNA/gdc_download_20240822_145832.884522/f90939c7-6e24-
 notebooks/downstream/Bulk RNA/gdc_download_20240822_145832.884522/fb60fc57-836c-42e1-bc96-042b82d1a878/21eea21d-7db3-4f85-a9e4-72cbb562b5ed.rna_seq.augmented_star_gene_counts.tsv
 notebooks/downstream/Bulk RNA/gdc_download_20240822_145832.884522/fd52d8a9-e044-4f17-861a-9780752b20ee/1084d48c-88e8-4d67-9049-d0e4cd7f9535.rna_seq.augmented_star_gene_counts.tsv
 notebooks/downstream/Bulk RNA/gdc_download_20240822_145832.884522/fdcad604-c1b4-40ff-a652-3c1e5fe5f9a1/2301103f-5cbe-4cb6-b5da-0b83b39e4616.rna_seq.augmented_star_gene_counts.tsv
+notebooks/downstream/Bulk RNA/data/ov_tcga_survial_all.h5ad
+notebooks/downstream/Bulk RNA/data/clinical/20230209_Thora_AllSamples.xlsx
+notebooks/downstream/Bulk RNA/data/clinical/Check_visit_order_clin.xlsx
+notebooks/downstream/Bulk RNA/data/clinical/clinical_selected.csv
+notebooks/downstream/Bulk RNA/data/clinical/Kobling Thora ID og biomarkørID_corr.xlsx
+notebooks/downstream/Bulk RNA/data/clinical/THORAMAY2024_all.sav
+notebooks/downstream/Bulk RNA/data/clinical/THORAMAY2024.sav
+notebooks/downstream/Bulk RNA/Enrichr/CUSTOM140407697281664.human.enrichr.reports.txt
+notebooks/downstream/Bulk RNA/enrichr_output/DisGeNET.Human.enrichr.reports.pdf
+notebooks/downstream/Bulk RNA/enrichr_output/DisGeNET.Human.enrichr.reports.txt
+notebooks/downstream/Bulk RNA/enrichr_output/DSigDB.Human.enrichr.reports.pdf
+notebooks/downstream/Bulk RNA/enrichr_output/DSigDB.Human.enrichr.reports.txt
