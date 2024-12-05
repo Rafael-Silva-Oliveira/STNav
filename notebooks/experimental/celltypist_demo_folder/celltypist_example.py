@@ -10,33 +10,54 @@ from matplotlib.colors import ListedColormap
 from colorspacious import cspace_converter
 import numpy as np
 import pandas as pd
+import pandas as pd
+import numpy as np
+import scanpy as sc
+import seaborn as sns
+import matplotlib.pyplot as plt
+from difflib import SequenceMatcher
+from tqdm import tqdm
+# Map probe sequences to each bin
+import gzip
+import json
+import io
+import tarfile
+import pandas as pd
+import scipy.io as sio
+import numpy as np
+import scanpy as sc
+import squidpy as sq
+import seaborn as sns
+import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
+from colorspacious import cspace_converter
+from scipy.sparse import csr_matrix
+from celltypist import models
+from difflib import SequenceMatcher
 
-# Load ST
 
-# config_json = r"/mnt/work/RO_src/Pipelines/STAnalysis/configs/analysis_cloud.json"
-# # Open config json with json.load
-# config_total = json.load(open(config_json, "r"))
-# config = config_total["ST"]
-# adata_st = sc.read_visium(
-#     path=config["path"],
-#     count_file=config["count_file"],
-#     load_images=config["load_images"],
-#     source_image_path=config["source_image_path"],
-# )
-
-adata_st = sc.read_h5ad(r"/mnt/work/RO_src/data/raw/adata_02micron.h5ad")
+adata_st = sc.read_h5ad(r"/mnt/work/RO_src/STAnalysis/notebooks/experimental/B2C/adata_b2c.h5ad")
+adata_st
 
 
+# Path to the Visium dataset directory
+#visium_path = "/mnt/archive2/RO_src/data/raw/VisiumHD/square_008um"
+
+# Read the Visium dataset
+#adata_st = sc.read_visium(
+#    path=visium_path,
+#    count_file='filtered_feature_bc_matrix.h5',
+#    load_images=True  # Set to False if you don't need the images or they're not available
+#)
 adata_st.var_names_make_unique()
 sc.pp.normalize_total(adata_st, target_sum=1e4)
 sc.pp.log1p(adata_st)
-
 
 # Load scRNA data
 
 # Train a model with the SCLC dataset
 
-sc_adata = sc.read_h5ad(r"/mnt/work/RO_src/data/raw/scRNA/SCLC/Combined samples.h5ad")
+sc_adata = sc.read_h5ad(r"/mnt/archive2/RO_src/data/raw/scRNA/SCLC/Combined samples.h5ad")
 sc_adata.var.set_index("feature_name", inplace=True)
 sc.pp.normalize_total(sc_adata, target_sum=1e4)
 sc.pp.log1p(sc_adata)
@@ -49,7 +70,7 @@ sc_adata = sc_adata[
     & sc_adata.obs["tissue"].isin(["lung", "pleural effusion"]),
     :,
 ]
-sc_adata.write_h5ad(r"/mnt/work/RO_src/data/raw/scRNA/SCLC/SCLC_lung.h5ad")
+sc_adata.write_h5ad(r"/mnt/archive2/RO_src/data/raw/scRNA/SCLC/SCLC_lung.h5ad")
 
 healthy_adata = sc_adata[
     sc_adata.obs["histo"].isin(["normal"])
@@ -79,27 +100,24 @@ sc_model_healthy = celltypist.train(
     epochs=30000,
 )
 sc_model_healthy.write(
-    "/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/celltypist_demo_folder/Non_Adjusted/model_healthy_lung.pkl"
+    "/mnt/work/RO_src/STAnalysis/notebooks/downstream/scRNA/celltypist_models/model_healthy_lung.pkl"
 )
 
 sc_model_sclc = celltypist.train(
     sclc_adata, labels="cell_type_fine", n_jobs=10, feature_selection=True, epochs=30000
 )
 sc_model_sclc.write(
-    "/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/celltypist_demo_folder/Non_Adjusted/model_sclc_lung.pkl"
+    "/mnt/work/RO_src/STAnalysis/notebooks/downstream/scRNA/celltypist_models/model_sclc_lung.pkl"
 )
 
 
 sc_model_sclc = models.Model.load(
-    model="/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/model_sclc_lung.pkl"
+    model="/mnt/work/RO_src/STAnalysis/notebooks/downstream/scRNA/celltypist_models/model_sclc_lung.pkl"
 )
 sc_model_healthy = models.Model.load(
-    model="/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/model_healthy_lung.pkl"
+    model="/mnt/work/RO_src/STAnalysis/notebooks/downstream/scRNA/celltypist_models/model_healthy_lung.pkl"
 )
 
-
-sc.pp.normalize_total(adata_st, target_sum=1e4)
-sc.pp.log1p(adata_st)
 
 # # Add spatial connectivities4
 
@@ -122,7 +140,6 @@ predictions_sclc = celltypist.annotate(
 
 # combine 2 models for cell annotations
 # add the healthy gut model
-
 
 pred_healthy = predictions_healthy.to_adata()
 pred_healthy.obs["predicted_labels_healthy"] = pred_healthy.obs["predicted_labels"]
@@ -167,7 +184,7 @@ cdata.obsm["spatial"] = cdata.obsm["spatial"].astype(float)
 cdata.obs["in_tissue"] = cdata.obs["in_tissue"].astype(int)
 
 cdata.write_h5ad(
-    "/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/celltypist_demo_folder/combined_adata_nonadjusted.h5ad"
+    "/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/celltypist_demo_folder/combined_adata_b2c_nonadjusted.h5ad"
 )
 
 cdata = sc.read_h5ad(
@@ -212,3 +229,87 @@ for cell_type in list(cdata.obs["predicted_labels"].unique()):
         save=f"/mnt/work/RO_src/Pipelines/STAnalysis/notebooks/experimental/celltypist_demo_folder/{cell_type}_sclc_nonadjusted.png",
         legend_fontsize=3.5,  # adjust this value to make the legend smaller
     )
+
+from Bio import pairwise2
+import pandas as pd
+import numpy as np
+
+# Load clone and probe data
+def load_clone_data(clone_data_path: str) -> pd.DataFrame:
+    """
+    Load the combined_clones_data.tsv into a pandas DataFrame.
+    """
+    clone_df = pd.read_csv(clone_data_path, sep='\t')
+    return clone_df
+
+def extract_clone_sequences(clone_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Extract clone sequences and relevant columns for further analysis.
+    """
+    return clone_df[['clone_type', 'targetSequences']]
+
+# Paths to your files
+clone_data_path = '/mnt/work/RO_src/Projects/THORA/ImmuneReservoireAnalysis/results_rna/combined_clones_data.tsv'
+probe_set_path = '/mnt/archive2/RO_src/data/raw/VisiumHD/Visium_HD_Human_Lung_Cancer_probe_set.csv'
+
+# Load data
+clone_df = load_clone_data(clone_data_path)
+extracted_clones = extract_clone_sequences(clone_df)
+bulk_sequences = extracted_clones["targetSequences"].tolist()
+probe_set = pd.read_csv(probe_set_path, comment='#')
+
+# Define a similarity threshold for matching
+similarity_threshold = 0.8
+
+# Function to align sequences and check for similarity
+def is_sequence_match(probe_seq, bulk_sequences, threshold):
+    """
+    Checks if the probe sequence matches any of the bulk RNA-seq sequences.
+    Returns True if there is a match.
+    """
+    for bulk_seq in bulk_sequences:
+        alignments = pairwise2.align.globalxx(probe_seq, bulk_seq)
+        score = max(align.score for align in alignments) / min(len(probe_seq), len(bulk_seq))
+        if score >= threshold:
+            return True
+    return False
+
+# Initialize a dictionary to store match information
+probe_matches = {}
+
+# Check each probe sequence for matches
+for idx, row in probe_set.iterrows():
+    gene_id = row['gene_id']
+    probe_seq = row['probe_seq']
+    
+    # Check if this probe sequence matches any bulk RNA-seq sequence
+    match_found = is_sequence_match(probe_seq, bulk_sequences, similarity_threshold)
+    
+    # Store match result
+    if gene_id not in probe_matches:
+        probe_matches[gene_id] = []
+    probe_matches[gene_id].append({
+        "probe_seq": probe_seq,
+        "match_found": match_found
+    })
+
+# Create a DataFrame for better visualization of match results
+match_results = []
+for gene_id, probes in probe_matches.items():
+    for probe in probes:
+        match_results.append({
+            "gene_id": gene_id,
+            "probe_seq": probe["probe_seq"],
+            "match_found": probe["match_found"]
+        })
+
+match_df = pd.DataFrame(match_results)
+
+# Display the DataFrame with matching results
+print(match_df)
+
+# To analyze the results further or visualize the matched genes, you could
+# aggregate the data by gene and visualize which genes have matching probes.
+# For instance, you could check how many probes per gene have a match.
+matched_genes = match_df.groupby("gene_id")["match_found"].any()
+print(matched_genes)
