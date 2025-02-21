@@ -1,0 +1,516 @@
+  {
+    "ST": {
+      "usage": true,
+      "scRNA_path": "",
+      "path": "/mnt/work/RO_src/STAnalysis/notebooks/experimental/B2C/adata_b2c.h5ad",
+      "quality_control": {
+        "adata_to_use": "raw_adata",
+        "save_as": "QCed_adata",
+        "calculate_qc_metrics": {
+          "func_str": "sc.pp.calculate_qc_metrics",
+          "usage": true,
+          "params": {
+            "adata": "adata",
+            "qc_vars": [
+              "Mt",
+              "Ribo",
+              "Hb"
+            ],
+            "percent_top": null,
+            "log1p": false,
+            "inplace": true
+          },
+          "pct_counts_Mt": 20,
+          "n_genes_by_counts": {
+            "quantile": {
+              "usage": true,
+              "upper_quantile": 0.98,
+              "lower_quantile": 0.02
+            },
+            "manual_interval": {
+              "usage": false,
+              "upper_bound": null,
+              "lower_bound": null
+            }
+          }
+        },
+        "print_mt": false
+      },
+      "preprocessing": {
+        "adata_to_use": "QCed_adata",
+        "save_as": "preprocessed_adata",
+        "unnormalize": {
+          "usage": false,
+          "col_name": "total_counts"
+        },
+        "normalize": {
+          "func_str": "sc.pp.normalize_total",
+          "usage": true,
+          "params": {
+            "adata": "adata",
+            "layer": "normalized_counts"
+          }
+        },
+        "log1p": {
+          "func_str": "sc.pp.log1p",
+          "usage": true,
+          "params": {
+            "X": "adata",
+            "layer": "lognorm_counts"
+          }
+        },
+        "scale": {
+          "func_str": "sc.pp.scale",
+          "usage": false,
+          "params": {
+            "X": "adata",
+            "max_value": null,
+            "layer": "scaled_lognorm_counts"
+          }
+        },
+        "filter_genes": {
+          "func_str": "sc.pp.filter_genes",
+          "usage": false,
+          "params": {
+            "data": "adata",
+            "min_counts": 15,
+            "min_cells": null
+          }
+        },
+        "filter_cells": {
+          "func_str": "sc.pp.filter_cells",
+          "usage": false,
+          "params": {
+            "data": "adata",
+            "min_genes": 25
+          }
+        },
+        "highly_variable_genes": {
+          "usage": true,
+          "func_str": "sc.pp.highly_variable_genes",
+          "params": {
+            "adata": "adata",
+            "subset": false,
+            "n_top_genes": 10000,
+            "min_mean": 0.0125,
+            "max_mean": 3,
+            "min_disp": 0.5,
+            "flavor": "seurat_v3",
+            "layer": "raw_counts",
+            "inplace": true
+          }
+        },
+        "plotting_prep": {
+          "pca": {
+            "usage": true,
+            "func_str": "sc.tl.pca",
+            "params": {
+              "data": "adata",
+              "svd_solver": "arpack"
+            }
+          },
+          "neighbors": {
+            "usage": true,
+            "func_str": "sc.pp.neighbors",
+            "params": {
+              "adata": "adata",
+              "n_pcs": 30,
+              "n_neighbors": 10
+            }
+          },
+          "umap": {
+            "usage": true,
+            "func_str": "sc.tl.umap",
+            "params": {
+              "adata": "adata"
+            }
+          },
+          "tsne": {
+            "usage": false,
+            "func_str": "sc.tl.tsne",
+            "params": {
+              "adata": "adata",
+              "n_pcs": 30
+            }
+          },
+          "leiden": {
+            "usage": true,
+            "func_str": "sc.tl.leiden",
+            "params": {
+              "adata": "adata",
+              "key_added": "leiden_clusters",
+              "resolution": 0.5
+            }
+          },
+          "dendogram": {
+            "usage": false,
+            "func_str": "sc.tl.dendrogram",
+            "params": {
+              "groupby": "leiden_clusters"
+            }
+          }
+        }
+      },
+      "DEG": {
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "preprocessed_adata",
+        "rank_genes_groups": {
+          "usage": true,
+          "func_str": "sc.tl.rank_genes_groups",
+          "params": {
+            "adata": "adata",
+            "groupby": "leiden_clusters",
+            "groups": "all",
+            "reference": "rest",
+            "method": "wilcoxon",
+            "key_added": "wilcoxon",
+            "layer": "lognorm_counts",
+            "n_genes": 10000,
+            "use_raw": false
+          }
+        },
+        "filter_rank_genes_groups": {
+          "usage": false,
+          "func_str": "sc.tl.filter_rank_genes_groups",
+          "params": {
+            "adata": "adata",
+            "min_fold_change": 1
+          }
+        },
+        "rank_genes_groups_df": {
+          "usage": true,
+          "func_str": "sc.get.rank_genes_groups_df",
+          "params": {
+            "adata": "adata",
+            "key": "wilcoxon",
+            "pval_cutoff": 0.05,
+            "log2fc_min": null,
+            "group": null
+          }
+        },
+        "GSEA": {
+          "usage": false,
+          "stratify_by_group": true,
+          "gene_sets": {
+            "usage": true,
+            "sets": {
+              "DisGeNET": true,
+              "GO_Biological_Process_2023": true,
+              "KEGG_2021_Human": true
+            }
+          },
+          "enrichr": {
+            "func_str": "gp.enrichr",
+            "usage": true,
+            "params": {
+              "cutoff": 0.05
+            }
+          },
+          "prerank": {
+            "func_str": "gp.prerank",
+            "usage": true,
+            "params": {
+              "rnk": "adata",
+              "min_size": 1,
+              "max_size": 1000,
+              "permutation_num": 1000,
+              "weighted_score_type": 1.0,
+              "ascending": false,
+              "threads": 4,
+              "format": "pdf",
+              "graph_num": 20,
+              "no_plot": false,
+              "seed": 123,
+              "verbose": true
+            }
+          },
+          "gsea": {
+            "func_str": "gp.gsea",
+            "adata_cls_col_name": null,
+            "usage": false,
+            "params": {
+              "data": "adata",
+              "permutation_type": "phenotype",
+              "permutation_num": 1000,
+              "method": "s2n",
+              "seed": 123,
+              "threads": 4
+            }
+          }
+        }
+      },
+      "SpatialMarkersMapping": {
+        "usage": true,
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "preprocessed_adata",
+        "get_cell_type_markers": {
+          "usage": true,
+          "path": "/mnt/work/RO_src/STAnalysis/notebooks/downstream/scRNA/Markers/scMAGS_markers.csv",
+          "markers_column_name": "Markers",
+          "cell_type_column_name": "CellType"
+        },
+        "map_markers_to_spatial_cell_type": {
+          "top_markers_combination_method": {
+            "mean": true
+          }
+        },
+        "map_to_clusters": {
+          "percentile_threshold": 0.9,
+          "cluster_column_name": "leiden_clusters"
+        }
+      },
+      "DeconvolutionModels": {
+        "usage": true,
+        "adata_to_use": "preprocessed_adata",
+        "save_as": "preprocessed_adata",
+        "CellTypist": {
+          "usage": true,
+          "pre_trained_model_path": "/mnt/work/RO_src/Pipelines/STAnalysis/STNav/models",
+          "Annotate": {
+            "adata_to_use": "preprocessed_adata",
+            "models": [
+              {
+                "model_name": "sclc_model",
+                "model_path": "/mnt/work/RO_src/STAnalysis/STNav/models/model_sclc_lung.pkl",
+                "usage": true,
+                "params": {
+                  "X": "adata",
+                  "transpose_output": false,
+                  "mode": "best match",
+                  "p_thres": 0.5,
+                  "majority_voting": false,
+                  "min_prop": 0
+                }
+              },
+              {
+                "model_name": "healthy_model",
+                "model_path": "/mnt/work/RO_src/STAnalysis/STNav/models/model_healthy_lung.pkl",
+                "usage": true,
+                "params": {
+                  "X": "adata",
+                  "transpose_output": false,
+                  "mode": "best match",
+                  "p_thres": 0.5,
+                  "majority_voting": false,
+                  "min_prop": 0
+                }
+              }
+            ]
+          }
+        }
+      },
+      "SpatialNeighbors": {
+        "Squidpy": {
+          "adata_to_use": "preprocessed_adata",
+          "save_as": "preprocessed_adata",
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+          },
+          "data_type": "ST",
+          "usage": true,
+          "Squidpy_NHoodEnrichment": {
+            "func_str": "sq.gr.nhood_enrichment",
+            "params": {
+              "adata": "adata",
+              "cluster_key": "cell_type"
+            }
+          },
+          "Squidpy_Co_Ocurrence": {
+            "func_str": "sq.gr.co_occurrence",
+            "params": {
+              "adata": "adata",
+              "cluster_key": "cell_type"
+            }
+          },
+          "Squidpy_Centrality": {
+            "func_str": "sq.gr.centrality_scores",
+            "params": {
+              "adata": "adata",
+              "cluster_key": "cell_type",
+              "show_progress_bar": true
+            }
+          }
+        }
+      },
+      "SpatiallyVariableGenes": {
+        "Squidpy": {
+          "usage": true,
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+          },
+          "save_as": "preprocessed_adata",
+          "adata_to_use": "preprocessed_adata",
+          "data_type": "ST",
+          "n_genes": 1000,
+          "Squidpy_MoranI": {
+            "func_str": "sq.gr.spatial_autocorr",
+            "params": {
+              "adata": "adata",
+              "mode": "moran",
+              "n_perms": 25,
+              "n_jobs": 1
+            }
+          },
+          "Squidpy_Sepal": {
+            "func_str": "sq.gr.sepal",
+            "params": {
+              "adata": "adata",
+              "max_neighs": 6,
+              "n_jobs": 1
+            }
+          }
+        }
+      },
+      "CCI": {
+        "LIANA": {
+          "adata_to_use": "preprocessed_adata",
+          "save_as": "preprocessed_adata",
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+          },
+          "data_type": "ST",
+          "usage": true,
+          "spatial_neighbors": {
+            "func_str": "li.ut.spatial_neighbors",
+            "params": {
+              "adata": "adata",
+              "bandwidth": 100,
+              "cutoff": 0.1,
+              "kernel": "gaussian",
+              "key_added": "liana_spatial",
+              "set_diag": false,
+              "max_neighbours": 4
+            }
+          },
+          "cellphonedb": {
+            "func_str": "li.mt.cellphonedb",
+            "params": {
+              "adata": "adata",
+              "groupby": "cell_type",
+              "resource_name": "consensus",
+              "expr_propr": 0.1,
+              "verbose": true,
+              "use_raw": false,
+              "key_added": "cpdb_res"
+            }
+          },
+          "rank_aggregate": {
+            "func_str": "li.mt.rank_aggregate",
+            "params": {
+              "adata": "adata",
+              "groupby": "cell_type",
+              "resource_name": "consensus",
+              "use_raw": false,
+              "expr_prop": 0.05,
+              "verbose": true
+            }
+          },
+          "bivariate": {
+            "func_str": "li.mt.bivariate",
+            "params": {
+              "mdata": "adata",
+              "layer": "lognorm_counts",
+              "connectivity_key": "liana_spatial_connectivities",
+              "resource_name": "consensus",
+              "local_name": "jaccard",
+              "global_name": "morans",
+              "n_perms": 20,
+              "mask_negatives": false,
+              "add_categories": true,
+              "nz_prop": 0.01,
+              "use_raw": false,
+              "verbose": true
+            }
+          },
+          "nmf": {
+            "func_str": "li.multi.nmf",
+            "params": {
+              "adata": "adata",
+              "n_components": 3,
+              "inplace": true,
+              "random_state": 0,
+              "max_iter": 200,
+              "verbose": true
+            }
+          }
+        },
+        "stLearn": {
+          "adata_to_use": "preprocessed_adata",
+          "save_as": "preprocessed_adata",
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+          },
+          "data_type": "ST",
+          "usage": false,
+          "stLearn_cci": {
+            "func_str": "stLearn_wrapper",
+            "params": {
+              "adata": "adata",
+              "layer": "normalized_counts",
+              "cell_type_label": "cell_type",
+              "min_spots": 20,
+              "distance": null,
+              "n_pairs": 5000,
+              "spot_mixtures": false,
+              "sig_spots": true,
+              "cell_prop_cutoff": 0.2,
+              "p_cutoff": 0.05,
+              "n_perms": 25,
+              "n_cpus": null,
+              "verbose": true
+            }
+          }
+        }
+      },
+      "FunctionalAnalysis": {
+        "decoupleR": {
+          "adata_to_use": "preprocessed_adata",
+          "save_as": "preprocessed_adata",
+          "checkpoint": {
+            "usage": false,
+            "pipeline_run": "PipelineRun_2024_05_20-01_18_04_PM"
+          },
+          "data_type": "ST",
+          "usage": true,
+          "databases": {
+            "PROGENy": {
+              "usage": true,
+              "func_str": "dc.run_mlm",
+              "params": {
+                "source": "source",
+                "target": "target",
+                "weight": "weight",
+                "verbose": true,
+                "use_raw": false
+              }
+            },
+            "CollecTRI": {
+              "usage": true,
+              "func_str": "dc.run_ulm",
+              "params": {
+                "source": "source",
+                "target": "target",
+                "weight": "weight",
+                "verbose": true,
+                "use_raw": false
+              }
+            },
+            "MSigDB": {
+              "usage": true,
+              "func_str": "dc.run_ora",
+              "params": {
+                "source": "geneset",
+                "target": "genesymbol",
+                "verbose": true,
+                "use_raw": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }

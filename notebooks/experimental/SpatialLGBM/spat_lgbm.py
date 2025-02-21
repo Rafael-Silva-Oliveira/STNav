@@ -2,13 +2,11 @@ import scanpy as sc
 import pandas as pd
 import scmags as sm
 from sklearn.model_selection import train_test_split
-import lightgbm as lgb
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.metrics import classification_report, roc_curve, auc
 import squidpy as sq
 from sklearn.model_selection import cross_val_score
 import optuna
-import lightgbm as lgb
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_validate
 from sklearn.metrics import classification_report
 import numpy as np
@@ -18,10 +16,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from scipy.sparse import csr_matrix
 import squidpy as sq
-from mapie.metrics import (
-    classification_coverage_score,
-    classification_mean_width_score,
-)<
+
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.calibration import calibration_curve
 import pickle
@@ -68,8 +63,9 @@ from sklearn.metrics import classification_report
 import matplotlib.pyplot as plt
 import optuna
 from scipy.sparse import csr_matrix
-from mapie.classification import MapieClassifier
-from mapie.metrics import classification_coverage_score
+
+# from mapie.classification import MapieClassifier
+# from mapie.metrics import classification_coverage_score
 from tqdm import tqdm
 
 
@@ -415,7 +411,7 @@ st_adata_pred.write_h5ad("predicted_adata_deconv.h5ad")
 #     main()
 
 st_adata_pred.write_h5ad(
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\notebooks\experimental\SpatialLGBM\predicted_adata_deconv.h5ad",
+    r".\predicted_adata_deconv.h5ad",
 )
 st_adata_pred.obs.columns
 import matplotlib.pyplot as plt

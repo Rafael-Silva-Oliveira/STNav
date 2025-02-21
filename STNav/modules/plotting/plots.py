@@ -17,18 +17,22 @@ import numpy as np
 import pandas as pd
 import scanorama
 import scanpy as sc
-import scarches as sca
+
+# import scarches as sca
 import seaborn as sns
-import spatialdm as sdm
+
+# import spatialdm as sdm
 import squidpy as sq
 from gseapy.plot import gseaplot
-import stlearn as st
+
+# import stlearn as st
 
 # Training a model to predict proportions on spatial data using scRNA seq as reference
 from loguru import logger
 from scipy import sparse
 from scipy.sparse import csr_matrix
-from scvi.external import RNAStereoscope, SpatialStereoscope
+
+# from scvi.external import RNAStereoscope, SpatialStereoscope
 from sklearn.cluster import AgglomerativeClustering, KMeans
 from sklearn.metrics import adjusted_rand_score
 
@@ -158,14 +162,14 @@ def run_plots(
                         filtered_params["adata_or_result"] = eval(
                             filtered_params["adata_or_result"]
                         )
-                    save_path = directory + "\\Plots\\" + config_name
+                    save_path = directory + "/Plots/" + config_name
                     filtered_params.setdefault("save", save_path)
 
                     logger.info(
                         f"The following parameters were validated and will be used for the {plot_type} plot: {filtered_params} "
                     )
 
-                save_path = directory + "\\Plots\\" + config_name
+                save_path = directory + "/Plots/" + config_name
                 try:
                     with plt.rc_context():  # Use this to set figure params like size and dpi
                         plt.figure(figsize=(20, 20))  # Set the figure size

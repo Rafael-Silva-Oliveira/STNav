@@ -1,0 +1,17 @@
+scanpy
+squidpy
+stlearn
+scvi-tools
+scArches
+tacco
+celltypist
+scanorama
+SpaGCN
+gseapy
+seagal
+SpatialDE
+SpatialDM
+loguru
+setuptools==69.5.1
+
+

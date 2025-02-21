@@ -1,10 +1,20 @@
-ANALYSIS_CONFIG = (
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\configs\analysis.json"
-)
-PLOTTING_CONFIG = (
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\configs\plots.json"
-)
+ANALYSIS_CONFIG = {
+    "cloud": r"/mnt/work/RO_src/STAnalysis/configs/analysis_cloud.json",
+    "local": "",
+}
 
-SAVING_PATH = (
-    r"C:\Users\rafaelo\OneDrive - NTNU\Documents\Projects\STNav\data\processed"
-)
+PLOTTING_CONFIG = {
+    "cloud": r"/mnt/work/RO_src/STAnalysis/configs/plots_cloud.json",
+    "local": "",
+}
+
+SAVING_PATH = {
+    "cloud": {
+        "usage": True,
+        "path": r"/mnt/archive2/RO_src/data/processed",
+    },
+    "local": {
+        "usage": False,
+        "path": r"",
+    },
+}

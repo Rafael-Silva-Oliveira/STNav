@@ -5,13 +5,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import scanpy as sc
-import SpatialDE
-import NaiveDE
 import squidpy as sq
 import json
 import torch
 from loguru import logger
-from GraphST.utils import project_cell_to_spot
 from STNav.utils.decorators import pass_STNavCore_params
 from STNav.utils.helpers import (
     return_filtered_params,
@@ -30,7 +27,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 # Get current date
 date = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
-import spatialdm.plottings as pl
+# import spatialdm.plottings as pl
 import squidpy as sq
 
 
@@ -71,7 +68,28 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                 genes = adata[:, adata.var.highly_variable].var_names.values[
                     : config_params["n_genes"]
                 ]
+
+                # nearest neighborhood graph
+                sc.pp.neighbors(adata)
+                nn_graph_genes = adata.obsp["connectivities"]
+                # spatial proximity graph
                 sq.gr.spatial_neighbors(adata)
+                nn_graph_space = adata.obsp["spatial_connectivities"]
+
+                # Identify joint cluster. Add the 2 graphs, compute leiden and joint graph.
+                alpha = 0.2  # used to weight the importance of each graph
+
+                logger.info(
+                    "Computing joint graph for spatial domains with squidpy 'squidpy_spatial_domains'"
+                )
+                joint_graph = (1 - alpha) * nn_graph_genes + alpha * nn_graph_space
+                sc.tl.leiden(
+                    adata, adjacency=joint_graph, key_added="squidpy_spatial_domains"
+                )
+
+                # sq.pl.spatial_scatter(
+                #     adata, color=["leiden_clusters", "squidpy_domains"], wspace=0.9
+                # )
 
                 # Calculate spatially variable genes with Moran I statistic
                 config_params["Squidpy_MoranI"]["params"].setdefault("genes", genes)
@@ -85,7 +103,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                 num_view = 12
 
                 save_path_top = (
-                    STNavCorePipeline.saving_path + "\\Plots\\" + "moran_I_top" + ".png"
+                    STNavCorePipeline.saving_path + "/Plots/" + "moran_I_top" + ".png"
                 )
                 top_autocorr = (
                     adata.uns["moranI"]["I"]
@@ -107,7 +125,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                 save_path_bot = (
                     STNavCorePipeline.saving_path
-                    + "\\Plots\\"
+                    + "/Plots/"
                     + "moran_I_bottom"
                     + ".png"
                 )
@@ -133,7 +151,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                 # Save to excel file
                 with pd.ExcelWriter(
-                    f"{STNavCorePipeline.saving_path}\\{data_type}\\Files\\{data_type}_Squidpy_MoranI_{date}.xlsx"
+                    f"{STNavCorePipeline.saving_path}/{data_type}/Files/{data_type}_Squidpy_MoranI_{date}.xlsx"
                 ) as writer:
                     adata.uns["moranI"].to_excel(
                         writer,
@@ -152,7 +170,7 @@ def SpatiallyVariableGenes(STNavCorePipeline):
 
                 # Save to excel file
                 with pd.ExcelWriter(
-                    f"{STNavCorePipeline.saving_path}\\{data_type}\\Files\\{data_type}_Squidpy_Sepal_{date}.xlsx"
+                    f"{STNavCorePipeline.saving_path}/{data_type}/Files/{data_type}_Squidpy_Sepal_{date}.xlsx"
                 ) as writer:
                     adata.uns["sepal_score"].to_excel(
                         writer,
@@ -166,6 +184,3 @@ def SpatiallyVariableGenes(STNavCorePipeline):
                     name=f"{config_params['save_as']}",
                 )
                 del adata
-
-            if method_name == "scBSP":
-                ...
