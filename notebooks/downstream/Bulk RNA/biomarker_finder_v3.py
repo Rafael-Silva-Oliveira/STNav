@@ -1,4 +1,4 @@
-
+# %% Test
 # Standard library imports
 import os
 from typing import Dict, List
@@ -98,6 +98,7 @@ import umap
 # Local imports
 from cnmf import cNMF
 from catboost import CatBoostClassifier
+from lifelines import CoxPHFitter
 
 # Set global rcParams for consistent formatting
 plt.rcParams.update(
@@ -1050,7 +1051,7 @@ def get_top_genes(
     return deg_results
 
 def calculate_risk_scores(
-    adata, coef_df, layer="raw_counts", endpoint="os", lower_bound=30, upper_bound=71
+    adata, coef_df, layer="lognormalized_counts", endpoint="os", lower_bound=30, upper_bound=71, cutpoint_method="max_rank", plot_layer="raw_counts",use_z_score=True, use_robust_z_score=False
 ):
     """
     Calculate risk scores and find optimal cutpoint for stratification using sksurv.
@@ -1065,6 +1066,8 @@ def calculate_risk_scores(
         Layer in AnnData to use for expression values, by default "lognormalized_counts"
     endpoint : str, optional
         Endpoint to use for survival analysis ('os' or 'ttp'), by default "os"
+    plot_layer: str
+        Layer in AnnData to use for the risk profile plotting. Differs from the layer in the sence that layer is used to compute risks, etc.
 
     Returns
     -------
@@ -1097,7 +1100,7 @@ def calculate_risk_scores(
     )
 
     print(
-        f"Expression data being used to calculate the risk scores:\n {expr} using {layer}"
+        f"Expression data being used to calculate the risk scores:\n {expr} ... \n\n  ... using {layer}"
     )
 
     # Calculate risk scores
@@ -1117,9 +1120,7 @@ def calculate_risk_scores(
     if formula_parts:
         print(f"\nRisk score formula for {endpoint.upper()}:")
         print("Risk Score = " + " + ".join(formula_parts))
-        print(
-            "\nWhere positive coefficients indicate higher risk and negative coefficients indicate lower risk"
-        )
+
     else:
         print(f"\nNo non-zero coefficients found for {endpoint.upper()}")
 
@@ -1129,9 +1130,9 @@ def calculate_risk_scores(
             "risk_score": risk_scores,
             "time": adata.obs[time_col],
             "status": adata.obs[status_col].map(
-                {"Alive": 0, "Dead": 1}
+                {False: 0, True: 1}
                 if endpoint == "os"
-                else {"Did not progress": 0, "Progressed": 1}
+                else {False: 0, True: 1}
             ),
         },
         index=adata.obs.index,
@@ -1142,29 +1143,46 @@ def calculate_risk_scores(
     # Add expression values for selected genes
     risk_scores_df = pd.concat([risk_scores_df, expr], axis=1)
 
-    # Find optimal cutpoint using log-rank test
-    cutpoints = np.percentile(risk_scores, np.arange(lower_bound, upper_bound, 1))
-    max_statistic = 0
-    optimal_cutpoint = None
-    optimal_pvalue = None
+    if cutpoint_method == "max_rank":
+        # Find optimal cutpoint using log-rank test
+        cutpoints = np.percentile(risk_scores, np.arange(lower_bound, upper_bound, 1))
+        max_statistic = 0
+        optimal_cutpoint = None
 
-    for cutpoint in cutpoints:
-        groups = risk_scores > cutpoint
+        for cutpoint in cutpoints:
+            groups = risk_scores > cutpoint
 
-        # Create structured array for survival data
-        survival_data = np.zeros(
-            len(risk_scores_df), dtype=[("status", bool), ("time", float)]
-        )
-        survival_data["status"] = risk_scores_df["status"].values.astype(bool)
-        survival_data["time"] = risk_scores_df["time"].values
+            # Create structured array for survival data
+            survival_data = np.zeros(
+                len(risk_scores_df), dtype=[("status", bool), ("time", float)]
+            )
+            survival_data["status"] = risk_scores_df["status"].values.astype(bool)
+            survival_data["time"] = risk_scores_df["time"].values
 
-        # Calculate log-rank test
-        chisq, pvalue = compare_survival(survival_data, groups)
+            # Calculate log-rank test
+            chisq, pvalue = compare_survival(survival_data, groups)
 
-        if chisq > max_statistic:
-            max_statistic = chisq
-            optimal_cutpoint = cutpoint
-            optimal_pvalue = pvalue
+            if chisq > max_statistic:
+                max_statistic = chisq
+                optimal_cutpoint = cutpoint
+
+    elif cutpoint_method == "median":
+        optimal_cutpoint = risk_scores_df["risk_score"].median()
+
+    elif cutpoint_method == "youden":
+        # Calculate the ROC curve and select the threshold with the maximum Youden index
+        from sklearn.metrics import roc_curve
+        print(risk_scores_df)
+        # Note: risk_scores_df["status"] should be binary (0/1)
+        fpr, tpr, thresholds = roc_curve(risk_scores_df["status"], risk_scores_df["risk_score"])
+        youden_index = tpr - fpr
+        optimal_idx = np.argmax(youden_index)
+        optimal_cutpoint = thresholds[optimal_idx]
+        print(f"Optimal cutpoint (Youden index): {optimal_cutpoint}")
+
+    else:
+        print(f"Cutpoint method {cutpoint_method} not supported. ")
+
 
     # Assign risk groups - higher scores = higher risk
     risk_scores_df["risk_group"] = (
@@ -1207,7 +1225,7 @@ def calculate_risk_scores(
     print(summary)
 
     # Create the combined risk profile plot
-    plot_risk_profile(risk_scores_df, adata, coefficients, optimal_cutpoint, layer)
+    plot_risk_profile(risk_scores_df, adata, coefficients, optimal_cutpoint,  cutpoint_method=cutpoint_method, plot_layer=plot_layer,use_z_score=use_z_score, use_robust_z_score=use_robust_z_score)
 
     # Calculate HR using Cox model
     X = (risk_scores_df["risk_group"] == "high").values.reshape(-1, 1)
@@ -1221,6 +1239,20 @@ def calculate_risk_scores(
     cph = CoxPHSurvivalAnalysis()
     cph.fit(X, y)
     hr = np.exp(cph.coef_[0])
+    from lifelines.statistics import logrank_test
+
+    high_risk = risk_scores_df[risk_scores_df["risk_group"] == "high"]
+    low_risk = risk_scores_df[risk_scores_df["risk_group"] == "low"]
+
+    # Perform Log-rank test
+    log_rank_result = logrank_test(
+        high_risk["time"], low_risk["time"], 
+        event_observed_A=high_risk["status"], 
+        event_observed_B=low_risk["status"]
+    )
+
+    # Get the p-value
+    log_rank_pval = log_rank_result.p_value
 
     # Plot Kaplan-Meier curves with statistics
     plt.figure(figsize=(10, 6))
@@ -1242,7 +1274,7 @@ def calculate_risk_scores(
             )
 
     # Add HR and p-value to the plot
-    stats_text = f"HR = {hr:.2f}\n" f"Log-rank P = {optimal_pvalue:.2e}"
+    stats_text = f"HR = {hr:.2f}\n" f"Log-rank P = {log_rank_pval:.2e}"
     plt.text(
         0.05,
         0.15,
@@ -1262,16 +1294,16 @@ def calculate_risk_scores(
     print("\nRisk group sizes:")
     print(risk_scores_df["risk_group"].value_counts())
     print(f"\nOptimal cutpoint: {optimal_cutpoint:.4f}")
-    print(f"Log-rank test p-value: {optimal_pvalue:.2e}")
+    print(f"Log-rank test p-value: {log_rank_pval:.2e}")
     print(f"Hazard Ratio: {hr:.2f}")
 
     return risk_scores_df
 
 def plot_risk_profile(
-    risk_scores_df, adata, gene_coefficients, optimal_cutpoint, layer="raw_counts"
+    risk_scores_df, adata, gene_coefficients, optimal_cutpoint, plot_layer="raw_counts", cutpoint_method="max_rank", use_z_score=False,use_robust_z_score=False
 ):
     """
-    Create a combined plot showing risk scores, survival status, and gene expression profiles.
+    Create a combined plot showing risk scores, survival status, and gene expression profiles with clustered genes.
 
     Parameters
     ----------
@@ -1283,7 +1315,7 @@ def plot_risk_profile(
         Dictionary mapping gene names to their coefficients
     optimal_cutpoint : float
         Optimal cutpoint for risk stratification
-    layer : str, optional
+    plot_layer : str, optional
         Layer in AnnData to use for expression values, by default "raw_counts"
     """
     # Create figure with subplots
@@ -1358,33 +1390,67 @@ def plot_risk_profile(
     # Get expression data from specified layer
     gene_mask = adata.var_names.isin(non_zero_genes)
     expr_data = pd.DataFrame(
-        adata.layers[layer][:, gene_mask],
+        adata.layers[plot_layer][:, gene_mask],
         index=adata.obs.index,
         columns=adata.var_names[gene_mask],
     )
 
     # Z-score normalization using numpy operations
     expr_matrix = expr_data.values
-    expr_data_scaled = (expr_matrix - expr_matrix.mean(axis=0)) / expr_matrix.std(
-        axis=0
-    )
-    expr_data_scaled = pd.DataFrame(
-        expr_data_scaled, columns=non_zero_genes, index=expr_data.index
-    )
+    cmap = "RdBu_r"
+    center = 0
 
-    # Sort genes by absolute coefficient value
-    gene_coef_pairs = [(gene, abs(gene_coefficients[gene])) for gene in non_zero_genes]
-    sorted_genes = [
-        gene for gene, _ in sorted(gene_coef_pairs, key=lambda x: x[1], reverse=True)
-    ]
+    def robust_z(x):
+        median_x = np.median(x)
+        mad_x = np.median(np.abs(x - median_x))
+        robust_z_i = (x - median_x) / mad_x
+        return robust_z_i
+    
+    if use_robust_z_score == True:
+        expr_data_processed = robust_z(expr_matrix)
+        cbar_label = "Robust Z-score"
 
-    # Create heatmap with z-scaled data
+    if use_z_score == True:
+        if use_robust_z_score == True:
+            raise ValueError("Cannot use both z score and robust z-score. Please, set only one to true.")
+        # Z-score normalization using numpy operations
+        expr_data_processed = (expr_matrix - expr_matrix.mean(axis=0)) / expr_matrix.std(axis=0)
+        cbar_label = "Z-score"
+    else:
+        expr_data_processed = expr_matrix
+        center=None
+        if plot_layer == "lognormalized_counts":
+            cbar_label = "Log-normalized expression"
+        elif plot_layer == "normalized_counts":
+            cbar_label = "Normalized expression"
+        else:  # raw_counts
+            cbar_label = "Raw counts"
+    
+    print(f"Expression matrix processed with method {use_robust_z_score=} and {use_z_score=} with {plot_layer} layer. \n\n {expr_data_processed}")
+
+    expr_data_processed = pd.DataFrame(
+        expr_data_processed, columns=non_zero_genes, index=expr_data.index
+    )
+    
+    # Filter to only include patients in risk_scores_df
+    expr_data_filtered = expr_data_processed.loc[risk_scores_df.index]
+    
+    # Cluster genes based on expression patterns using hierarchical clustering
+    from scipy.cluster.hierarchy import linkage, dendrogram
+    # Compute linkage matrix for gene clustering
+    gene_linkage = linkage(expr_data_filtered.T, method='ward')
+    
+    # Get clustered gene order
+    gene_order = dendrogram(gene_linkage, no_plot=True)['leaves']
+    clustered_genes = expr_data_filtered.columns[gene_order].tolist()
+    
+    # Plot heatmap with clustered genes
     sns.heatmap(
-        expr_data_scaled.loc[risk_scores_df.index, sorted_genes].T,
-        cmap="RdBu_r",
-        center=0,
+        expr_data_filtered.loc[:, clustered_genes].T,
+        cmap=cmap,
+        center=center,
         ax=axes[2],
-        cbar_kws={"label": "Z-score"},
+        cbar_kws={"label": cbar_label},
     )
 
     # Add a vertical line to separate low and high risk groups
@@ -1412,14 +1478,21 @@ def plot_risk_profile(
         va="top",
     )
 
+    # Add gene coefficient information to y-axis labels
+    y_labels = [f"{gene} ({gene_coefficients[gene]:.3f})" for gene in clustered_genes]
+    axes[2].set_yticklabels(y_labels)
+    
     axes[2].set_xlabel("Patients (ranked by risk score)")
-    axes[2].set_ylabel("Genes")
+    axes[2].set_ylabel("Genes (clustered by expression)")
 
-    # Add title
+    # Add title including data type and whether Z-score was applied
+    z_score_text = "with Z-score normalization" if use_z_score else "without Z-score normalization"
+    layer_text = plot_layer.replace("_", " ")
     plt.suptitle(
-        "Risk Score Profile using the maximally selected rank statistic using log rank test to find the optimal cutoff point",
+        f"Risk Score Profile ({layer_text} {z_score_text})\nusing the {cutpoint_method} method",
         y=1.02,
     )
+
 
     # Adjust layout
     plt.tight_layout()
@@ -1504,15 +1577,20 @@ adata_nmf_cp.obs["status-ttp"] = adata_nmf_cp.obs["status-ttp"].map(
     {0: "Did not progress", 1: "Progressed"}
 )
 
+# %%
 # Re-normalize with the 77 samples
-adata_nmf.layers["raw_counts"] = adata_nmf.X.copy()
-adata_nmf.layers["normalized_counts"] = adata_nmf.X.copy()
-adata_nmf.layers["lognormalized_counts"] = adata_nmf.X.copy()
-adata_nmf.X = adata_nmf.layers["raw_counts"].copy()
-sc.pp.normalize_total(adata_nmf, target_sum=1e6,layer="normalized_counts") 
-sc.pp.log1p(adata_nmf, layer="lognormalized_counts")
+# Delete existing layers
+adata_nmf_cp.X = adata_nmf_cp.layers["raw_counts"].copy()
+for layer in list(adata_nmf_cp.layers.keys()):
+    if layer != "raw_counts":
+        del adata_nmf_cp.layers[layer]
+adata_nmf_cp.layers["raw_counts"] = adata_nmf_cp.X.copy()
+adata_nmf_cp.layers["normalized_counts"] = adata_nmf_cp.X.copy()
+sc.pp.normalize_total(adata_nmf_cp, target_sum=1e6,layer="normalized_counts") 
+adata_nmf_cp.layers["lognormalized_counts"] = adata_nmf_cp.layers["normalized_counts"].copy()
+sc.pp.log1p(adata_nmf_cp, layer="lognormalized_counts")
 
-
+# %%
 # ####################### Run PyDESeq2 ######################
 # deg_os = DEGAnalysis(
 #     adata_nmf_cp,
@@ -1611,7 +1689,6 @@ sc.pp.log1p(adata_nmf, layer="lognormalized_counts")
 # # Fit the Cox model
 # import numpy as np
 # import pandas as pd
-# from lifelines import CoxPHFitter
 # from sklearn.model_selection import train_test_split
 # from statsmodels.stats.multitest import multipletests
 
@@ -2051,3 +2128,270 @@ coef_df.to_csv("coxnet_selected_genes.csv", index=False)
 # from feature_engine.selection import MRMR
 # mrmr_sel = MRMR(method="MIQ", regression=False, random_state=3)
 # X_t = mrmr_sel.fit_transform(X_train, y_train)
+
+
+
+
+# %% -------------------------------------------------------
+# 1) Map status, prepare X and y
+# -------------------------------------------------------
+
+from sksurv.util import Surv
+
+# Remove gene names from adata.obs (keep them in layers)
+adata_nmf_cp.obs = adata_nmf_cp.obs.drop(columns=adata_nmf_cp.var_names)
+
+# Map survival status
+status_map = {
+    "os": {"Dead": True, "Alive": False},
+    "ttp": {"Progressed": True, "Did not progress": False},
+}
+endpoint = "os"
+adata_nmf_cp.obs[f"status-{endpoint}"] = adata_nmf_cp.obs[f"status-{endpoint}"].map(status_map[endpoint])
+
+# Extract gene expression data (log-normalized)
+X = pd.DataFrame(adata_nmf_cp.layers["lognormalized_counts"], index=adata_nmf_cp.obs_names, columns=adata_nmf_cp.var_names)
+
+# # Define thresholds
+# presence_threshold = 0.85  # Keep genes present in at least 90% of samples
+
+# # List of key SCLC biomarkers to retain (add more if needed)
+# important_biomarkers = {"ASCL1", "NEUROD1", "POU2F3", "YAP1"}
+
+# # Calculate presence of each gene
+# percent_expressed = (X > 0).mean(axis=0)  # Fraction of nonzero samples per gene
+
+# # Select genes that pass the threshold OR are known biomarkers
+# expressed_genes = percent_expressed[(percent_expressed >= presence_threshold) | percent_expressed.index.isin(important_biomarkers)].index.tolist()
+# removed_genes = percent_expressed[~percent_expressed.index.isin(expressed_genes)].index.tolist()
+
+# # Filter the data
+# X = X[expressed_genes].copy()
+
+# # Summary statistics
+# print(f"Original number of genes: {X.shape[1]}")
+# print(f"Number of genes expressed in >{presence_threshold*100}% of samples: {len(expressed_genes)}")
+# print(f"Number of genes removed: {len(removed_genes)}")
+# print(f"Percentage of genes retained: {len(expressed_genes)/X.shape[1]*100:.2f}%")
+
+# # Create a DataFrame of removed genes and their expression percentages
+# removed_genes_df = pd.DataFrame({
+#     'Gene': removed_genes,
+#     'Percent_Expressed': percent_expressed[removed_genes].values
+# }).sort_values('Percent_Expressed', ascending=False)
+
+# # Display top removed genes (closest to threshold)
+# print("\nTop removed genes (closest to threshold):")
+# print(removed_genes_df.head(10))
+
+# # Histogram of expression percentages
+# plt.figure(figsize=(8, 5))
+# plt.hist(percent_expressed * 100, bins=30, color='steelblue', edgecolor='black', alpha=0.7)
+# plt.axvline(presence_threshold * 100, color='red', linestyle='dashed', label=f"Threshold ({presence_threshold*100}%)")
+# plt.xlabel("Percentage of Samples with Gene Expressed")
+# plt.ylabel("Number of Genes")
+# plt.title("Distribution of Gene Expression Across Samples")
+# plt.legend()
+# plt.show()
+
+# # Update AnnData object
+# adata_nmf_cp = adata_nmf_cp[:, expressed_genes].copy()
+
+# Prepare structured survival data
+time = adata_nmf_cp.obs[f"tend_{endpoint}"]
+status = adata_nmf_cp.obs[f"status-{endpoint}"]
+y_structured = Surv.from_arrays(event=status, time=time)
+
+
+
+# %% -------------------------------------------------------
+# 2) Split once into training (70%) and testing (30%)
+# -------------------------------------------------------
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y_structured, test_size=0.20, random_state=42, stratify=status
+)
+print(f"Training set size: {X_train.shape[0]}, Testing set size: {X_test.shape[0]}")
+
+# %% -------------------------------------------------------
+# 3) DEG on the training set to get up and down genes
+# -------------------------------------------------------
+adata_subset_train = adata_nmf_cp[X_train.index].copy()
+
+deg = DEGAnalysis(
+    adata = adata_subset_train,
+    design_factor=f"status-{endpoint}",
+    layer="raw_counts",
+    output_dir=f"./deg_analysis_biomarker_{endpoint}",
+)
+deg.create_dds()
+deg.run_comparisons()
+deg.save_results()
+results_deg = deg.get_results()
+
+top_genes_df = results_deg["False_vs_True"].results_df[
+results_deg["False_vs_True"].results_df["log2FoldChange"] > 1].sort_values("log2FoldChange", ascending=False
+).index.tolist()
+
+bottom_genes_df = results_deg["False_vs_True"].results_df[
+results_deg["False_vs_True"].results_df["log2FoldChange"] < - 1].sort_values("log2FoldChange", ascending=False).index.tolist()
+
+res_df= results_deg["False_vs_True"].results_df[
+    (results_deg["False_vs_True"].results_df["log2FoldChange"].abs() > 0.5)
+]
+
+deg_genes = res_df.index.tolist()
+
+# %% -------------------------------------------------------
+# 3.b) PyWGCNA
+# -------------------------------------------------------
+import PyWGCNA
+expr_TPM = pd.DataFrame(adata_nmf_cp.layers["normalized_counts"], index=adata_nmf_cp.obs_names, columns=adata_nmf_cp.var_names)
+expr_TPM.to_csv(r"/home/rafaed/work/RO_src/STAnalysis/notebooks/downstream/Bulk RNA/WGCNA/expressionList.csv")
+geneExp = '/home/rafaed/work/RO_src/STAnalysis/notebooks/downstream/Bulk RNA/WGCNA/expressionList.csv'
+pyWGCNA_5xFAD = PyWGCNA.WGCNA(name='SCLC', 
+                              species='Human', 
+                              geneExpPath=geneExp, 
+                              outputPath='/home/rafaed/work/RO_src/STAnalysis/notebooks/downstream/Bulk RNA/WGCNA',
+                              save=True)
+pyWGCNA_5xFAD.geneExpr.to_df().head(5)
+pyWGCNA_5xFAD.preprocess()
+
+
+# %% -------------------------------------------------------
+# 4.a) MRMR on training set for initial gene selection from DEG genes
+# -------------------------------------------------------
+
+from feature_engine.selection import MRMR
+mrmr_sel = MRMR(method="MID", regression=False, random_state=3)
+y_train_bool = y_train['event']
+
+X_t = mrmr_sel.fit_transform(X_train[deg_genes], y_train_bool)
+
+significant_genes = X_t.columns.tolist()
+# %% -------------------------------------------------------
+# 4.b) Univariate Cox on training set to find p<0.05 genes from DEG genes
+# -------------------------------------------------------
+significant_genes = []
+cox_model = CoxPHFitter()
+
+cox_dict = {}
+for gene in X_train[deg_genes].columns:
+    data = pd.DataFrame({
+        "time": y_train["time"],
+        "status": y_train["event"],
+        gene: X_train[gene]
+    })
+    cox_model.fit(data, duration_col="time", event_col="status")
+    pval = cox_model.summary.loc[gene, "p"]
+
+    if gene in ["NEUROD1","POU2F3","YAP1","ASCL1"]:
+        print(cox_model.summary)
+
+    cox_dict[gene] = pval
+
+cox_pvals_df = pd.DataFrame.from_dict(cox_dict, orient="index", columns = ["pval"])
+from statsmodels.stats.multitest import \
+     multipletests
+
+_, corrected_pvals, _, _ = multipletests(cox_pvals_df["pval"].tolist(), method="fdr_bh")
+
+# Store the adjusted p-values in the DataFrame
+cox_pvals_df["adjusted_pval"] = corrected_pvals
+
+for g in cox_pvals_df.index:
+    if cox_pvals_df.loc[g,"pval"] < 0.05 and "ENSG" not in g:  # more stringent
+        significant_genes.append(g)
+
+print(f"Significant genes from univariate Cox (p<0.05): {len(significant_genes)}")
+print(significant_genes)
+
+# %% -------------------------------------------------------
+# 5.a) Train ElasticNet Cox model - Find best alpha with 10-fold CV on X_train_significant
+# -------------------------------------------------------
+X_train_significant = X_train[significant_genes].copy()
+X_test_significant  = X_test[significant_genes].copy()
+
+def c_index_scorer_func(y_true, y_pred):
+    return concordance_index_censored(y_true["event"], y_true["time"], y_pred)[0]
+
+c_index_scorer = make_scorer(c_index_scorer_func, greater_is_better=True)
+
+l1_ratio = 1
+alpha_min_ratio = 0.05
+max_iter = 10000
+
+# Train a first model to find the alphas range
+coxnet_pipe = make_pipeline(CoxnetSurvivalAnalysis(l1_ratio=l1_ratio, alpha_min_ratio=alpha_min_ratio,n_alphas=10000))
+coxnet_pipe.fit(X=X_train_significant, y=y_train)
+estimated_alphas = coxnet_pipe.named_steps["coxnetsurvivalanalysis"].alphas_
+
+# Train CV elastic net model to find the actual best alpha based on the initial set originated
+
+
+custom_alphas = np.logspace(
+    start=np.log10(0.001),  # Start from 0.001
+    stop=np.log10(100),     # End at 100
+    num=10000               # Generate 10,000 values
+)
+gcv = GridSearchCV(
+    CoxnetSurvivalAnalysis(
+        l1_ratio=l1_ratio,       
+        #alpha_min_ratio=alpha_min_ratio,
+    ),
+    param_grid={"alphas": [[v] for v in custom_alphas]},
+    scoring=c_index_scorer,
+    cv=KFold(n_splits=10, shuffle=True, random_state=42),
+    n_jobs=-1,
+    verbose=2,
+    return_train_score=True,
+    error_score=0.5
+)
+gcv.fit(X_train_significant, y_train)
+cv_results = pd.DataFrame(gcv.cv_results_)
+
+best_model = gcv.best_estimator_  # The pipeline, so best_model.named_steps['coxnetsurvivalanalysis'] if needed
+best_model_coef = best_model.coef_.ravel()
+best_non_null_coefs = np.where(best_model_coef != 0)
+best_selected_features = list(X_train_significant.columns[best_model_coef !=0])
+coef_dict = {}
+for coef, gene in zip(best_model_coef[best_non_null_coefs], best_selected_features):
+    print(f"{coef:.5f} * {gene} +")
+    coef_dict[gene] = coef
+
+best_alpha = gcv.best_params_["alphas"][0]
+
+print("Best alpha:", best_alpha)
+
+# Print the best alpha selected
+alphas = cv_results.param_alphas.map(lambda x: x[0])
+mean = cv_results.mean_test_score
+std = cv_results.std_test_score
+
+fig, ax = plt.subplots(figsize=(9, 6))
+ax.plot(alphas, mean)
+ax.fill_between(alphas, mean - std, mean + std, alpha=0.15)
+ax.set_xscale("log")
+ax.set_ylabel("concordance index")
+ax.set_xlabel("alpha")
+ax.axvline(gcv.best_params_["alphas"][0], c="C1")
+ax.axhline(0.5, color="grey", linestyle="--")
+ax.grid(True)
+plt.show()
+
+# Evaluate the best model on the test set to check for generalization
+risk_scores = best_model.predict(X_test_significant)
+
+# Calculate the C-index
+c_index = concordance_index_censored(y_test["event"], y_test["time"], risk_scores)
+print("C-index on test set:", c_index[0])
+
+# Calculate the risk scores as coef * lognormalized counts for the whole dataset    
+
+coef_df = pd.DataFrame.from_dict(coef_dict, orient='index', columns=['coefficient'])
+coef_df['coefficient'] = coef_df['coefficient'].round(5)
+# Find the optimal cutpoint by:
+
+# %%
+scores_risk_df = calculate_risk_scores(adata_nmf_cp, coef_df, layer="lognormalized_counts", cutpoint_method="youden", upper_bound=91, lower_bound=15, plot_layer="lognormalized_counts",use_z_score=False, use_robust_z_score=False)
+
+# %%
